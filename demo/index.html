@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<style>
+	#prods .act, #years .act { color: red; }
+</style>
+<body>
+
+<div id="prods">
+	<a href="" data-prod="cacao" class="">Cacao</a>
+	<a href="" data-prod="banana" class="">Banana</a>
+	<a href="" data-prod="azucar" class="">Azucar</a>
+	<a href="" data-prod="aceite" class="">Aceite</a>
+	<a href="" data-prod="cafe" class="">Cafe</a>
+</div>
+<div id="years">
+	<a href="" data-year="2010" class="">2010</a>
+	<a href="" data-year="2011" class="">2011</a>
+	<a href="" data-year="2012" class="">2012</a>
+	<a href="" data-year="2013" class="">2013</a>
+	<a href="" data-year="2014" class="">2014</a>
+</div>
+
+<svg id="viz"></svg>
+
+<script src="http://estaticos.lab.eldiario.es/libs/jquery-1.10.2.min.js"></script>
+<script src="http://estaticos.lab.eldiario.es/libs/d3-4.7.1.min.js"></script>
+<script src="http://estaticos.lab.eldiario.es/libs/topojson-2.2.0.min.js"></script>
+
+<script>
+
+var planta_graph = {
+
+	pathData: './',
+	pathPaises: './paises.json',
+
+	actYear: 2014,
+	actProd: 'cacao',
+
+	ready: false,
+
+	viz: {
+		$elm: null,
+		svg: null,
+		projection: null,
+		path: null,
+	},
+
+	data: {
+		prod: null,
+		countries: null
+	},
+
+	init: function(){
+
+		planta_graph.viz.$em = $('#viz');
+		
+		planta_graph.tools.loadCountries();
+
+			// jqueries
+		$('#years a').click(planta_graph.evs.change_year);
+		$('#prods a').click(planta_graph.evs.change_product);
+
+		$('#years a[data-year=' +  planta_graph.actYear + ']').addClass('act');
+		$('#prods a[data-prod=' +  planta_graph.actProd + ']').addClass('act');
+
+		$(window).bind('orientationchange resize', throttle(planta_graph.tools.handleResize, 500));
+
+		planta_graph.tools.handleResize();
+
+		planta_graph.tools.getProductos(planta_graph.actProd);
+	},
+
+	evs: {
+		change_product: function(e){
+			
+			e.preventDefault();
+			
+			$('#prods .act').removeClass('act');
+
+			var prod = $(this).addClass('act').data('prod');
+			if(!prod || planta_graph.actProd == prod) { console.log('no hay producto'); return; };
+
+			planta_graph.actProd = prod;
+
+				// carga datos nuevos y pinta
+			planta_graph.tools.getProductos(prod);
+		},
+		change_year: function(e){
+			
+			e.preventDefault();
+
+			$('#years .act').removeClass('act');
+			
+			var year = $(this).addClass('act').data('year');
+			if(!year || planta_graph.actYear == year) { console.log('no hay año'); return; };
+
+			planta_graph.actYear = year;
+
+				// actualiza el dibujo
+			planta_graph.tools.draw();
+		}
+	},
+
+	tools: {
+
+		handleResize: function() {
+			planta_graph.tools.updateProjection();
+			planta_graph.tools.initBG();
+			
+			if(planta_graph.ready) planta_graph.tools.draw();
+			
+			planta_graph.ready = true;
+		},
+
+		updateProjection: function() {
+
+		   	var width = $(window).width();
+		   	var height = width / 1.6;
+
+		   	planta_graph.viz.$em.css({
+		   		width: width,
+		   		height: height
+		   	});
+
+		   	planta_graph.viz.svg = d3.select('#viz');
+
+		   	planta_graph.viz.projection = d3.geoMercator()
+			    .scale(170 * (width / 1000))
+			    .translate([width / 2, height / 2])
+			    .precision(51);
+
+			planta_graph.viz.path = d3.geoPath().projection(planta_graph.viz.projection);
+
+		},
+
+		initBG: function() {
+
+			d3.json("./world-50m.json", function(error, world) {
+				if (error) throw error;
+
+				var countries = topojson.feature(world, world.objects.countries).features;
+				// var neighbors = topojson.neighbors(world.objects.countries.geometries);
+
+				planta_graph.viz.svg.selectAll('*').remove()
+
+				planta_graph.viz.svg.selectAll(".country")
+					.data(countries)
+					.enter()
+						.insert("path", ".graticule")
+							.attr('d', planta_graph.viz.path)
+							.attr('class', "country")
+							.style('stroke', '#ccc')
+							.style('fill', 'none')
+							.style('stroke-width', '1');
+
+			});
+		},
+
+		loadCountries: function(cb) {
+
+			d3.json(planta_graph.pathPaises, function(error, world) {
+			  	
+			  	if (error) throw error;
+
+			  	var paises = [];
+			  	for (var key in world) {
+				  if (world.hasOwnProperty(key)) {
+				    var pais = world[key];
+				    pais.key = key;
+				    paises.push(pais);
+				  }
+				}
+
+				planta_graph.data.countries = paises;
+				
+				if(cb) cb();
+			});
+		},
+
+		getProductos: function(producto) {
+			d3.json(planta_graph.pathData + producto + '.json', function(error, data){
+			    
+			    if (error) throw error;
+
+				planta_graph.data.prod = data;
+
+				planta_graph.tools.draw();
+			});
+		},
+
+		draw: function() {
+
+			if(!planta_graph.data.countries) planta_graph.tools.loadCountries(function(){ 
+				planta_graph.tools.draw();
+				return;
+			});
+
+			// console.log(planta_graph.actYear, planta_graph.actYear, planta_graph.data.prod);
+
+			var ref = {};
+			var max = 0;
+
+		  	for (var importador in planta_graph.data.prod[planta_graph.actYear]) {
+			  if (planta_graph.data.prod[planta_graph.actYear].hasOwnProperty(importador)) {
+			  	for (var exportador in planta_graph.data.prod[planta_graph.actYear][importador]) {
+				  if (planta_graph.data.prod[planta_graph.actYear][importador].hasOwnProperty(exportador)) {
+				  	
+				  	if(!ref[importador]) ref[importador] = {
+						imps: [],
+						totalImps: 0,
+						exps: [],
+						totalExps: 0
+					};
+				  	if(!ref[exportador]) ref[exportador] = {
+						imps: [],
+						totalImps: 0,
+						exps: [],
+						totalExps: 0
+					};
+			  		
+			  		ref[importador].imps[exportador] = planta_graph.data.prod[planta_graph.actYear][importador][exportador];
+			  		ref[importador].totalImps += planta_graph.data.prod[planta_graph.actYear][importador][exportador];
+
+			  		ref[exportador].exps[importador] = planta_graph.data.prod[planta_graph.actYear][importador][exportador];
+			  		ref[exportador].totalExps += planta_graph.data.prod[planta_graph.actYear][importador][exportador];
+
+			  		if(ref[importador].totalImps > max) max = ref[importador].totalImps;
+
+				  }
+				}
+			  }
+			}
+
+			// console.log(ref, max, planta_graph.data.countries);
+
+			planta_graph.viz.svg
+				.data(planta_graph.data.countries).enter()
+				.append("circle")
+				.attr('class', 'circ')
+				.attr("cx", function(d) {
+					// console.log(d, planta_graph.viz.projection([d.lon, d.lat]));
+					return planta_graph.viz.projection([d.lon, d.lat])[0]; 
+				})
+				.attr("cy", function(d) { return planta_graph.viz.projection([d.lon, d.lat])[1]; })
+				.attr("r", function(d) {
+					console.log(ref)
+				  	for (var key in ref) {
+					  if (ref.hasOwnProperty(key)) {
+					  	if(key == d.key) {
+					  		var val = ref[key].totalExps / max;
+					  		return (val / 0.1) ? (100 * val) : 0;
+					  	}
+					  }
+					}
+				})
+				.attr("fill", "red")
+				.on("mouseenter", function(d){ console.log(d); })
+				
+		}
+	}
+};
+
+
+planta_graph.init();
+
+
+
+function throttle (callback, limit) {   // http://sampsonblog.com/749/simple-throttle-function modificado!
+    var wait = false;                 // Initially, we're not waiting
+    return function () {              // We return a throttled function
+        if (!wait) {                  // If we're not waiting
+                                       // Execute users function
+            wait = true;              // Prevent future invocations
+            setTimeout(function () {  // After a period of time
+                callback.call();
+                wait = false;         // And allow future invocations
+            }, limit);
+        }
+    }
+}
+</script>
+</body>
+</html>

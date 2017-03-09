@@ -1,0 +1,1766 @@
+{
+    "ago": {
+        "name": "Angola",
+        "cont": "África",
+        "reg": "África Central",
+        "lat": "-8.833333333333334",
+        "lon": "13.216667"
+    },
+    "bdi": {
+        "name": "Burundi",
+        "cont": "África",
+        "reg": "África Oriental",
+        "lat": "-3.3666666666666667",
+        "lon": "29.350000"
+    },
+    "ben": {
+        "name": "Benín",
+        "cont": "África",
+        "reg": "África Occidental",
+        "lat": "6.483333333333333",
+        "lon": "2.616667"
+    },
+    "bfa": {
+        "name": "Burkina Faso",
+        "cont": "África",
+        "reg": "África Occidental",
+        "lat": "12.366666666666667",
+        "lon": "-1.516667"
+    },
+    "bwa": {
+        "name": "Botsuana",
+        "cont": "África",
+        "reg": "África austral",
+        "lat": "-24.633333333333333",
+        "lon": "25.900000"
+    },
+    "caf": {
+        "name": "República Centroafricana",
+        "cont": "África",
+        "reg": "África Central",
+        "lat": "4.366666666666666",
+        "lon": "18.583333"
+    },
+    "civ": {
+        "name": "Costa de Marfil",
+        "cont": "África",
+        "reg": "África Occidental",
+        "lat": "6.816666666666666",
+        "lon": "-5.266667"
+    },
+    "cmr": {
+        "name": "Camerún",
+        "cont": "África",
+        "reg": "África Central",
+        "lat": "3.8666666666666667",
+        "lon": "11.516667"
+    },
+    "cod": {
+        "name": "República Democrática del Congo",
+        "cont": "África",
+        "reg": "África Central",
+        "lat": "-4.316666666666666",
+        "lon": "15.300000"
+    },
+    "cog": {
+        "name": "Congo (República del)",
+        "cont": "África",
+        "reg": "África Central",
+        "lat": "-4.316666666666666",
+        "lon": "15.300000"
+    },
+    "com": {
+        "name": "Comoras",
+        "cont": "África",
+        "reg": "África Oriental",
+        "lat": "-11.7",
+        "lon": "43.233333"
+    },
+    "cpv": {
+        "name": "Cabo Verde",
+        "cont": "África",
+        "reg": "África Occidental",
+        "lat": "14.916666666666666",
+        "lon": "-23.516667"
+    },
+    "dji": {
+        "name": "Yibuti",
+        "cont": "África",
+        "reg": "África Oriental",
+        "lat": "11.583333333333334",
+        "lon": "43.150000"
+    },
+    "dza": {
+        "name": "Argelia",
+        "cont": "África",
+        "reg": "África del Norte",
+        "lat": "36.75",
+        "lon": "3.050000"
+    },
+    "egy": {
+        "name": "Egipto",
+        "cont": "África",
+        "reg": "África del Norte",
+        "lat": "30.05",
+        "lon": "31.250000"
+    },
+    "eri": {
+        "name": "Eritrea",
+        "cont": "África",
+        "reg": "África Oriental",
+        "lat": "15.333333333333334",
+        "lon": "38.933333"
+    },
+    "esh": {
+        "name": "Sahara Occidental",
+        "cont": "África",
+        "reg": "África del Norte",
+        "lat": "27.153611",
+        "lon": "-13.203333"
+    },
+    "eth": {
+        "name": "Etiopía",
+        "cont": "África",
+        "reg": "África Oriental",
+        "lat": "9.033333333333333",
+        "lon": "38.700000"
+    },
+    "gab": {
+        "name": "Gabón",
+        "cont": "África",
+        "reg": "África Central",
+        "lat": "0.38333333333333336",
+        "lon": "9.450000"
+    },
+    "gha": {
+        "name": "Ghana",
+        "cont": "África",
+        "reg": "África Occidental",
+        "lat": "5.55",
+        "lon": "-0.216667"
+    },
+    "gin": {
+        "name": "Guinea",
+        "cont": "África",
+        "reg": "África Occidental",
+        "lat": "9.5",
+        "lon": "-13.700000"
+    },
+    "gmb": {
+        "name": "Gambia",
+        "cont": "África",
+        "reg": "África Occidental",
+        "lat": "13.45",
+        "lon": "-16.566667"
+    },
+    "gnb": {
+        "name": "Guinea-Bissau",
+        "cont": "África",
+        "reg": "África Occidental",
+        "lat": "11.85",
+        "lon": "-15.583333"
+    },
+    "gnq": {
+        "name": "Guinea Ecuatorial",
+        "cont": "África",
+        "reg": "África Central",
+        "lat": "3.75",
+        "lon": "8.783333"
+    },
+    "ken": {
+        "name": "Kenia",
+        "cont": "África",
+        "reg": "África Oriental",
+        "lat": "-1.2833333333333332",
+        "lon": "36.816667"
+    },
+    "lbr": {
+        "name": "Liberia",
+        "cont": "África",
+        "reg": "África Occidental",
+        "lat": "6.3",
+        "lon": "-10.800000"
+    },
+    "lby": {
+        "name": "Libia",
+        "cont": "África",
+        "reg": "África del Norte",
+        "lat": "32.88333333333333",
+        "lon": "13.166667"
+    },
+    "lso": {
+        "name": "Lesoto",
+        "cont": "África",
+        "reg": "África austral",
+        "lat": "-29.316666666666666",
+        "lon": "27.483333"
+    },
+    "mar": {
+        "name": "Marruecos",
+        "cont": "África",
+        "reg": "África del Norte",
+        "lat": "34.016666666666666",
+        "lon": "-6.816667"
+    },
+    "mdg": {
+        "name": "Madagascar",
+        "cont": "África",
+        "reg": "África Oriental",
+        "lat": "-18.916666666666668",
+        "lon": "47.516667"
+    },
+    "mli": {
+        "name": "Malí",
+        "cont": "África",
+        "reg": "África Occidental",
+        "lat": "12.65",
+        "lon": "-8.000000"
+    },
+    "moz": {
+        "name": "Mozambique",
+        "cont": "África",
+        "reg": "África Oriental",
+        "lat": "-25.95",
+        "lon": "32.583333"
+    },
+    "mrt": {
+        "name": "Mauritania",
+        "cont": "África",
+        "reg": "África Occidental",
+        "lat": "18.066666666666666",
+        "lon": "-15.966667"
+    },
+    "mus": {
+        "name": "Mauricio",
+        "cont": "África",
+        "reg": "África Oriental",
+        "lat": "-20.15",
+        "lon": "57.483333"
+    },
+    "mwi": {
+        "name": "Malaui",
+        "cont": "África",
+        "reg": "África Oriental",
+        "lat": "-13.966666666666667",
+        "lon": "33.783333"
+    },
+    "myt": {
+        "name": "Mayotte",
+        "cont": "África",
+        "reg": "África Oriental",
+        "lat": "-12.843056",
+        "lon": "45.138333"
+    },
+    "nam": {
+        "name": "Namibia",
+        "cont": "África",
+        "reg": "África austral",
+        "lat": "-22.566666666666666",
+        "lon": "17.083333"
+    },
+    "ner": {
+        "name": "Níger",
+        "cont": "África",
+        "reg": "África Occidental",
+        "lat": "13.516666666666667",
+        "lon": "2.116667"
+    },
+    "nga": {
+        "name": "Nigeria",
+        "cont": "África",
+        "reg": "África Occidental",
+        "lat": "9.083333333333334",
+        "lon": "7.533333"
+    },
+    "reu": {
+        "name": "Reunión",
+        "cont": "África",
+        "reg": "África Oriental",
+        "lat": "-21.114444",
+        "lon": "55.5325"
+    },
+    "rwa": {
+        "name": "Ruanda",
+        "cont": "África",
+        "reg": "África Oriental",
+        "lat": "-1.95",
+        "lon": "30.050000"
+    },
+    "sdn": {
+        "name": "Sudán",
+        "cont": "África",
+        "reg": "África del Norte",
+        "lat": "15.6",
+        "lon": "32.533333"
+    },
+    "sen": {
+        "name": "Senegal",
+        "cont": "África",
+        "reg": "África Occidental",
+        "lat": "14.733333333333333",
+        "lon": "-17.633333"
+    },
+    "shn": {
+        "name": "Santa Helena",
+        "cont": "África",
+        "reg": "África Occidental",
+        "lat": "-15.933333333333334",
+        "lon": "-5.716667"
+    },
+    "sle": {
+        "name": "Sierra Leona",
+        "cont": "África",
+        "reg": "África Occidental",
+        "lat": "8.483333333333333",
+        "lon": "-13.233333"
+    },
+    "som": {
+        "name": "Somalia",
+        "cont": "África",
+        "reg": "África Oriental",
+        "lat": "2.066666666666667",
+        "lon": "45.333333"
+    },
+    "ssd": {
+        "name": "Sudán del Sur",
+        "cont": "África",
+        "reg": "África Oriental",
+        "lat": "4.85",
+        "lon": "31.616667"
+    },
+    "stp": {
+        "name": "Santo Tomé y Príncipe",
+        "cont": "África",
+        "reg": "África Central",
+        "lat": "0.3333333333333333",
+        "lon": "6.733333"
+    },
+    "swz": {
+        "name": "Suazilandia",
+        "cont": "África",
+        "reg": "África austral",
+        "lat": "-26.316666666666666",
+        "lon": "31.133333"
+    },
+    "syc": {
+        "name": "Seychelles",
+        "cont": "África",
+        "reg": "África Oriental",
+        "lat": "-4.616666666666667",
+        "lon": "55.450000"
+    },
+    "tcd": {
+        "name": "Chad",
+        "cont": "África",
+        "reg": "África Central",
+        "lat": "12.1",
+        "lon": "15.033333"
+    },
+    "tgo": {
+        "name": "Togo",
+        "cont": "África",
+        "reg": "África Occidental",
+        "lat": "6.116666666666666",
+        "lon": "1.216667"
+    },
+    "tun": {
+        "name": "Túnez",
+        "cont": "África",
+        "reg": "África del Norte",
+        "lat": "36.8",
+        "lon": "10.183333"
+    },
+    "tza": {
+        "name": "Tanzania",
+        "cont": "África",
+        "reg": "África Oriental",
+        "lat": "-6.8",
+        "lon": "39.283333"
+    },
+    "uga": {
+        "name": "Uganda",
+        "cont": "África",
+        "reg": "África Oriental",
+        "lat": "0.31666666666666665",
+        "lon": "32.550000"
+    },
+    "zaf": {
+        "name": "Sudáfrica",
+        "cont": "África",
+        "reg": "África austral",
+        "lat": "-25.7",
+        "lon": "28.216667"
+    },
+    "zmb": {
+        "name": "Zambia",
+        "cont": "África",
+        "reg": "África Oriental",
+        "lat": "-15.416666666666666",
+        "lon": "28.283333"
+    },
+    "zwe": {
+        "name": "Zimbabue",
+        "cont": "África",
+        "reg": "África Oriental",
+        "lat": "-17.816666666666666",
+        "lon": "31.033333"
+    },
+    "ata": {
+        "name": "Antártico",
+        "cont": "Antarctica",
+        "reg": "Antártida",
+        "lat": "90",
+        "lon": "0"
+    },
+    "atf": {
+        "name": "Territorio Francés Surantártico",
+        "cont": "Antarctica",
+        "reg": "Antártida",
+        "lat": "90",
+        "lon": "0"
+    },
+    "bvt": {
+        "name": "Isla de Bouvet",
+        "cont": "Antarctica",
+        "reg": "Antártida",
+        "lat": "90",
+        "lon": "0"
+    },
+    "hmd": {
+        "name": "Islas Heard y McDonald",
+        "cont": "Antarctica",
+        "reg": "Antártida",
+        "lat": "90",
+        "lon": "0"
+    },
+    "sgs": {
+        "name": "South Georgia South Sandwich Islands",
+        "cont": "Antarctica",
+        "reg": "Antártida",
+        "lat": "90",
+        "lon": "0"
+    },
+    "afg": {
+        "name": "Afganistán",
+        "cont": "Asia",
+        "reg": "Asia del Sur",
+        "lat": "34.516666666666666",
+        "lon": "69.183333"
+    },
+    "are": {
+        "name": "Emiratos Árabes Unidos",
+        "cont": "Asia",
+        "reg": "Asia Occidental",
+        "lat": "24.466666666666665",
+        "lon": "54.366667"
+    },
+    "arm": {
+        "name": "Armenia",
+        "cont": "Asia",
+        "reg": "Asia Occidental",
+        "lat": "40.166666666666664",
+        "lon": "44.500000"
+    },
+    "aze": {
+        "name": "Azerbaiyán",
+        "cont": "Asia",
+        "reg": "Asia Occidental",
+        "lat": "40.38333333333333",
+        "lon": "49.866667"
+    },
+    "bgd": {
+        "name": "Bangladesh",
+        "cont": "Asia",
+        "reg": "Asia del Sur",
+        "lat": "23.716666666666665",
+        "lon": "90.400000"
+    },
+    "bhr": {
+        "name": "Bahréin",
+        "cont": "Asia",
+        "reg": "Asia Occidental",
+        "lat": "26.233333333333334",
+        "lon": "50.566667"
+    },
+    "brn": {
+        "name": "Brunéi",
+        "cont": "Asia",
+        "reg": "South-Asia Oriental",
+        "lat": "4.5",
+        "lon": "114.666667"
+    },
+    "btn": {
+        "name": "Bután",
+        "cont": "Asia",
+        "reg": "Asia del Sur",
+        "lat": "27.466666666666665",
+        "lon": "89.633333"
+    },
+    "cck": {
+        "name": "Islas de Cocos",
+        "cont": "Asia",
+        "reg": "",
+        "lat": "-12.16",
+        "lon": "96.833333"
+    },
+    "chn": {
+        "name": "China",
+        "cont": "Asia",
+        "reg": "Asia Oriental",
+        "lat": "39.916666666666664",
+        "lon": "116.383333"
+    },
+    "cxr": {
+        "name": "Isla de Navidad",
+        "cont": "Asia",
+        "reg": "",
+        "lat": "-10.416666666666666",
+        "lon": "105.716667"
+    },
+    "cyp": {
+        "name": "Chipre",
+        "cont": "Asia",
+        "reg": "Asia Occidental",
+        "lat": "35.166666666666664",
+        "lon": "33.366667"
+    },
+    "geo": {
+        "name": "Georgia",
+        "cont": "Asia",
+        "reg": "Asia Occidental",
+        "lat": "41.68333333333333",
+        "lon": "44.833333"
+    },
+    "hkg": {
+        "name": "Hong Kong",
+        "cont": "Asia",
+        "reg": "Asia Oriental",
+        "lat": "22.3",
+        "lon": "114.2"
+    },
+    "idn": {
+        "name": "Indonesia",
+        "cont": "Asia",
+        "reg": "South-Asia Oriental",
+        "lat": "-6.166666666666667",
+        "lon": "106.816667"
+    },
+    "ind": {
+        "name": "India",
+        "cont": "Asia",
+        "reg": "Asia del Sur",
+        "lat": "28.6",
+        "lon": "77.200000"
+    },
+    "iot": {
+        "name": "Territorio Británico en el Océano Índico",
+        "cont": "Asia",
+        "reg": "",
+        "lat": "-7.3",
+        "lon": "72.400000"
+    },
+    "irn": {
+        "name": "Irán",
+        "cont": "Asia",
+        "reg": "Asia del Sur",
+        "lat": "35.7",
+        "lon": "51.416667"
+    },
+    "irq": {
+        "name": "Iraq",
+        "cont": "Asia",
+        "reg": "Asia Occidental",
+        "lat": "33.333333333333336",
+        "lon": "44.400000"
+    },
+    "isr": {
+        "name": "Israel",
+        "cont": "Asia",
+        "reg": "Asia Occidental",
+        "lat": "31.766666666666666",
+        "lon": "35.233333"
+    },
+    "jor": {
+        "name": "Jordania",
+        "cont": "Asia",
+        "reg": "Asia Occidental",
+        "lat": "31.95",
+        "lon": "35.933333"
+    },
+    "jpn": {
+        "name": "Japón",
+        "cont": "Asia",
+        "reg": "Asia Oriental",
+        "lat": "35.68333333333333",
+        "lon": "139.750000"
+    },
+    "kaz": {
+        "name": "Kazajistán",
+        "cont": "Asia",
+        "reg": "Asia Central",
+        "lat": "51.166666666666664",
+        "lon": "71.416667"
+    },
+    "kgz": {
+        "name": "Kirguistán",
+        "cont": "Asia",
+        "reg": "Asia Central",
+        "lat": "42.86666666666667",
+        "lon": "74.600000"
+    },
+    "khm": {
+        "name": "Camboya",
+        "cont": "Asia",
+        "reg": "South-Asia Oriental",
+        "lat": "11.55",
+        "lon": "104.916667"
+    },
+    "kor": {
+        "name": "Corea del Sur",
+        "cont": "Asia",
+        "reg": "Asia Oriental",
+        "lat": "37.55",
+        "lon": "126.983333"
+    },
+    "kwt": {
+        "name": "Kuwait",
+        "cont": "Asia",
+        "reg": "Asia Occidental",
+        "lat": "29.366666666666667",
+        "lon": "47.966667"
+    },
+    "lao": {
+        "name": "Laos",
+        "cont": "Asia",
+        "reg": "South-Asia Oriental",
+        "lat": "17.966666666666665",
+        "lon": "102.600000"
+    },
+    "lbn": {
+        "name": "Líbano",
+        "cont": "Asia",
+        "reg": "Asia Occidental",
+        "lat": "33.86666666666667",
+        "lon": "35.500000"
+    },
+    "lka": {
+        "name": "Sri Lanka",
+        "cont": "Asia",
+        "reg": "Asia del Sur",
+        "lat": "6.916666666666667",
+        "lon": "79.833333"
+    },
+    "mac": {
+        "name": "Macao",
+        "cont": "Asia",
+        "reg": "Asia Oriental",
+        "lat": "22.166667",
+        "lon": "113.55"
+    },
+    "mdv": {
+        "name": "Maldivas",
+        "cont": "Asia",
+        "reg": "Asia del Sur",
+        "lat": "4.166666666666667",
+        "lon": "73.500000"
+    },
+    "mid": {
+        "name": "Islas Midway",
+        "cont": "",
+        "reg": "",
+        "lat": "28.2",
+        "lon": "-177.35"
+    },
+    "mmr": {
+        "name": "Burma",
+        "cont": "Asia",
+        "reg": "South-Asia Oriental",
+        "lat": "28.2",
+        "lon": "-177.35"
+    },
+    "mng": {
+        "name": "Mongolia",
+        "cont": "Asia",
+        "reg": "Asia Oriental",
+        "lat": "47.916666666666664",
+        "lon": "106.916667"
+    },
+    "mys": {
+        "name": "Malasia",
+        "cont": "Asia",
+        "reg": "South-Asia Oriental",
+        "lat": "3.1666666666666665",
+        "lon": "101.700000"
+    },
+    "npl": {
+        "name": "Nepal",
+        "cont": "Asia",
+        "reg": "Asia del Sur",
+        "lat": "27.716666666666665",
+        "lon": "85.316667"
+    },
+    "omn": {
+        "name": "Omán",
+        "cont": "Asia",
+        "reg": "Asia Occidental",
+        "lat": "23.616666666666667",
+        "lon": "58.583333"
+    },
+    "pak": {
+        "name": "Pakistán",
+        "cont": "Asia",
+        "reg": "Asia del Sur",
+        "lat": "33.68333333333333",
+        "lon": "73.050000"
+    },
+    "phl": {
+        "name": "Filipinas",
+        "cont": "Asia",
+        "reg": "South-Asia Oriental",
+        "lat": "14.6",
+        "lon": "120.966667"
+    },
+    "prk": {
+        "name": "Corea del Norte",
+        "cont": "Asia",
+        "reg": "Asia Oriental",
+        "lat": "39.016666666666666",
+        "lon": "125.750000"
+    },
+    "pse": {
+        "name": "Palestina",
+        "cont": "Asia",
+        "reg": "Asia Occidental",
+        "lat": "31.766666666666666",
+        "lon": "35.233333"
+    },
+    "qat": {
+        "name": "Qatar",
+        "cont": "Asia",
+        "reg": "Asia Occidental",
+        "lat": "25.283333333333335",
+        "lon": "51.533333"
+    },
+    "sau": {
+        "name": "Arabia Saudita",
+        "cont": "Asia",
+        "reg": "Asia Occidental",
+        "lat": "24.65",
+        "lon": "46.700000"
+    },
+    "sgp": {
+        "name": "Singapur",
+        "cont": "Asia",
+        "reg": "South-Asia Oriental",
+        "lat": "1.2833333333333332",
+        "lon": "103.850000"
+    },
+    "syr": {
+        "name": "Siria",
+        "cont": "Asia",
+        "reg": "Asia Occidental",
+        "lat": "33.5",
+        "lon": "36.300000"
+    },
+    "tha": {
+        "name": "Tailandia",
+        "cont": "Asia",
+        "reg": "South-Asia Oriental",
+        "lat": "13.75",
+        "lon": "100.516667"
+    },
+    "tjk": {
+        "name": "Tayikistán",
+        "cont": "Asia",
+        "reg": "Asia Central",
+        "lat": "38.55",
+        "lon": "68.766667"
+    },
+    "tkm": {
+        "name": "Turkmenistán",
+        "cont": "Asia",
+        "reg": "Asia Central",
+        "lat": "37.95",
+        "lon": "58.383333"
+    },
+    "tls": {
+        "name": "Timor-Leste",
+        "cont": "Asia",
+        "reg": "South-Asia Oriental",
+        "lat": "-8.583333333333334",
+        "lon": "125.600000"
+    },
+    "tur": {
+        "name": "Turquía",
+        "cont": "Asia",
+        "reg": "Asia Occidental",
+        "lat": "39.93333333333333",
+        "lon": "32.866667"
+    },
+    "twn": {
+        "name": "Taiwán",
+        "cont": "Asia",
+        "reg": "Asia Oriental",
+        "lat": "25.033333333333335",
+        "lon": "121.516667"
+    },
+    "uzb": {
+        "name": "Uzbekistán",
+        "cont": "Asia",
+        "reg": "Asia Central",
+        "lat": "41.31666666666667",
+        "lon": "69.250000"
+    },
+    "vnm": {
+        "name": "Vietnam",
+        "cont": "Asia",
+        "reg": "South-Asia Oriental",
+        "lat": "21.033333333333335",
+        "lon": "105.850000"
+    },
+    "yem": {
+        "name": "Yemen democrático",
+        "cont": "Asia",
+        "reg": "Asia Occidental",
+        "lat": "15.35",
+        "lon": "44.200000"
+    },
+    "alb": {
+        "name": "Albania",
+        "cont": "Europa",
+        "reg": "Europa mediterránea",
+        "lat": "41.31666666666667",
+        "lon": "19.816667"
+    },
+    "and": {
+        "name": "Andorra",
+        "cont": "Europa",
+        "reg": "Europa mediterránea",
+        "lat": "42.5",
+        "lon": "1.516667"
+    },
+    "aut": {
+        "name": "Austria",
+        "cont": "Europa",
+        "reg": "Europa Occidental",
+        "lat": "48.2",
+        "lon": "16.366667"
+    },
+    "bel": {
+        "name": "Bélgica",
+        "cont": "Europa",
+        "reg": "Europa Occidental",
+        "lat": "50.833333333333336",
+        "lon": "4.333333"
+    },
+    "bgr": {
+        "name": "Bulgaria",
+        "cont": "Europa",
+        "reg": "Europa del Este",
+        "lat": "42.68333333333333",
+        "lon": "23.316667"
+    },
+    "bih": {
+        "name": "Bosnia y Herzegovina",
+        "cont": "Europa",
+        "reg": "Europa mediterránea",
+        "lat": "43.86666666666667",
+        "lon": "18.416667"
+    },
+    "blr": {
+        "name": "Bielorrusia",
+        "cont": "Europa",
+        "reg": "Europa del Este",
+        "lat": "53.9",
+        "lon": "27.566667"
+    },
+    "blx": {
+        "name": "Bélgica-Luxemburgo",
+        "cont": "Europa",
+        "reg": "Europa del Este",
+        "lat": "50.833333333333336",
+        "lon": "4.333333"
+    },
+    "che": {
+        "name": "Suiza",
+        "cont": "Europa",
+        "reg": "Europa Occidental",
+        "lat": "46.916666666666664",
+        "lon": "7.466667"
+    },
+    "chi": {
+        "name": "Islas del Canal",
+        "cont": "Europa",
+        "reg": "Europa Occidental",
+        "lat": "49.335862",
+        "lon": "-2.334595"
+    },
+    "cze": {
+        "name": "República Checa",
+        "cont": "Europa",
+        "reg": "Europa del Este",
+        "lat": "50.083333333333336",
+        "lon": "14.466667"
+    },
+    "deu": {
+        "name": "Alemania",
+        "cont": "Europa",
+        "reg": "Europa Occidental",
+        "lat": "52.516666666666666",
+        "lon": "13.400000"
+    },
+    "dnk": {
+        "name": "Dinamarca",
+        "cont": "Europa",
+        "reg": "Europa septentrional",
+        "lat": "55.666666666666664",
+        "lon": "12.583333"
+    },
+    "esp": {
+        "name": "España",
+        "cont": "Europa",
+        "reg": "Europa mediterránea",
+        "lat": "40.4",
+        "lon": "-3.683333"
+    },
+    "est": {
+        "name": "Estonia",
+        "cont": "Europa",
+        "reg": "Europa septentrional",
+        "lat": "59.43333333333333",
+        "lon": "24.716667"
+    },
+    "fin": {
+        "name": "Finlandia",
+        "cont": "Europa",
+        "reg": "Europa septentrional",
+        "lat": "60.166666666666664",
+        "lon": "24.933333"
+    },
+    "fra": {
+        "name": "Francia",
+        "cont": "Europa",
+        "reg": "Europa Occidental",
+        "lat": "48.86666666666667",
+        "lon": "2.333333"
+    },
+    "fro": {
+        "name": "Islas Feroe",
+        "cont": "Europa",
+        "reg": "Europa septentrional",
+        "lat": "62",
+        "lon": "-6.766667"
+    },
+    "gbr": {
+        "name": "Reino Unido",
+        "cont": "Europa",
+        "reg": "Europa septentrional",
+        "lat": "51.5",
+        "lon": "-0.083333"
+    },
+    "gib": {
+        "name": "Gibraltar",
+        "cont": "Europa",
+        "reg": "Europa mediterránea",
+        "lat": "36.13333333333333",
+        "lon": "-5.350000"
+    },
+    "grc": {
+        "name": "Grecia",
+        "cont": "Europa",
+        "reg": "Europa mediterránea",
+        "lat": "37.983333333333334",
+        "lon": "23.733333"
+    },
+    "hrv": {
+        "name": "Croacia",
+        "cont": "Europa",
+        "reg": "Europa mediterránea",
+        "lat": "45.8",
+        "lon": "16.000000"
+    },
+    "hun": {
+        "name": "Hungría",
+        "cont": "Europa",
+        "reg": "Europa del Este",
+        "lat": "47.5",
+        "lon": "19.083333"
+    },
+    "imn": {
+        "name": "Isla de Man",
+        "cont": "Europa",
+        "reg": "Europa septentrional",
+        "lat": "54.15",
+        "lon": "-4.483333"
+    },
+    "irl": {
+        "name": "Irlanda",
+        "cont": "Europa",
+        "reg": "Europa septentrional",
+        "lat": "53.31666666666667",
+        "lon": "-6.233333"
+    },
+    "isl": {
+        "name": "Islandia",
+        "cont": "Europa",
+        "reg": "Europa septentrional",
+        "lat": "64.15",
+        "lon": "-21.950000"
+    },
+    "ita": {
+        "name": "Italia",
+        "cont": "Europa",
+        "reg": "Europa mediterránea",
+        "lat": "41.9",
+        "lon": "12.483333"
+    },
+    "ksv": {
+        "name": "Kosovo",
+        "cont": "Europa",
+        "reg": "Europa del Este",
+        "lat": "42.666666666666664",
+        "lon": "21.166667"
+    },
+    "lie": {
+        "name": "Liechtenstein",
+        "cont": "Europa",
+        "reg": "Europa Occidental",
+        "lat": "47.13333333333333",
+        "lon": "9.516667"
+    },
+    "ltu": {
+        "name": "Lituania",
+        "cont": "Europa",
+        "reg": "Europa septentrional",
+        "lat": "54.68333333333333",
+        "lon": "25.316667"
+    },
+    "lux": {
+        "name": "Luxemburgo",
+        "cont": "Europa",
+        "reg": "Europa Occidental",
+        "lat": "49.6",
+        "lon": "6.116667"
+    },
+    "lva": {
+        "name": "Letonia",
+        "cont": "Europa",
+        "reg": "Europa septentrional",
+        "lat": "56.95",
+        "lon": "24.100000"
+    },
+    "mco": {
+        "name": "Mónaco",
+        "cont": "Europa",
+        "reg": "Europa Occidental",
+        "lat": "43.733333333333334",
+        "lon": "7.416667"
+    },
+    "mda": {
+        "name": "Moldavia",
+        "cont": "Europa",
+        "reg": "Europa del Este",
+        "lat": "47",
+        "lon": "28.850000"
+    },
+    "mkd": {
+        "name": "Macedonia",
+        "cont": "Europa",
+        "reg": "Europa mediterránea",
+        "lat": "42",
+        "lon": "21.433333"
+    },
+    "mlt": {
+        "name": "Malta",
+        "cont": "Europa",
+        "reg": "Europa mediterránea",
+        "lat": "35.88333333333333",
+        "lon": "14.500000"
+    },
+    "mne": {
+        "name": "Montenegro",
+        "cont": "Europa",
+        "reg": "Europa mediterránea",
+        "lat": "42.43333333333333",
+        "lon": "19.266667"
+    },
+    "nld": {
+        "name": "Países Bajos",
+        "cont": "Europa",
+        "reg": "Europa Occidental",
+        "lat": "52.35",
+        "lon": "4.916667"
+    },
+    "nor": {
+        "name": "Noruega",
+        "cont": "Europa",
+        "reg": "Europa septentrional",
+        "lat": "59.916666666666664",
+        "lon": "10.750000"
+    },
+    "pol": {
+        "name": "Polonia",
+        "cont": "Europa",
+        "reg": "Europa del Este",
+        "lat": "52.25",
+        "lon": "21.000000"
+    },
+    "prt": {
+        "name": "Portugal",
+        "cont": "Europa",
+        "reg": "Europa mediterránea",
+        "lat": "38.71666666666667",
+        "lon": "-9.133333"
+    },
+    "rou": {
+        "name": "Rumania",
+        "cont": "Europa",
+        "reg": "Europa del Este",
+        "lat": "44.43333333333333",
+        "lon": "26.100000"
+    },
+    "rus": {
+        "name": "Rusia",
+        "cont": "Europa",
+        "reg": "Europa del Este",
+        "lat": "55.75",
+        "lon": "37.600000"
+    },
+    "scg": {
+        "name": "Serbia y Montenegro",
+        "cont": "Europa",
+        "reg": "Europa del Este",
+        "lat": "44.833333333333336",
+        "lon": "20.500000"
+    },
+    "sjm": {
+        "name": "Islas Svalbard",
+        "cont": "Europa",
+        "reg": "Europa septentrional",
+        "lat": "78.21666666666667",
+        "lon": "15.633333"
+    },
+    "smr": {
+        "name": "San Marino",
+        "cont": "Europa",
+        "reg": "Europa mediterránea",
+        "lat": "43.93333333333333",
+        "lon": "12.416667"
+    },
+    "srb": {
+        "name": "Serbia",
+        "cont": "Europa",
+        "reg": "Europa mediterránea",
+        "lat": "44.833333333333336",
+        "lon": "20.500000"
+    },
+    "svk": {
+        "name": "Eslovaquia",
+        "cont": "Europa",
+        "reg": "Europa del Este",
+        "lat": "48.15",
+        "lon": "17.116667"
+    },
+    "svn": {
+        "name": "Eslovenia",
+        "cont": "Europa",
+        "reg": "Europa mediterránea",
+        "lat": "46.05",
+        "lon": "14.516667"
+    },
+    "swe": {
+        "name": "Suecia",
+        "cont": "Europa",
+        "reg": "Europa septentrional",
+        "lat": "59.333333333333336",
+        "lon": "18.050000"
+    },
+    "ukr": {
+        "name": "Ucrania",
+        "cont": "Europa",
+        "reg": "Europa del Este",
+        "lat": "50.43333333333333",
+        "lon": "30.516667"
+    },
+    "vat": {
+        "name": "Ciudad del Vaticano",
+        "cont": "Europa",
+        "reg": "Europa mediterránea",
+        "lat": "41.9",
+        "lon": "12.450000"
+    },
+    "yug": {
+        "name": "Yugoslavia",
+        "cont": "Europa",
+        "reg": "Europa del Este",
+        "lat": "44.833333333333336",
+        "lon": "20.500000"
+    },
+    "abw": {
+        "name": "Aruba",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "12.516666666666667",
+        "lon": "-70.033333"
+    },
+    "aia": {
+        "name": "Anguila",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "18.216666666666665",
+        "lon": "-63.050000"
+    },
+    "ant": {
+        "name": "Antillas Nederlandesas",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "12.116667",
+        "lon": "-68.933333"
+    },
+    "atg": {
+        "name": "Antigua y Barbuda",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "17.116666666666667",
+        "lon": "-61.850000"
+    },
+    "bes": {
+        "name": "Bonaire",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "12.183333",
+        "lon": "-68.25"
+    },
+    "bhs": {
+        "name": "Bahamas",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "25.083333333333332",
+        "lon": "-77.350000"
+    },
+    "blm": {
+        "name": "Saint Barthélemy",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "17.9",
+        "lon": "-62.833333"
+    },
+    "blz": {
+        "name": "Belice",
+        "cont": "América",
+        "reg": "Centroamérica",
+        "lat": "17.25",
+        "lon": "-88.766667"
+    },
+    "bmu": {
+        "name": "Bermudas",
+        "cont": "América",
+        "reg": "Norteamérica",
+        "lat": "32.28333333333333",
+        "lon": "-64.783333"
+    },
+    "brb": {
+        "name": "Barbados",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "13.1",
+        "lon": "-59.616667"
+    },
+    "can": {
+        "name": "Canadá",
+        "cont": "América",
+        "reg": "Norteamérica",
+        "lat": "45.416666666666664",
+        "lon": "-75.700000"
+    },
+    "cri": {
+        "name": "Costa Rica",
+        "cont": "América",
+        "reg": "Centroamérica",
+        "lat": "9.933333333333334",
+        "lon": "-84.083333"
+    },
+    "cub": {
+        "name": "Cuba",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "23.116666666666667",
+        "lon": "-82.350000"
+    },
+    "cuw": {
+        "name": "Curaçao",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "12.183333",
+        "lon": "-69"
+    },
+    "cym": {
+        "name": "Islas Caimán",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "19.3",
+        "lon": "-81.383333"
+    },
+    "dma": {
+        "name": "Dominica",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "15.3",
+        "lon": "-61.400000"
+    },
+    "dom": {
+        "name": "República Dominicana",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "18.466666666666665",
+        "lon": "-69.900000"
+    },
+    "grd": {
+        "name": "Granada",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "12.05",
+        "lon": "-61.750000"
+    },
+    "grl": {
+        "name": "Groenlandia",
+        "cont": "América",
+        "reg": "Norteamérica",
+        "lat": "64.18333333333334",
+        "lon": "-51.750000"
+    },
+    "gtm": {
+        "name": "Guatemala",
+        "cont": "América",
+        "reg": "Centroamérica",
+        "lat": "14.616666666666667",
+        "lon": "-90.516667"
+    },
+    "hnd": {
+        "name": "Honduras",
+        "cont": "América",
+        "reg": "Centroamérica",
+        "lat": "14.1",
+        "lon": "-87.216667"
+    },
+    "hti": {
+        "name": "Haití",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "18.533333333333335",
+        "lon": "-72.333333"
+    },
+    "jam": {
+        "name": "Jamaica",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "18",
+        "lon": "-76.800000"
+    },
+    "kna": {
+        "name": "San Cristóbal y Nieves",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "17.3",
+        "lon": "-62.716667"
+    },
+    "lca": {
+        "name": "Santa Lucía",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "14",
+        "lon": "-61.000000"
+    },
+    "maf": {
+        "name": "San Martín (Sint Maarten)",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "18.066667",
+        "lon": "-63.05"
+    },
+    "mex": {
+        "name": "México",
+        "cont": "América",
+        "reg": "Centroamérica",
+        "lat": "19.433333333333334",
+        "lon": "-99.133333"
+    },
+    "msr": {
+        "name": "Montserrat",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "16.7",
+        "lon": "-62.216667"
+    },
+    "mtq": {
+        "name": "Martinica",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "12.116667",
+        "lon": "-68.933333"
+    },
+    "naa": {
+        "name": "Antillas Nederlandesas y Arubas",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "14.666667",
+        "lon": "-61"
+    },
+    "nic": {
+        "name": "Nicaragua",
+        "cont": "América",
+        "reg": "Centroamérica",
+        "lat": "12.133333333333333",
+        "lon": "-86.250000"
+    },
+    "pan": {
+        "name": "Canal de Panamá",
+        "cont": "América",
+        "reg": "Centroamérica",
+        "lat": "9.08",
+        "lon": "-79.68"
+    },
+    "pri": {
+        "name": "Puerto Rico",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "18.466666666666665",
+        "lon": "-66.116667"
+    },
+    "slv": {
+        "name": "El Salvador",
+        "cont": "América",
+        "reg": "Centroamérica",
+        "lat": "13.7",
+        "lon": "-89.200000"
+    },
+    "spm": {
+        "name": "Saint Pierre y Miquelon",
+        "cont": "América",
+        "reg": "Norteamérica",
+        "lat": "46.766666666666666",
+        "lon": "-56.183333"
+    },
+    "tca": {
+        "name": "Islas Turcas y Caicos",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "21.466666666666665",
+        "lon": "-71.133333"
+    },
+    "tto": {
+        "name": "Trinidad y Tobago",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "10.65",
+        "lon": "-61.516667"
+    },
+    "usa": {
+        "name": "Estados Unidos",
+        "cont": "América",
+        "reg": "Norteamérica",
+        "lat": "38.904722",
+        "lon": "-77.016389"
+    },
+    "vct": {
+        "name": "San Vicente y las Granadinas",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "13.133333333333333",
+        "lon": "-61.216667"
+    },
+    "vgb": {
+        "name": "Islas Vírgenes Británicas",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "18.416666666666668",
+        "lon": "-64.616667"
+    },
+    "vir": {
+        "name": "Islas Vírgenes",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "18.416666666666668",
+        "lon": "-64.616667"
+    },
+    "asm": {
+        "name": "Samoa Americana",
+        "cont": "Oceanía",
+        "reg": "Polinesia",
+        "lat": "-14.266666666666667",
+        "lon": "-170.700000"
+    },
+    "aus": {
+        "name": "Australia",
+        "cont": "Oceanía",
+        "reg": "Australia y Nueva Zelanda",
+        "lat": "-35.266666666666666",
+        "lon": "149.133333"
+    },
+    "cok": {
+        "name": "Islas Cook",
+        "cont": "Oceanía",
+        "reg": "Polinesia",
+        "lat": "-21.2",
+        "lon": "-159.766667"
+    },
+    "fji": {
+        "name": "Fiyi",
+        "cont": "Oceanía",
+        "reg": "Melanesia",
+        "lat": "-18.133333333333333",
+        "lon": "178.416667"
+    },
+    "fsm": {
+        "name": "Micronesia",
+        "cont": "Oceanía",
+        "reg": "Micronesia",
+        "lat": "6.916667",
+        "lon": "158.25"
+    },
+    "glp": {
+        "name": "Guadalupe",
+        "cont": "América",
+        "reg": "Caribe",
+        "lat": "16.25",
+        "lon": "-61.583333"
+    },
+    "gum": {
+        "name": "Guam",
+        "cont": "Oceanía",
+        "reg": "Micronesia",
+        "lat": "13.466666666666667",
+        "lon": "144.733333"
+    },
+    "kir": {
+        "name": "Kiribati",
+        "cont": "Oceanía",
+        "reg": "Micronesia",
+        "lat": "-0.8833333333333333",
+        "lon": "169.533333"
+    },
+    "mhl": {
+        "name": "Islas Marshall",
+        "cont": "Oceanía",
+        "reg": "Micronesia",
+        "lat": "7.1",
+        "lon": "171.383333"
+    },
+    "mnp": {
+        "name": "Islas Marianas del Norte",
+        "cont": "Oceanía",
+        "reg": "Micronesia",
+        "lat": "15.2",
+        "lon": "145.750000"
+    },
+    "ncl": {
+        "name": "Nueva Caledonia",
+        "cont": "Oceanía",
+        "reg": "Melanesia",
+        "lat": "-22.266666666666666",
+        "lon": "166.450000"
+    },
+    "nfk": {
+        "name": "Isla Norfolk",
+        "cont": "Oceanía",
+        "reg": "Australia y Nueva Zelanda",
+        "lat": "-29.05",
+        "lon": "167.966667"
+    },
+    "niu": {
+        "name": "Niue",
+        "cont": "Oceanía",
+        "reg": "Polinesia",
+        "lat": "-19.016666666666666",
+        "lon": "-169.916667"
+    },
+    "nru": {
+        "name": "Nauru",
+        "cont": "Oceanía",
+        "reg": "Micronesia",
+        "lat": "-0.5477",
+        "lon": "166.920867"
+    },
+    "nzl": {
+        "name": "Nueva Zelanda",
+        "cont": "Oceanía",
+        "reg": "Australia y Nueva Zelanda",
+        "lat": "-41.3",
+        "lon": "174.783333"
+    },
+    "pcn": {
+        "name": "Islas Pitcairn",
+        "cont": "Oceanía",
+        "reg": "Polinesia",
+        "lat": "-25.066666666666666",
+        "lon": "-130.083333"
+    },
+    "plw": {
+        "name": "Palaos",
+        "cont": "Oceanía",
+        "reg": "Micronesia",
+        "lat": "7.483333333333333",
+        "lon": "134.633333"
+    },
+    "png": {
+        "name": "Papúa Nueva Guinea",
+        "cont": "Oceanía",
+        "reg": "Melanesia",
+        "lat": "-9.45",
+        "lon": "147.183333"
+    },
+    "pyf": {
+        "name": "Polinesia Francesa",
+        "cont": "Oceanía",
+        "reg": "Polinesia",
+        "lat": "-17.533333333333335",
+        "lon": "-149.566667"
+    },
+    "slb": {
+        "name": "Islas Salomón",
+        "cont": "Oceanía",
+        "reg": "Melanesia",
+        "lat": "-9.433333333333334",
+        "lon": "159.950000"
+    },
+    "tkl": {
+        "name": "Tokelau",
+        "cont": "Oceanía",
+        "reg": "Polinesia",
+        "lat": "-9.166667",
+        "lon": "-171.833333"
+    },
+    "ton": {
+        "name": "Tonga",
+        "cont": "Oceanía",
+        "reg": "Polinesia",
+        "lat": "-21.133333333333333",
+        "lon": "-175.200000"
+    },
+    "tuv": {
+        "name": "Tuvalu",
+        "cont": "Oceanía",
+        "reg": "Polinesia",
+        "lat": "-8.516666666666667",
+        "lon": "179.216667"
+    },
+    "vut": {
+        "name": "Vanuatu",
+        "cont": "Oceanía",
+        "reg": "Melanesia",
+        "lat": "-17.733333333333334",
+        "lon": "168.316667"
+    },
+    "wlf": {
+        "name": "Wallis y Futuna",
+        "cont": "Oceanía",
+        "reg": "Polinesia",
+        "lat": "-13.95",
+        "lon": "-171.933333"
+    },
+    "wsm": {
+        "name": "Samoa",
+        "cont": "Oceanía",
+        "reg": "Polinesia",
+        "lat": "-13.816666666666666",
+        "lon": "-171.766667"
+    },
+    "arg": {
+        "name": "Argentina",
+        "cont": "América",
+        "reg": "Sudamérica",
+        "lat": "-34.583333333333336",
+        "lon": "-58.666667"
+    },
+    "bol": {
+        "name": "Bolivia",
+        "cont": "América",
+        "reg": "Sudamérica",
+        "lat": "-16.5",
+        "lon": "-68.150000"
+    },
+    "bra": {
+        "name": "Brasil",
+        "cont": "América",
+        "reg": "Sudamérica",
+        "lat": "-15.783333333333333",
+        "lon": "-47.916667"
+    },
+    "chl": {
+        "name": "Chile",
+        "cont": "América",
+        "reg": "Sudamérica",
+        "lat": "-33.45",
+        "lon": "-70.666667"
+    },
+    "col": {
+        "name": "Colombia",
+        "cont": "América",
+        "reg": "Sudamérica",
+        "lat": "4.6",
+        "lon": "-74.083333"
+    },
+    "ecu": {
+        "name": "Ecuador",
+        "cont": "América",
+        "reg": "Sudamérica",
+        "lat": "-0.21666666666666667",
+        "lon": "-78.500000"
+    },
+    "flk": {
+        "name": "Islas Malvinas",
+        "cont": "América",
+        "reg": "Sudamérica",
+        "lat": "-51.7",
+        "lon": "-57.850000"
+    },
+    "guf": {
+        "name": "Guayana Francesa",
+        "cont": "América",
+        "reg": "Sudamérica",
+        "lat": "4.938611",
+        "lon": "-52.335"
+    },
+    "guy": {
+        "name": "Guyana",
+        "cont": "América",
+        "reg": "Sudamérica",
+        "lat": "6.8",
+        "lon": "-58.150000"
+    },
+    "per": {
+        "name": "Perú",
+        "cont": "América",
+        "reg": "Sudamérica",
+        "lat": "-12.05",
+        "lon": "-77.050000"
+    },
+    "pry": {
+        "name": "Paraguay",
+        "cont": "América",
+        "reg": "Sudamérica",
+        "lat": "-25.266666666666666",
+        "lon": "-57.666667"
+    },
+    "sur": {
+        "name": "Surinam",
+        "cont": "América",
+        "reg": "Sudamérica",
+        "lat": "5.833333333333333",
+        "lon": "-55.166667"
+    },
+    "ury": {
+        "name": "Uruguay",
+        "cont": "América",
+        "reg": "Sudamérica",
+        "lat": "-34.85",
+        "lon": "-56.166667"
+    },
+    "ven": {
+        "name": "Venezuela",
+        "cont": "América",
+        "reg": "Sudamérica",
+        "lat": "10.483333333333333",
+        "lon": "-66.866667"
+    }
+}
