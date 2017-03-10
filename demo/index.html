@@ -186,10 +186,16 @@ var planta_graph = {
 			    
 			    if (error) throw error;
 
-				planta_graph.data.prod = data;
+				planta_graph.data.prod = planta_graph.tools.parseDataProd(data);
 
 				planta_graph.tools.draw();
 			});
+		},
+		parseDataProd: function(data) {
+			var outp = [];
+
+		  	for (var importador in planta_graph.data.prod[planta_graph.actYear]) {
+		  	}
 		},
 
 		draw: function() {
@@ -203,6 +209,8 @@ var planta_graph = {
 
 			var ref = {};
 			var max = 0;
+
+			var dataYear = 
 
 		  	for (var importador in planta_graph.data.prod[planta_graph.actYear]) {
 			  if (planta_graph.data.prod[planta_graph.actYear].hasOwnProperty(importador)) {
@@ -238,6 +246,7 @@ var planta_graph = {
 			// console.log(ref, max, planta_graph.data.countries);
 
 			planta_graph.viz.svg
+				.selectAll('.circ')
 				.data(planta_graph.data.countries).enter()
 				.append("circle")
 				.attr('class', 'circ')
@@ -251,11 +260,12 @@ var planta_graph = {
 				  	for (var key in ref) {
 					  if (ref.hasOwnProperty(key)) {
 					  	if(key == d.key) {
-					  		var val = ref[key].totalExps / max;
+					  		var val = ref[key].totalExps / max; console.log((val / 0.1) ? (100 * val) : 0)
 					  		return (val / 0.1) ? (100 * val) : 0;
 					  	}
 					  }
 					}
+					return 0;
 				})
 				.attr("fill", "red")
 				.on("mouseenter", function(d){ console.log(d); })
