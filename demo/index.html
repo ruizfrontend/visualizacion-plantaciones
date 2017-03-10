@@ -186,31 +186,69 @@ var planta_graph = {
 			    
 			    if (error) throw error;
 
-				planta_graph.data.prod = planta_graph.tools.parseDataProd(data);
+				if(!planta_graph.data.countries) planta_graph.tools.loadCountries(function(){ 
+					
+					planta_graph.data.prod = planta_graph.tools.parseDataProd(data);
 
+					planta_graph.tools.draw();
+					return;
+				});
+
+				planta_graph.data.prod = planta_graph.tools.parseDataProd(data);
+				
 				planta_graph.tools.draw();
 			});
 		},
 		parseDataProd: function(data) {
-			var outp = [];
+			
 
-		  	for (var importador in planta_graph.data.prod[planta_graph.actYear]) {
-		  	}
+			var countries = planta_graph.data.countries;
+
+			for (var i = countries.length - 1; i >= 0; i--) {
+				
+				console.log(countries[i].key);
+
+				for(year in data) {
+					if(data.hasOwnProperty(year)) {
+
+						countries[i][year] = {
+							totalImp: 0,
+							totalExp: 0
+						};
+
+						if(data[year][countries[i].key]){
+console.log(data[year][countries[i].key])
+							for(keyOut in data[year][countries[i].key]) {
+								if(data[year][countries[i].key].hasOwnProperty(keyOut)) {
+								console.log(data[year][countries[i].key][keyOut]);			
+									countries[i][year].totalImp += data[year][countries[i].key][keyOut];
+								}
+							}							
+						}
+
+
+					}
+				}
+
+			}
+			console.log(countries);
+			// for(country in planta_graph.data.countries) {
+			//   if (planta_graph.data.countries.hasOwnProperty(country)) {
+			//   		console.log(country , planta_graph.data.countries[country]);
+			//   }
+			// }
+		  	// for (var importador in planta_graph.data.prod[planta_graph.actYear]) {
+		  	// }
 		},
 
 		draw: function() {
-
-			if(!planta_graph.data.countries) planta_graph.tools.loadCountries(function(){ 
-				planta_graph.tools.draw();
-				return;
-			});
-
+return;
 			// console.log(planta_graph.actYear, planta_graph.actYear, planta_graph.data.prod);
 
 			var ref = {};
 			var max = 0;
 
-			var dataYear = 
+			var dataYear = null;
 
 		  	for (var importador in planta_graph.data.prod[planta_graph.actYear]) {
 			  if (planta_graph.data.prod[planta_graph.actYear].hasOwnProperty(importador)) {
