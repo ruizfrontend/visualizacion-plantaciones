@@ -17,6 +17,12 @@
 	<a href="" data-prod="cafe" class="">Cafe</a>
 </div>
 <div id="years">
+	<a href="" data-year="2004" class="">2004</a>
+	<a href="" data-year="2005" class="">2005</a>
+	<a href="" data-year="2006" class="">2006</a>
+	<a href="" data-year="2007" class="">2007</a>
+	<a href="" data-year="2008" class="">2008</a>
+	<a href="" data-year="2009" class="">2009</a>
 	<a href="" data-year="2010" class="">2010</a>
 	<a href="" data-year="2011" class="">2011</a>
 	<a href="" data-year="2012" class="">2012</a>
@@ -38,20 +44,28 @@ var planta_graph = {
 	pathPaises: './paises.json',
 
 	actYear: 2014,
-	actProd: 'cacao',
+	actProd: 'cafe',
 
 	ready: false,
+
+	constants: {
+		maxCirc: 20, // max circle size 
+	},
 
 	viz: {
 		$elm: null,
 		svg: null,
 		projection: null,
 		path: null,
+		map: null,
+		circs: null,
+		circ2: null,
 	},
 
 	data: {
 		prod: null,
-		countries: null
+		countries: null,
+		maxImp: null // valores máximos por años
 	},
 
 	init: function(){
@@ -145,9 +159,9 @@ var planta_graph = {
 				var countries = topojson.feature(world, world.objects.countries).features;
 				// var neighbors = topojson.neighbors(world.objects.countries.geometries);
 
-				planta_graph.viz.svg.selectAll('*').remove()
+				if(planta_graph.viz.map) planta_graph.viz.map.remove()
 
-				planta_graph.viz.svg.selectAll(".country")
+				planta_graph.viz.map = planta_graph.viz.svg.selectAll(".country")
 					.data(countries)
 					.enter()
 						.insert("path", ".graticule")
@@ -200,14 +214,13 @@ var planta_graph = {
 			});
 		},
 		parseDataProd: function(data) {
-			
 
-			var countries = planta_graph.data.countries;
+			var countries = planta_graph.data.countries; // alias
+			planta_graph.data.maxImp = {};
 
 			for (var i = countries.length - 1; i >= 0; i--) {
-				
-				console.log(countries[i].key);
 
+					// initial data reset
 				for(year in data) {
 					if(data.hasOwnProperty(year)) {
 
@@ -216,12 +229,34 @@ var planta_graph = {
 							totalExp: 0
 						};
 
+						planta_graph.data.maxImp[year] = 0;
+
+					}
+				}
+			}
+
+			for (var i = countries.length - 1; i >= 0; i--) {
+
+					// procesa datose
+				for(year in data) {
+					if(data.hasOwnProperty(year)) {
+
 						if(data[year][countries[i].key]){
-console.log(data[year][countries[i].key])
+
 							for(keyOut in data[year][countries[i].key]) {
 								if(data[year][countries[i].key].hasOwnProperty(keyOut)) {
-								console.log(data[year][countries[i].key][keyOut]);			
+
+										// suma importaciones
 									countries[i][year].totalImp += data[year][countries[i].key][keyOut];
+
+										// suma exportaciones
+									for (var j = planta_graph.data.countries.length - 1; j >= 0; j--) {
+										if(planta_graph.data.countries[j].key == keyOut) countries[j][year].totalExp += data[year][countries[i].key][keyOut];
+										if(planta_graph.data.maxImp[year] < countries[j][year].totalExp) planta_graph.data.maxImp[year] = countries[j][year].totalExp;
+									};
+
+										// actualiza máximos
+									if(planta_graph.data.maxImp[year] < countries[i][year].totalImp) planta_graph.data.maxImp[year] = countries[i][year].totalImp;
 								}
 							}							
 						}
@@ -231,82 +266,53 @@ console.log(data[year][countries[i].key])
 				}
 
 			}
-			console.log(countries);
-			// for(country in planta_graph.data.countries) {
-			//   if (planta_graph.data.countries.hasOwnProperty(country)) {
-			//   		console.log(country , planta_graph.data.countries[country]);
-			//   }
-			// }
-		  	// for (var importador in planta_graph.data.prod[planta_graph.actYear]) {
-		  	// }
+
+			return countries;
 		},
 
 		draw: function() {
-return;
-			// console.log(planta_graph.actYear, planta_graph.actYear, planta_graph.data.prod);
+			
+			console.log('draw')
 
-			var ref = {};
-			var max = 0;
 
-			var dataYear = null;
-
-		  	for (var importador in planta_graph.data.prod[planta_graph.actYear]) {
-			  if (planta_graph.data.prod[planta_graph.actYear].hasOwnProperty(importador)) {
-			  	for (var exportador in planta_graph.data.prod[planta_graph.actYear][importador]) {
-				  if (planta_graph.data.prod[planta_graph.actYear][importador].hasOwnProperty(exportador)) {
-				  	
-				  	if(!ref[importador]) ref[importador] = {
-						imps: [],
-						totalImps: 0,
-						exps: [],
-						totalExps: 0
-					};
-				  	if(!ref[exportador]) ref[exportador] = {
-						imps: [],
-						totalImps: 0,
-						exps: [],
-						totalExps: 0
-					};
-			  		
-			  		ref[importador].imps[exportador] = planta_graph.data.prod[planta_graph.actYear][importador][exportador];
-			  		ref[importador].totalImps += planta_graph.data.prod[planta_graph.actYear][importador][exportador];
-
-			  		ref[exportador].exps[importador] = planta_graph.data.prod[planta_graph.actYear][importador][exportador];
-			  		ref[exportador].totalExps += planta_graph.data.prod[planta_graph.actYear][importador][exportador];
-
-			  		if(ref[importador].totalImps > max) max = ref[importador].totalImps;
-
-				  }
-				}
-			  }
+			if(!planta_graph.viz.circs) {
+				planta_graph.viz.circs = planta_graph.viz.svg.selectAll('.circ').data(planta_graph.data.prod).enter().append('circle').attr('class', 'circ');
+				planta_graph.viz.circ2 = planta_graph.viz.svg.selectAll('.cir2').data(planta_graph.data.prod).enter().append('circle').attr('class', 'cir2');
+				
+			} else {
+				planta_graph.viz.circs.data(planta_graph.data.prod);
+				planta_graph.viz.circ2.data(planta_graph.data.prod);
 			}
 
-			// console.log(ref, max, planta_graph.data.countries);
-
-			planta_graph.viz.svg
-				.selectAll('.circ')
-				.data(planta_graph.data.countries).enter()
-				.append("circle")
-				.attr('class', 'circ')
-				.attr("cx", function(d) {
-					// console.log(d, planta_graph.viz.projection([d.lon, d.lat]));
-					return planta_graph.viz.projection([d.lon, d.lat])[0]; 
-				})
-				.attr("cy", function(d) { return planta_graph.viz.projection([d.lon, d.lat])[1]; })
-				.attr("r", function(d) {
-					console.log(ref)
-				  	for (var key in ref) {
-					  if (ref.hasOwnProperty(key)) {
-					  	if(key == d.key) {
-					  		var val = ref[key].totalExps / max; console.log((val / 0.1) ? (100 * val) : 0)
-					  		return (val / 0.1) ? (100 * val) : 0;
-					  	}
-					  }
-					}
-					return 0;
-				})
-				.attr("fill", "red")
+			planta_graph.viz.circs
+				.attr('cx', function(d) { return planta_graph.viz.projection([d.lon, d.lat])[0]; })
+				.attr('cy', function(d) { return planta_graph.viz.projection([d.lon, d.lat])[1]; })
+				.attr("stroke", "red")
+				.attr("fill", "none")
 				.on("mouseenter", function(d){ console.log(d); })
+				.transition()
+				.duration(500)
+				.attr('stroke-width', function(d) {
+					return (planta_graph.constants.maxCirc * d[planta_graph.actYear].totalImp / planta_graph.data.maxImp[planta_graph.actYear]);
+				})
+				.attr('r', function(d) { return (planta_graph.constants.maxCirc * d[planta_graph.actYear].totalImp / planta_graph.data.maxImp[planta_graph.actYear]) / 2; });
+
+			planta_graph.viz.circ2
+				.attr('cx', function(d) { return planta_graph.viz.projection([d.lon, d.lat])[0]; })
+				.attr('cy', function(d) { return planta_graph.viz.projection([d.lon, d.lat])[1]; })
+				.attr("stroke", "blue")
+				.attr("fill", "none")
+				.on("mouseenter", function(d){ console.log(d); })
+				.transition()
+				.duration(500)
+				.attr('stroke-width', function(d) {
+					return (planta_graph.constants.maxCirc * d[planta_graph.actYear].totalExp / planta_graph.data.maxImp[planta_graph.actYear]);
+				})
+				.attr('r', function(d) {
+					var rImp = (planta_graph.constants.maxCirc * d[planta_graph.actYear].totalImp / planta_graph.data.maxImp[planta_graph.actYear]);
+					var rExp = (planta_graph.constants.maxCirc * d[planta_graph.actYear].totalExp / planta_graph.data.maxImp[planta_graph.actYear]) / 2;
+					return (rImp + (rExp / 2));
+				});
 				
 		}
 	}
