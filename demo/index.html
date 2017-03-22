@@ -53,6 +53,8 @@ var planta_graph = {
 	},
 
 	viz: {
+		width: 0,
+		height: 0,
 		$elm: null,
 		svg: null,
 		projection: null,
@@ -71,6 +73,7 @@ var planta_graph = {
 	init: function(){
 
 		planta_graph.viz.$em = $('#viz');
+		planta_graph.viz.svg = d3.select('#viz');
 		
 		planta_graph.tools.loadCountries();
 
@@ -81,7 +84,7 @@ var planta_graph = {
 		$('#years a[data-year=' +  planta_graph.actYear + ']').addClass('act');
 		$('#prods a[data-prod=' +  planta_graph.actProd + ']').addClass('act');
 
-		$(window).bind('orientationchange resize', throttle(planta_graph.tools.handleResize, 500));
+		$(window).bind('orientationchange resize', throttle(planta_graph.tools.handleResize, 300));
 
 		planta_graph.tools.handleResize();
 
@@ -132,19 +135,17 @@ var planta_graph = {
 
 		updateProjection: function() {
 
-		   	var width = $(window).width();
-		   	var height = width / 1.6;
+		   	planta_graph.viz.width = $(window).width();
+		   	planta_graph.viz.height = planta_graph.viz.width / 1.6;
 
 		   	planta_graph.viz.$em.css({
-		   		width: width,
-		   		height: height
+		   		width: planta_graph.viz.width,
+		   		height: planta_graph.viz.height
 		   	});
 
-		   	planta_graph.viz.svg = d3.select('#viz');
-
 		   	planta_graph.viz.projection = d3.geoMercator()
-			    .scale(170 * (width / 1000))
-			    .translate([width / 2, height / 2])
+			    .scale(170 * (planta_graph.viz.width / 1000))
+			    .translate([planta_graph.viz.width / 2, planta_graph.viz.height / 2])
 			    .precision(51);
 
 			planta_graph.viz.path = d3.geoPath().projection(planta_graph.viz.projection);
@@ -218,6 +219,7 @@ var planta_graph = {
 			var countries = planta_graph.data.countries; // alias
 			planta_graph.data.maxImp = {};
 
+			console.log('go')
 			for (var i = countries.length - 1; i >= 0; i--) {
 
 					// initial data reset
@@ -241,7 +243,7 @@ var planta_graph = {
 				for(year in data) {
 					if(data.hasOwnProperty(year)) {
 
-						if(data[year][countries[i].key]){
+						if(planta_graph.actYear == year && data[year][countries[i].key]){
 
 							for(keyOut in data[year][countries[i].key]) {
 								if(data[year][countries[i].key].hasOwnProperty(keyOut)) {
@@ -250,9 +252,14 @@ var planta_graph = {
 									countries[i][year].totalImp += data[year][countries[i].key][keyOut];
 
 										// suma exportaciones
-									for (var j = planta_graph.data.countries.length - 1; j >= 0; j--) {
-										if(planta_graph.data.countries[j].key == keyOut) countries[j][year].totalExp += data[year][countries[i].key][keyOut];
-										if(planta_graph.data.maxImp[year] < countries[j][year].totalExp) planta_graph.data.maxImp[year] = countries[j][year].totalExp;
+									for (var j = countries.length - 1; j >= 0; j--) {
+
+										if(countries[j].key == keyOut) 
+											countries[j][year].totalExp += data[year][countries[i].key][keyOut];
+										
+										if(planta_graph.data.maxImp[year] < countries[j][year].totalExp)
+											planta_graph.data.maxImp[year] = countries[j][year].totalExp;
+
 									};
 
 										// actualiza máximos
@@ -266,6 +273,8 @@ var planta_graph = {
 				}
 
 			}
+
+			console.log(countries)
 
 			return countries;
 		},
