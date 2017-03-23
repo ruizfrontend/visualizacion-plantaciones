@@ -7,8 +7,8 @@
 <style>
 	#prods .act, #years .act { color: red; }
 	.link { stroke: rgba(0,0,0,0.6); fill: none; }
-	.circ { fill: rgba(0,0,0,0.4); }
-	.text {  fill: white; font-weight: 900; font-family: arial, sans-serif; font-size: 9px; pointer-events: none; text-anchor: middle; }
+	.circ { fill: rgba(0,0,0,0.4); transition: all .2s;}
+	.text {  fill: white; font-weight: 900; font-family: arial, sans-serif; font-size: 12px; pointer-events: none; text-anchor: middle; }
 </style>
 <body>
 
@@ -145,7 +145,7 @@ var planta_graph = {
 		handleResize: function() {
 			planta_graph.tools.updateProjection();
 			planta_graph.tools.update();
-			planta_graph.tools.initBG();
+			// planta_graph.tools.initBG();
 		},
 
 		updateProjection: function() {
@@ -390,7 +390,7 @@ var planta_graph = {
 			}
 
 			planta_graph.viz.circs.data(countries)
-				.transition().duration(planta_graph.updateTime)
+				// .transition().duration(planta_graph.updateTime)
 				.attr('r', function(d) { return d.rTot; })
 				.attr('cx', function(d) { return d.x; })
 				.attr('cy', function(d) { return d.y; })
@@ -399,18 +399,18 @@ var planta_graph = {
 			  	})
 
 			planta_graph.viz.texts
-				.transition().duration(planta_graph.updateTime)
+				// .transition().duration(planta_graph.updateTime)
 				.attr('x', function(d) { return d.x; })
 				.attr('y', function(d) { return d.y+5; })
 				.attr("visibility", function (d) {
-			    	return d.rTot <  (planta_graph.maxCirc / 50) ? "hidden" : "visible";
+			    	return d.rTot < 10 ? "hidden" : "visible";
 			  	})
 
 			if(planta_graph.viz.force) planta_graph.viz.force.stop();
 
 			planta_graph.viz.force = d3.forceSimulation(countries)
 				.force("link", d3.forceLink(links).strength(0.000001))
-				// .force("charge", d3.forceManyBody().strength(0.01))
+				.force("charge", d3.forceManyBody().strength(0.01))
     			.force("collide", d3.forceCollide().radius(function(d) { return d.rTot + 5; }).iterations(1).strength(5))
 				// .force("link", d3.forceLink(links).strength(function(d){return d.val / 1000 }).distance(20))
 				// .force("center", d3.forceCenter(planta_graph.viz.width / 2, planta_graph.viz.height / 2))
@@ -419,10 +419,10 @@ var planta_graph = {
 				.velocityDecay(.6)
 
 				.on('tick', planta_graph.tools.tick)
-				.on('end', function(){ // NOVA
+				.on('end', function(){
 					console.log('end')
-					planta_graph.animate = false;
-					clearTimeout(planta_graph.timeout);
+					// planta_graph.animate = false;
+					// clearTimeout(planta_graph.timeout);
 				});
 
 			// planta_graph.tools.forceStart();
@@ -458,6 +458,10 @@ var planta_graph = {
 				.attr('y1', function(d) { return d.source.y; })
 				.attr('y2', function(d) { return d.target.y; })
 
+
+			planta_graph.viz.texts
+				.attr('x', function(d) { return d.x; })
+				.attr('y', function(d) { return d.y+5; })
 
 			// planta_graph.viz.force.stop();
 			// planta_graph.timeout = setTimeout(planta_graph.tools.forceTick, planta_graph.updateTime);
