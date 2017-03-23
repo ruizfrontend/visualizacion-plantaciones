@@ -6,6 +6,9 @@
 </head>
 <style>
 	#prods .act, #years .act { color: red; }
+	.link { stroke: rgba(0,0,0,0.6); fill: none; }
+	.circ { fill: rgba(0,0,0,0.4); }
+	.text {  fill: white; font-weight: 900; font-family: arial, sans-serif; font-size: 9px; pointer-events: none; text-anchor: middle; }
 </style>
 <body>
 
@@ -66,6 +69,7 @@ var planta_graph = {
 		map: null,
 		circs: null,
 		circ2: null,
+		texts: null,
 		force: null,
 		scale: {
 			circImp: null,
@@ -324,7 +328,7 @@ var planta_graph = {
 				d3.scaleLinear().domain([0,d3.max(imps)]).range([0,planta_graph.maxLine]);
 
 			for (var i = countries.length - 1; i >= 0; i--) {
-				countries[i].rTot = planta_graph.viz.scale.circImp(countries[i].totalImp);
+				countries[i].rTot = planta_graph.viz.scale.circImpExp(countries[i].totalImp + countries[i].totalExp);
 			}
 
 			planta_graph.data.prod = countries;
@@ -337,8 +341,8 @@ var planta_graph = {
 					.enter()
 						.append('line')
 							.attr('class', 'link')
-							.attr("stroke", "blue")
-							.attr("fill", "none")
+							// .attr("stroke", "blue")
+							// .attr("fill", "none")
 							.attr('stroke-width', function(d){ return planta_graph.viz.scale.lines(d.val); });
 			}
 
@@ -356,9 +360,19 @@ var planta_graph = {
 					.enter()
 						.append('circle')
 							.attr('class', 'circ')
-							.attr("stroke", "red")
-							.attr("fill", "red")
+							// .attr("stroke", "red")
+							// .attr("fill", "red")
 							.on("mouseenter", function(d){ console.log(d); });
+
+
+				planta_graph.viz.texts = planta_graph.viz.svg
+					.selectAll('.text')
+					.data(countries)
+					.enter()
+						.append('text')
+							.attr('class', 'text')
+							.text(function(d){ return d.key; })
+
 
 				// planta_graph.viz.circs.transition().duration(planta_graph.updateTime);
 				
@@ -380,6 +394,14 @@ var planta_graph = {
 				.attr('r', function(d) { return d.rTot; })
 				.attr('cx', function(d) { return d.x; })
 				.attr('cy', function(d) { return d.y; })
+				.attr("visibility", function (d) {
+			    	return d.rTot <  (planta_graph.maxCirc / 50) ? "hidden" : "visible";
+			  	})
+
+			planta_graph.viz.texts
+				.transition().duration(planta_graph.updateTime)
+				.attr('x', function(d) { return d.x; })
+				.attr('y', function(d) { return d.y+5; })
 				.attr("visibility", function (d) {
 			    	return d.rTot <  (planta_graph.maxCirc / 50) ? "hidden" : "visible";
 			  	})
