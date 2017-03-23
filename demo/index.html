@@ -49,12 +49,12 @@ var planta_graph = {
 
 	animate: false,
 	timeout: null,
-	updateTime: 500,
+	updateTime: 200,
 
-	maxCirc: 50, // max circle size 
+	maxCirc: 40, // max circle size 
 	maxLine: 10, // max circle size 
-	// limitLine: 10,
-	// limitCirc: 100,
+	limitLine: 10,
+	limitCirc: 100,
 
 	viz: {
 		width: 0,
@@ -163,8 +163,8 @@ var planta_graph = {
 
 			if(planta_graph.data.prod)
 				for (var i = 0; i < planta_graph.data.prod.length; i++) {
-					planta_graph.data.prod[i].posX = planta_graph.viz.projection([planta_graph.data.prod[i].lon, planta_graph.data.prod[i].lat])[0];
-					planta_graph.data.prod[i].posY = planta_graph.viz.projection([planta_graph.data.prod[i].lon, planta_graph.data.prod[i].lat])[1];
+					planta_graph.data.prod[i].x = planta_graph.viz.projection([planta_graph.data.prod[i].lon, planta_graph.data.prod[i].lat])[0];
+					planta_graph.data.prod[i].y = planta_graph.viz.projection([planta_graph.data.prod[i].lon, planta_graph.data.prod[i].lat])[1];
 				};
 
 		},
@@ -277,28 +277,28 @@ var planta_graph = {
 								val: actData[countries[i].key][countries[j].key]
 							});
 
-						} else {
+						// } else {
 
-							links.push({
-								source: i,
-								target: j,
-								val: 0
-							});
+						// 	links.push({
+						// 		source: i,
+						// 		target: j,
+						// 		val: 0
+						// 	});
 
 						}
 
 					}
 
-				} else {
-					for (var j = countries.length - 1; j >= 0; j--) {
+				// } else {
+				// 	for (var j = countries.length - 1; j >= 0; j--) {
 
-						links.push({
-							source: i,
-							target: j,
-							val: 0
-						});
+				// 		links.push({
+				// 			source: i,
+				// 			target: j,
+				// 			val: 0
+				// 		});
 
-					}
+				// 	}
 				}
 			}
 			
@@ -339,15 +339,14 @@ var planta_graph = {
 							.attr('class', 'link')
 							.attr("stroke", "blue")
 							.attr("fill", "none")
-							.attr('stroke-width', function(d){ return planta_graph.viz.scale.lines(d.val); })
-							.attr("visibility", function (d) {
-						    	return planta_graph.viz.scale.lines(d.val) < (planta_graph.maxLines / 50) ? "hidden" : "visible";
-						  	});;
-
-			} else {
-				planta_graph.viz.links.data(links)
-					.attr('stroke-width', function(d){ return planta_graph.viz.scale.lines(d.val); });
+							.attr('stroke-width', function(d){ return planta_graph.viz.scale.lines(d.val); });
 			}
+
+			planta_graph.viz.links.data(links)
+				.attr('stroke-width', function(d){ return planta_graph.viz.scale.lines(d.val); })
+				.attr("visibility", function (d) {
+			    	return planta_graph.viz.scale.lines(d.val) < (planta_graph.maxLines / planta_graph.limitLine) ? "hidden" : "visible";
+			  	});
 
 
 			if(!planta_graph.viz.circs) {
@@ -359,15 +358,9 @@ var planta_graph = {
 							.attr('class', 'circ')
 							.attr("stroke", "red")
 							.attr("fill", "red")
-							.attr('cx', function(d) { return d.x; })
-							.attr('cy', function(d) { return d.y; })
-							.on("mouseenter", function(d){ console.log(d); })
-							.attr("visibility", function (d) {
-						    	return d.rTot <  (planta_graph.maxCirc / 50) ? "hidden" : "visible";
-						  	});
+							.on("mouseenter", function(d){ console.log(d); });
 
-				planta_graph.viz.circs.transition().duration(planta_graph.updateTime)
-							.attr('r', function(d) { return d.rTot; });
+				// planta_graph.viz.circs.transition().duration(planta_graph.updateTime);
 				
 				// planta_graph.viz.circ2 = planta_graph.viz.svg
 				// 	.selectAll('.cir2')
@@ -380,35 +373,37 @@ var planta_graph = {
 				// 			.on("mouseenter", function(d){ console.log(d); })
 				// 			.attr('r', function(d) { return d.rTot; })
 				
-			} else {
-				planta_graph.viz.circs.data(countries)
-							.attr("visibility", function (d) {
-						    	return d.rTot <  (planta_graph.maxCirc / 50) ? "hidden" : "visible";
-						  	})
-							// .transition().duration(500)
-							.attr('r', function(d) { return d.rTot; });
-				// planta_graph.viz.circ2.data(countries);
 			}
+
+			planta_graph.viz.circs.data(countries)
+				.transition().duration(planta_graph.updateTime)
+				.attr('r', function(d) { return d.rTot; })
+				.attr('cx', function(d) { return d.x; })
+				.attr('cy', function(d) { return d.y; })
+				.attr("visibility", function (d) {
+			    	return d.rTot <  (planta_graph.maxCirc / 50) ? "hidden" : "visible";
+			  	})
 
 			if(planta_graph.viz.force) planta_graph.viz.force.stop();
 
 			planta_graph.viz.force = d3.forceSimulation(countries)
-				.force("link", d3.forceLink(links).strength(0.001))
-				.force("charge", d3.forceManyBody().strength(-1))
-    			.force("collide", d3.forceCollide().radius(function(d) { return d.rTot; }).iterations(1).strength(1))
+				.force("link", d3.forceLink(links).strength(0.000001))
+				// .force("charge", d3.forceManyBody().strength(0.01))
+    			.force("collide", d3.forceCollide().radius(function(d) { return d.rTot + 5; }).iterations(1).strength(5))
 				// .force("link", d3.forceLink(links).strength(function(d){return d.val / 1000 }).distance(20))
 				// .force("center", d3.forceCenter(planta_graph.viz.width / 2, planta_graph.viz.height / 2))
 
-				// .alphaDecay(0.9)
-				// .velocityDecay(.3)
+				.alphaDecay(0.6)
+				.velocityDecay(.6)
+
 				.on('tick', planta_graph.tools.tick)
-				.on('end', function(){
+				.on('end', function(){ // NOVA
 					console.log('end')
 					planta_graph.animate = false;
 					clearTimeout(planta_graph.timeout);
 				});
 
-			planta_graph.tools.forceStart();
+			// planta_graph.tools.forceStart();
 
 
 				// .stop();
@@ -417,33 +412,33 @@ var planta_graph = {
 		},
 		tick: function() {
 
-			console.log('ttick')
-			if(!planta_graph.animate) {
-				planta_graph.viz.force.stop();
-				return;
-			}
+			// console.log('ttick')
+			// if(!planta_graph.animate) {
+			// 	planta_graph.viz.force.stop();
+			// 	return;
+			// }
 
 			console.log('tick')
 
 			planta_graph.viz.circs
-				.transition().duration(planta_graph.updateTime)
+				// .transition().duration(planta_graph.updateTime)
 				.attr('cx', function(d) { return d.x; })
 				.attr('cy', function(d) { return d.y; })
 
 
 			planta_graph.viz.links
-				.transition().duration(planta_graph.updateTime)
+				// .transition().duration(planta_graph.updateTime)
+				.attr("visibility", function (d) {
+			    	return d.val < 100000000 ? "hidden" : "visible";
+			  	})
 				.attr('x1', function(d) { return d.source.x; })
 				.attr('x2', function(d) { return d.target.x; })
 				.attr('y1', function(d) { return d.source.y; })
 				.attr('y2', function(d) { return d.target.y; })
-				.attr("visibility", function (d) {
-			    	return d.val < 100000000 ? "hidden" : "visible";
-			  	})
 
-			planta_graph.viz.force.stop();
 
-			planta_graph.timeout = setTimeout(planta_graph.tools.forceTick, planta_graph.updateTime);
+			// planta_graph.viz.force.stop();
+			// planta_graph.timeout = setTimeout(planta_graph.tools.forceTick, planta_graph.updateTime);
 			
 		},
 
@@ -459,29 +454,29 @@ var planta_graph = {
 
 		draw: function() {
 			return;
-			if(!planta_graph.viz.circs) {
-				planta_graph.viz.circs = planta_graph.viz.svg.selectAll('.circ').data(planta_graph.data.prod).enter().append('circle').attr('class', 'circ');
-				planta_graph.viz.circ2 = planta_graph.viz.svg.selectAll('.cir2').data(planta_graph.data.prod).enter().append('circle').attr('class', 'cir2');
+			// if(!planta_graph.viz.circs) {
+			// 	planta_graph.viz.circs = planta_graph.viz.svg.selectAll('.circ').data(planta_graph.data.prod).enter().append('circle').attr('class', 'circ');
+			// 	planta_graph.viz.circ2 = planta_graph.viz.svg.selectAll('.cir2').data(planta_graph.data.prod).enter().append('circle').attr('class', 'cir2');
 				
-			} else {
-				planta_graph.viz.circs.data(planta_graph.data.prod);
-				planta_graph.viz.circ2.data(planta_graph.data.prod);
-			}
+			// } else {
+			// 	planta_graph.viz.circs.data(planta_graph.data.prod);
+			// 	planta_graph.viz.circ2.data(planta_graph.data.prod);
+			// }
 
-			planta_graph.viz.circs
-				.attr('cx', function(d) { return d.posX; })
-				.attr('cy', function(d) { return d.posY; })
-				.attr("stroke", "red")
-				.attr("fill", "none")
-				.on("mouseenter", function(d){ console.log(d); })
-				.transition()
-				.duration(500)
-				.attr('stroke-width', function(d) {
-					return (planta_graph.constants.maxCirc * d.totalImp / planta_graph.data.maxImp);
-				})
-				.attr('r', function(d) { return d.rTot; });
+			// planta_graph.viz.circs
+			// 	.attr('cx', function(d) { return d.posX; })
+			// 	.attr('cy', function(d) { return d.posY; })
+			// 	.attr("stroke", "red")
+			// 	.attr("fill", "none")
+			// 	.on("mouseenter", function(d){ console.log(d); })
+			// 	.transition()
+			// 	.duration(500)
+			// 	.attr('stroke-width', function(d) {
+			// 		return (planta_graph.constants.maxCirc * d.totalImp / planta_graph.data.maxImp);
+			// 	})
+			// 	.attr('r', function(d) { return d.rTot; });
 
-				// if(planta_graph.viz.force) planta_graph.viz.force.stop();
+			// 	// if(planta_graph.viz.force) planta_graph.viz.force.stop();
 				
 		}
 	}
