@@ -47,11 +47,14 @@ var planta_graph = {
 	actYear: 2014,
 	actProd: 'cafe',
 
-	ready: false, // semaforo carga inicial
+	animate: false,
+	timeout: null,
+	updateTime: 500,
 
-	constants: {
-		maxCirc: 200, // max circle size 
-	},
+	maxCirc: 50, // max circle size 
+	maxLine: 10, // max circle size 
+	// limitLine: 10,
+	// limitCirc: 100,
 
 	viz: {
 		width: 0,
@@ -63,7 +66,13 @@ var planta_graph = {
 		map: null,
 		circs: null,
 		circ2: null,
-		force: null
+		force: null,
+		scale: {
+			circImp: null,
+			circExp: null,
+			circImpExp: null,
+			lines: null,
+		}
 	},
 
 	data: {
@@ -131,11 +140,8 @@ var planta_graph = {
 
 		handleResize: function() {
 			planta_graph.tools.updateProjection();
-			// planta_graph.tools.initBG();
-			
-			if(planta_graph.ready) planta_graph.tools.draw();
-			
-			planta_graph.ready = true; // semaforo
+			planta_graph.tools.update();
+			planta_graph.tools.initBG();
 		},
 
 		updateProjection: function() {
@@ -193,6 +199,7 @@ var planta_graph = {
 			  	if (error) throw error;
 
 			  	var paises = [];
+
 			  	for (var key in world) {
 				  if (world.hasOwnProperty(key)) {
 				    var pais = world[key];
@@ -203,7 +210,7 @@ var planta_graph = {
 				    pais.y = pais.posY;
 				    paises.push(pais);
 				  }
-				}
+				};
 
 				planta_graph.data.countries = paises;
 				
@@ -212,7 +219,7 @@ var planta_graph = {
 		},
 
 		update: function() {
-			d3.json(planta_graph.pathData + planta_graph.actProd + '.json', function(error, data){
+			d3.json(planta_graph.pathData + planta_graph.actProd + '.json?dd', function(error, data){
 			    
 			    if (error) throw error;
 
@@ -243,46 +250,81 @@ var planta_graph = {
 			var links = [];
 
 			planta_graph.data.maxImp = 0;
-			planta_graph.data.maxExp = 0;
+			planta_graph.data.maxTotalImp = 0;
 
 			for (var i = countries.length - 1; i >= 0; i--) {
 				countries[i].totalImp = 0;
 				countries[i].totalExp = 0;
 			}
 
+			var imps = [];
+
 			for (var i = countries.length - 1; i >= 0; i--) {
 				if(actData[countries[i].key]) {
 
-					for (keyOut in actData[countries[i].key]) { 
-						if(actData[countries[i].key].hasOwnProperty(keyOut)) {
-							countries[i].totalImp = actData[countries[i].key][keyOut];
-
 								// suma exportaciones
-							for (var j = countries.length - 1; j >= 0; j--) {
+					for (var j = countries.length - 1; j >= 0; j--) {
+						if(actData[countries[i].key][countries[j].key]) {
 
-								if(countries[j].key == keyOut) {
-									countries[j].totalExp += actData[countries[i].key][keyOut];
+							countries[i].totalExp += actData[countries[i].key][countries[j].key];
+							countries[j].totalImp += actData[countries[i].key][countries[j].key];
 
-									links.push({
-										source: i,
-										target: j,
-										val: actData[countries[i].key][keyOut]
-									})
-								}
-								
-								if(planta_graph.data.maxImp < countries[j].totalExp)
-									planta_graph.data.maxImp = countries[j].totalExp;
+							imps.push(actData[countries[i].key][countries[j].key]);
 
-							}
+							links.push({
+								source: i,
+								target: j,
+								val: actData[countries[i].key][countries[j].key]
+							});
+
+						} else {
+
+							links.push({
+								source: i,
+								target: j,
+								val: 0
+							});
 
 						}
-					};
 
+					}
+
+				} else {
+					for (var j = countries.length - 1; j >= 0; j--) {
+
+						links.push({
+							source: i,
+							target: j,
+							val: 0
+						});
+
+					}
 				}
 			}
+			
+			var maxImp = [];
+			var maxExp = [];
+			var maxImpExp = [];
 
 			for (var i = countries.length - 1; i >= 0; i--) {
-				countries[i].rTot = (planta_graph.constants.maxCirc * countries[i].totalImp / planta_graph.data.maxImp) / 2;
+				if(countries[i].totalImp > 0) maxImp.push(countries[i].totalImp);
+				if(countries[i].totalExp > 0) maxExp.push(countries[i].totalExp);
+				if((countries[i].totalImp + countries[i].totalExp) > 0) maxImpExp.push(countries[i].totalImp + countries[i].totalExp);
+			}
+
+			// console.log(maxImp, d3.max(maxImp), maxExp, d3.max(maxExp), maxImpExp, d3.max(maxImpExp), imps, d3.max(imps), countries, links);
+
+			planta_graph.viz.scale.circImp = 
+				d3.scaleLinear().domain([0,d3.max(maxImp)]).range([0,planta_graph.maxCirc]);
+			planta_graph.viz.scale.circExp = 
+				d3.scaleLinear().domain([0,d3.max(maxExp)]).range([0,planta_graph.maxCirc]);
+			planta_graph.viz.scale.circImpExp = 
+				d3.scaleLinear().domain([0,d3.max(maxImpExp)]).range([0,planta_graph.maxCirc]);
+			planta_graph.viz.scale.lines = 
+				d3.scaleLinear().domain([0,d3.max(imps)]).range([0,planta_graph.maxLine]);
+
+			for (var i = countries.length - 1; i >= 0; i--) {
+				countries[i].rTot = planta_graph.viz.scale.circImp(countries[i].totalImp);
 			}
 
 			planta_graph.data.prod = countries;
@@ -296,11 +338,15 @@ var planta_graph = {
 						.append('line')
 							.attr('class', 'link')
 							.attr("stroke", "blue")
-							.attr("stroke-width", 0.1)
 							.attr("fill", "none")
+							.attr('stroke-width', function(d){ return planta_graph.viz.scale.lines(d.val); })
+							.attr("visibility", function (d) {
+						    	return planta_graph.viz.scale.lines(d.val) < (planta_graph.maxLines / 50) ? "hidden" : "visible";
+						  	});;
 
 			} else {
 				planta_graph.viz.links.data(links)
+					.attr('stroke-width', function(d){ return planta_graph.viz.scale.lines(d.val); });
 			}
 
 
@@ -313,11 +359,14 @@ var planta_graph = {
 							.attr('class', 'circ')
 							.attr("stroke", "red")
 							.attr("fill", "red")
+							.attr('cx', function(d) { return d.x; })
+							.attr('cy', function(d) { return d.y; })
 							.on("mouseenter", function(d){ console.log(d); })
 							.attr("visibility", function (d) {
-						    	return d.rTot < 1 ? "hidden" : "visible";
-						  	})
-							// .transition().duration(500)
+						    	return d.rTot <  (planta_graph.maxCirc / 50) ? "hidden" : "visible";
+						  	});
+
+				planta_graph.viz.circs.transition().duration(planta_graph.updateTime)
 							.attr('r', function(d) { return d.rTot; });
 				
 				// planta_graph.viz.circ2 = planta_graph.viz.svg
@@ -334,7 +383,7 @@ var planta_graph = {
 			} else {
 				planta_graph.viz.circs.data(countries)
 							.attr("visibility", function (d) {
-						    	return d.rTot < 1 ? "hidden" : "visible";
+						    	return d.rTot <  (planta_graph.maxCirc / 50) ? "hidden" : "visible";
 						  	})
 							// .transition().duration(500)
 							.attr('r', function(d) { return d.rTot; });
@@ -344,29 +393,46 @@ var planta_graph = {
 			if(planta_graph.viz.force) planta_graph.viz.force.stop();
 
 			planta_graph.viz.force = d3.forceSimulation(countries)
-				.force("link", d3.forceLink(links).strength(0.00001))
+				.force("link", d3.forceLink(links).strength(0.001))
+				.force("charge", d3.forceManyBody().strength(-1))
+    			.force("collide", d3.forceCollide().radius(function(d) { return d.rTot; }).iterations(1).strength(1))
 				// .force("link", d3.forceLink(links).strength(function(d){return d.val / 1000 }).distance(20))
-				.force("charge", d3.forceManyBody().strength(0.01))
-    			// .force("center", d3.forceCenter(planta_graph.viz.width / 2, planta_graph.viz.height / 2))
-    			.force("collide", d3.forceCollide().radius(function(d) { return d.rTot; }).iterations(2).strength(1))
-				.on('tick', planta_graph.tools.tick);
+				// .force("center", d3.forceCenter(planta_graph.viz.width / 2, planta_graph.viz.height / 2))
+
+				// .alphaDecay(0.9)
+				// .velocityDecay(.3)
+				.on('tick', planta_graph.tools.tick)
+				.on('end', function(){
+					console.log('end')
+					planta_graph.animate = false;
+					clearTimeout(planta_graph.timeout);
+				});
+
+			planta_graph.tools.forceStart();
 
 
-				// .stop()
-				// .force("center", d3.forceCenter(planta_graph.viz.width / 2, planta_graph.viz.height / 2));
+				// .stop();
 
 
 		},
 		tick: function() {
 
+			console.log('ttick')
+			if(!planta_graph.animate) {
+				planta_graph.viz.force.stop();
+				return;
+			}
+
 			console.log('tick')
 
 			planta_graph.viz.circs
+				.transition().duration(planta_graph.updateTime)
 				.attr('cx', function(d) { return d.x; })
 				.attr('cy', function(d) { return d.y; })
 
 
 			planta_graph.viz.links
+				.transition().duration(planta_graph.updateTime)
 				.attr('x1', function(d) { return d.source.x; })
 				.attr('x2', function(d) { return d.target.x; })
 				.attr('y1', function(d) { return d.source.y; })
@@ -377,11 +443,18 @@ var planta_graph = {
 
 			planta_graph.viz.force.stop();
 
-			setTimeout(function(){
-				planta_graph.viz.force.tick();
-				planta_graph.tools.tick();
-			}, 500);
+			planta_graph.timeout = setTimeout(planta_graph.tools.forceTick, planta_graph.updateTime);
 			
+		},
+
+		forceStart: function() {
+			planta_graph.animate = true;
+			planta_graph.tools.forceTick();
+		},
+
+		forceTick: function() {
+			planta_graph.viz.force.tick();
+			planta_graph.tools.tick();
 		},
 
 		draw: function() {
