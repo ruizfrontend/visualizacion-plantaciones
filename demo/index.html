@@ -5,19 +5,23 @@
 	<title>Document</title>
 </head>
 <style>
-	#prods .act, #years .act { color: red; }
+	#type .act, #prods .act, #years .act { color: red; }
 	.link { stroke: rgba(0,0,0,0.4); fill: none; 
 		-webkit-transition: stroke .2s; -ms-transition: stroke .2s; transition: stroke .2s; }
 		.link:hover { stroke: rgba(60, 4, 4, 0.6); }
-	.circ { fill: rgba(0,0,0,0.4); cursor: pointer;
+	.circImp { fill: rgba(0,0,0,0.4); cursor: pointer;
 		-webkit-transform-origin: center center; -ms-transform-origin: center center; transform-origin: center center;
 		-webkit-transition: all .2s; -ms-transition: all .2s; transition: all .2s; }
-		.circ:hover { fill: rgba(6, 3, 68, 0.4);
+		.circImp:hover { fill: rgba(6, 3, 68, 0.4);
 			-webkit-transform: -ms-scale(1.1); transform: scale(1.1); transform: scale(1.1); }
 	.text {  fill: white; font-weight: 900; font-family: arial, sans-serif; font-size: 12px; pointer-events: none; text-anchor: middle; }
 </style>
 <body>
 
+<div id="type">
+	<a href="" data-type="imp" class="">imp</a>
+	<a href="" data-type="exp" class="">exp</a>
+</div>
 <div id="prods">
 	<a href="" data-prod="cacao" class="">Cacao</a>
 	<a href="" data-prod="banana" class="">Banana</a>
@@ -55,9 +59,8 @@ var planta_graph = {
 
 	actYear: 2014,
 	actProd: 'cafe',
+	actType: ['imp', 'exp'],
 
-	animate: false,
-	timeout: null,
 	updateTime: 200,
 
 	maxCircProp: 20, // relation winWidth to maxCircProp
@@ -102,49 +105,13 @@ var planta_graph = {
 		
 		planta_graph.tools.loadCountries();
 
-			// jqueries
-		$('#years a').click(planta_graph.evs.change_year);
-		$('#prods a').click(planta_graph.evs.change_product);
-
-		$('#years a[data-year=' +  planta_graph.actYear + ']').addClass('act');
-		$('#prods a[data-prod=' +  planta_graph.actProd + ']').addClass('act');
+		planta_graph.tools.initJqueries();
 
 		$(window).bind('orientationchange resize', throttle(planta_graph.tools.handleResize, 300));
 
 		planta_graph.tools.handleResize();
 
 		planta_graph.tools.update();
-	},
-
-	evs: {
-		change_product: function(e) {
-			
-			e.preventDefault();
-			
-			$('#prods .act').removeClass('act');
-
-			var prod = $(this).addClass('act').data('prod');
-			if(!prod || planta_graph.actProd == prod) { console.log('no hay producto'); return; };
-
-			planta_graph.actProd = prod;
-
-				// carga datos nuevos y pinta
-			planta_graph.tools.update();
-		},
-		change_year: function(e){
-			
-			e.preventDefault();
-
-			$('#years .act').removeClass('act');
-			
-			var year = $(this).addClass('act').data('year');
-			if(!year || planta_graph.actYear == year) { console.log('no hay año'); return; };
-
-			planta_graph.actYear = year;
-
-				// actualiza el dibujo
-			planta_graph.tools.update();
-		}
 	},
 
 	tools: {
@@ -349,11 +316,11 @@ var planta_graph = {
 
 			if(!planta_graph.viz.circs) {
 				planta_graph.viz.circs = planta_graph.viz.svg
-					.selectAll('.circ')
+					.selectAll('.circImp')
 					.data(countries)
 					.enter()
 						.append('circle')
-							.attr('class', 'circ')
+							.attr('class', 'circImp')
 							.on("mouseenter", function(d){ console.log(d); });
 
 
@@ -431,16 +398,82 @@ var planta_graph = {
 			
 		},
 
-		forceStart: function() {
-			planta_graph.animate = true;
-			planta_graph.tools.forceTick();
+		initJqueries: function() {
+
+			$('#years a').click(planta_graph.evs.change_year);
+			$('#prods a').click(planta_graph.evs.change_product);
+
+			$('#type a').click(planta_graph.evs.change_type);
+
+			$('#years a[data-year=' +  planta_graph.actYear + ']').addClass('act');
+			$('#prods a[data-prod=' +  planta_graph.actProd + ']').addClass('act');
+			$(planta_graph.actType).each(function(e, f){ console.log('#type a[data-type=' +  f + ']');$('#type a[data-type=' +  f + ']').addClass('act'); })
+
+		},
+	},
+
+	evs: {
+
+		change_product: function(e) {
+			
+			e.preventDefault();
+			
+			$('#prods .act').removeClass('act');
+
+			var prod = $(this).addClass('act').data('prod');
+			if(!prod || planta_graph.actProd == prod) { console.log('no hay producto'); return; };
+
+			planta_graph.actProd = prod;
+
+				// carga datos nuevos y pinta
+			planta_graph.tools.update();
 		},
 
-		forceTick: function() {
-			planta_graph.viz.force.tick();
-			planta_graph.tools.tick();
+		change_year: function(e){
+			
+			e.preventDefault();
+
+			$('#years .act').removeClass('act');
+			
+			var year = $(this).addClass('act').data('year');
+			if(!year || planta_graph.actYear == year) { console.log('no hay año'); return; };
+
+			planta_graph.actYear = year;
+
+				// actualiza el dibujo
+			planta_graph.tools.update();
 		},
-	}
+
+		change_type: function(e) {
+			
+			e.preventDefault();
+
+			var $this = $(this);
+			var type = $this.data('type');
+			console.log(type)
+			console.log(planta_graph.actType)
+
+			if($.inArray(type, planta_graph.actType) != -1){
+					
+					// para no quedarnos a 0
+				if(planta_graph.actType.length < 2) return;
+
+				$this.removeClass('act');
+				planta_graph.actType.splice(planta_graph.actType.indexOf(type), 1);
+
+			} else {
+
+				$this.addClass('act');
+				planta_graph.actType.push(type);
+			}
+			console.log(planta_graph.actType)
+
+				// actualiza el dibujo
+			planta_graph.tools.update();
+
+		}
+	},
+
 };
 
 planta_graph.init();
