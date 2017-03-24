@@ -450,8 +450,6 @@ var planta_graph = {
 
 			var $this = $(this);
 			var type = $this.data('type');
-			console.log(type)
-			console.log(planta_graph.actType)
 
 			if($.inArray(type, planta_graph.actType) != -1){
 					
@@ -466,7 +464,6 @@ var planta_graph = {
 				$this.addClass('act');
 				planta_graph.actType.push(type);
 			}
-			console.log(planta_graph.actType)
 
 				// actualiza el dibujo
 			planta_graph.tools.update();
