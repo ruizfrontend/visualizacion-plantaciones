@@ -6,8 +6,14 @@
 </head>
 <style>
 	#prods .act, #years .act { color: red; }
-	.link { stroke: rgba(0,0,0,0.6); fill: none; }
-	.circ { fill: rgba(0,0,0,0.4); transition: all .2s;}
+	.link { stroke: rgba(0,0,0,0.6); fill: none; 
+		-webkit-transition: all .2s; -ms-transition: all .2s; transition: all .2s; }
+		.link:hover { stroke: rgba(60, 4, 4, 0.4); }
+	.circ { fill: rgba(0,0,0,0.4); cursor: pointer;
+		-webkit-transform-origin: center center; -ms-transform-origin: center center; transform-origin: center center;
+		-webkit-transition: all .2s; -ms-transition: all .2s; transition: all .2s; }
+		.circ:hover { fill: rgba(6, 3, 68, 0.4);
+			-webkit-transform: -ms-scale(1.1); transform: scale(1.1); transform: scale(1.1); }
 	.text {  fill: white; font-weight: 900; font-family: arial, sans-serif; font-size: 12px; pointer-events: none; text-anchor: middle; }
 </style>
 <body>
@@ -54,9 +60,12 @@ var planta_graph = {
 	timeout: null,
 	updateTime: 200,
 
-	maxCirc: 80, // max circle size 
-	maxLine: 15, // max circle size 
-	limitLine: 10,
+	maxCircProp: 30, // relation winWidth to maxCircProp
+	maxCirc: null, // generated max circle size 
+	maxLineProp: 60,
+	maxLine: null,
+
+	limitLine: 10, // 1/a mini
 	limitCirc: 100,
 
 	viz: {
@@ -86,7 +95,7 @@ var planta_graph = {
 		maxImp: null // importación máxima
 	},
 
-	init: function(){
+	init: function() {
 
 		planta_graph.viz.$em = $('#viz');
 		planta_graph.viz.svg = d3.select('#viz');
@@ -109,7 +118,7 @@ var planta_graph = {
 	},
 
 	evs: {
-		change_product: function(e){
+		change_product: function(e) {
 			
 			e.preventDefault();
 			
@@ -170,6 +179,9 @@ var planta_graph = {
 					planta_graph.data.prod[i].x = planta_graph.viz.projection([planta_graph.data.prod[i].lon, planta_graph.data.prod[i].lat])[0];
 					planta_graph.data.prod[i].y = planta_graph.viz.projection([planta_graph.data.prod[i].lon, planta_graph.data.prod[i].lat])[1];
 				};
+
+			planta_graph.maxCirc = parseInt(planta_graph.viz.width / planta_graph.maxCircProp);
+			planta_graph.maxLine = parseInt(planta_graph.viz.width / planta_graph.maxLineProp);
 
 		},
 
@@ -318,14 +330,24 @@ var planta_graph = {
 
 			// console.log(maxImp, d3.max(maxImp), maxExp, d3.max(maxExp), maxImpExp, d3.max(maxImpExp), imps, d3.max(imps), countries, links);
 
+				// linear sclaes
+			// planta_graph.viz.scale.circImp = 
+			// 	d3.scaleLinear().domain([0,d3.max(maxImp)]).range([0,planta_graph.maxCirc]);
+			// planta_graph.viz.scale.circExp = 
+			// 	d3.scaleLinear().domain([0,d3.max(maxExp)]).range([0,planta_graph.maxCirc]);
+			// planta_graph.viz.scale.circImpExp = 
+			// 	d3.scaleLinear().domain([0,d3.max(maxImpExp)]).range([0,planta_graph.maxCirc]);
+			// planta_graph.viz.scale.lines = 
+			// 	d3.scaleLinear().domain([0,d3.max(imps)]).range([0,planta_graph.maxLine]);
+
 			planta_graph.viz.scale.circImp = 
-				d3.scaleLinear().domain([0,d3.max(maxImp)]).range([0,planta_graph.maxCirc]);
+				d3.scalePow().exponent(0.8).domain([0,d3.max(maxImp)]).range([0,planta_graph.maxCirc]);
 			planta_graph.viz.scale.circExp = 
-				d3.scaleLinear().domain([0,d3.max(maxExp)]).range([0,planta_graph.maxCirc]);
+				d3.scalePow().exponent(0.8).domain([0,d3.max(maxExp)]).range([0,planta_graph.maxCirc]);
 			planta_graph.viz.scale.circImpExp = 
-				d3.scaleLinear().domain([0,d3.max(maxImpExp)]).range([0,planta_graph.maxCirc]);
+				d3.scalePow().exponent(0.8).domain([0,d3.max(maxImpExp)]).range([0,planta_graph.maxCirc]);
 			planta_graph.viz.scale.lines = 
-				d3.scaleLinear().domain([0,d3.max(imps)]).range([0,planta_graph.maxLine]);
+				d3.scalePow().exponent(0.8).domain([0,d3.max(imps)]).range([0,planta_graph.maxLine]);
 
 			for (var i = countries.length - 1; i >= 0; i--) {
 				countries[i].rTot = planta_graph.viz.scale.circImpExp(countries[i].totalImp + countries[i].totalExp);
@@ -343,7 +365,8 @@ var planta_graph = {
 							.attr('class', 'link')
 							// .attr("stroke", "blue")
 							// .attr("fill", "none")
-							.attr('stroke-width', function(d){ return planta_graph.viz.scale.lines(d.val); });
+							.attr('stroke-width', function(d){ return planta_graph.viz.scale.lines(d.val); })
+							.on("mouseenter", function(d){ console.log(d); });;
 			}
 
 			planta_graph.viz.links.data(links)
