@@ -62,7 +62,7 @@ var planta_graph = {
 
 	maxCircProp: 30, // relation winWidth to maxCircProp
 	maxCirc: null, // generated max circle size 
-	maxLineProp: 60,
+	maxLineProp: 200,
 	maxLine: null,
 
 	limitLine: 10, // 1/a mini
@@ -347,7 +347,7 @@ var planta_graph = {
 			planta_graph.viz.scale.circImpExp = 
 				d3.scalePow().exponent(0.8).domain([0,d3.max(maxImpExp)]).range([0,planta_graph.maxCirc]);
 			planta_graph.viz.scale.lines = 
-				d3.scalePow().exponent(0.8).domain([0,d3.max(imps)]).range([0,planta_graph.maxLine]);
+				d3.scalePow().exponent(0.2).domain([0,d3.max(imps)]).range([0,planta_graph.maxLine]);
 
 			for (var i = countries.length - 1; i >= 0; i--) {
 				countries[i].rTot = planta_graph.viz.scale.circImpExp(countries[i].totalImp + countries[i].totalExp);
