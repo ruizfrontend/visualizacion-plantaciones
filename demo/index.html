@@ -279,10 +279,37 @@ var planta_graph = {
 			});
 		},
 
-		processDrop: function(e) {
-			d3.json(planta_graph.pathData + planta_graph.actProd + '.json' + planta_graph.urlQuery, function(error, data){
-			    
+		getdataCountry: function(country) {
+			d3.json(planta_graph.pathData + planta_graph.actProd + '.json' + planta_graph.urlQuery, function(error, data){			    
 			    if (error) throw error;
+
+			    for (var i = planta_graph.data.countries.length - 1; i >= 0; i--) {
+					if(planta_graph.data.countries[i].key == country) console.log(planta_graph.data.countries[i])
+				}
+
+			    var out = {
+			    	expByYear: [],
+			    	impByYear: [],
+			    };
+
+			  	for(var year = 2004; year <= 2014; year++) {
+
+			  		out.expByYear[year] = 0
+			  		out.impByYear[year] = 0
+
+					for (var i = planta_graph.data.countries.length - 1; i >= 0; i--) {
+						if(planta_graph.data.countries[i].key == country) {
+							for (var k = planta_graph.data.countries.length - 1; k >= 0; k--) {
+								if(data[year][country][planta_graph.data.countries[k].key]) out.impByYear[year] += data[year][country][planta_graph.data.countries[k].key];
+							}
+						} else if (data[year][planta_graph.data.countries[i].key] && data[year][planta_graph.data.countries[i].key][country]) {
+							out.expByYear[year] += data[year][planta_graph.data.countries[i].key][country];
+						}
+					}
+
+			  	}
+
+			  	console.log(out);
 
 			});
 		},
@@ -506,7 +533,7 @@ var planta_graph = {
 
 	evs: { // planta_graph.evs.circInEnter
 		activaCountry: function(countryKey) {
-			console.log(countryKey)
+			planta_graph.tools.getdataCountry(countryKey);
 		},
 
 		desactivaCountry: function() {
