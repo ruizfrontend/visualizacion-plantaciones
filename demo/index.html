@@ -77,7 +77,7 @@ var planta_graph = {
 	maxLineProp: 100,
 	maxLine: null,
 
-	minLineProp: 10, // relation of max circ
+	minLineProp: 4, // relation of max circ
 	minLine: null,
 	minCircProp: 10, // relation of max circ
 	minCirc: null,
@@ -300,7 +300,7 @@ var planta_graph = {
 			planta_graph.viz.scale.circImpExp = 
 				d3.scalePow().exponent(.8).domain([0,d3.max(maxImpExp)]).range([0,planta_graph.maxCirc]);
 			planta_graph.viz.scale.lines = 
-				d3.scalePow().exponent(.7).domain([0,d3.max(imps)]).range([-1,planta_graph.maxLine]);
+				d3.scalePow().exponent(.9).domain([0,d3.max(imps)]).range([-1,planta_graph.maxLine]);
 
 			for (var i = countries.length - 1; i >= 0; i--) {
 				countries[i].rTot = planta_graph.viz.scale.circImpExp(countries[i].totalImp + countries[i].totalExp);
@@ -310,8 +310,8 @@ var planta_graph = {
 				countries[i].rExp = planta_graph.viz.scale.circExp(countries[i].totalExp);
 			}
 
-			planta_graph.data.prod = countries;
-			planta_graph.data.links = links;
+			// planta_graph.data.prod = countries;
+			// planta_graph.data.links = links;
 
 				// iniciación inicial de líneas
 			if(!planta_graph.viz.links) {
@@ -389,10 +389,10 @@ var planta_graph = {
 			planta_graph.viz.texts
 				.attr("visibility", function (d) {
 					if(planta_graph.actType.length == 2) {
-						return d.rTot < 10 ? "hidden" : "visible";
+						return d.rTot < 13 ? "hidden" : "visible";
 					} else {
-						if($.inArray('imp', planta_graph.actType) == -1) return d.rExp < 10 ? "hidden" : "visible";
-						return d.rImp < 10 ? "hidden" : "visible";
+						if($.inArray('imp', planta_graph.actType) == -1) return d.rExp < 13 ? "hidden" : "visible";
+						return d.rImp < 13 ? "hidden" : "visible";
 					}
 			  	})
 				.attr('x', function(d) { return d.x; })
