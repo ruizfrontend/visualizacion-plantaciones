@@ -29,6 +29,7 @@ svg { background: white; }
 			-webkit-transform: -ms-scale(1.1); transform: scale(1.1); transform: scale(1.1); }
 
 	.text {  fill: white; font-weight: 900; font-family: arial, sans-serif; font-size: 12px; pointer-events: none; text-anchor: middle; }
+
 </style>
 <body>
 
@@ -59,9 +60,16 @@ svg { background: white; }
 	<a href="" data-year="2014" class="">2014</a>
 </div>
 
+<input type="text" id="contryImput">
+<select name="contrySelect" id="contrySelect">
+	
+</select>
+
+
 <svg id="viz"></svg>
 
 <script src="http://estaticos.lab.eldiario.es/libs/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="http://estaticos.lab.eldiario.es/estaticos/libs/jquery.autocomplete.js"></script>
 <!-- <script src="http://estaticos.lab.eldiario.es/libs/d3-4.7.1.min.js"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.7.3/d3.js"></script>
 <script src="http://estaticos.lab.eldiario.es/libs/topojson-2.2.0.min.js"></script>
@@ -72,6 +80,7 @@ var planta_graph = {
 
 	pathData: './',
 	pathPaises: './paises.json',
+	urlQuery: '?dd',
 
 	actYear: 2014,
 	actProd: 'cafe',
@@ -203,18 +212,49 @@ var planta_graph = {
 			  	if (error) throw error;
 
 			  	var paises = [];
+			  	var autoComplete = [];
 
 			  	for (var key in world) {
 				  if (world.hasOwnProperty(key)) {
+
 				    var pais = world[key];
+
 				    pais.key = key;
 				    pais.posX = planta_graph.viz.projection([pais.lon, pais.lat])[0];
 				    pais.posY = planta_graph.viz.projection([pais.lon, pais.lat])[1];
 				    pais.x = pais.posX;
 				    pais.y = pais.posY;
+
 				    paises.push(pais);
+
+
+				    autoComplete.push({
+				    	value: pais.name,
+				    	data: {
+				    		id: pais.name,
+				    		key: pais.key
+				    	}
+				    });
+
+
+				    $('#contrySelect').append('<option value="' + pais.key + '">' + pais.name + '</option>')
+
 				  }
 				};
+				
+				$('#contryImput').autocomplete({
+		          lookup: autoComplete,
+		          minChars: 3,
+		          orientation: 'bottom',
+		          autoSelectFirst: true,
+		          showNoSuggestionNotice: true,
+		          noSuggestionNotice: 'No se encontraron coincidencias',
+		          groupBy: 'p',
+		          onSelect: function (suggestion) {
+		            planta_graph.evs.activaCountry(suggestion.data.key);
+		          }
+		        });
+
 
 				planta_graph.data.countries = paises;
 				
@@ -223,7 +263,7 @@ var planta_graph = {
 		},
 
 		update: function() {
-			d3.json(planta_graph.pathData + planta_graph.actProd + '.json?dd', function(error, data){
+			d3.json(planta_graph.pathData + planta_graph.actProd + '.json' + planta_graph.urlQuery, function(error, data){
 			    
 			    if (error) throw error;
 
@@ -236,6 +276,14 @@ var planta_graph = {
 				});
 
 				planta_graph.tools.processData(data);
+			});
+		},
+
+		processDrop: function(e) {
+			d3.json(planta_graph.pathData + planta_graph.actProd + '.json' + planta_graph.urlQuery, function(error, data){
+			    
+			    if (error) throw error;
+
 			});
 		},
 
@@ -291,9 +339,11 @@ var planta_graph = {
 				if((countries[i].totalImp + countries[i].totalExp) > 0) maxImpExp.push(countries[i].totalImp + countries[i].totalExp);
 			}
 
+
 			// console.log(maxImp, d3.max(maxImp), maxExp, d3.max(maxExp), maxImpExp, d3.max(maxImpExp), imps, d3.max(imps), countries, links);
 
-				// linear sclaes
+
+				// scalas lineales
 			// planta_graph.viz.scale.circImp = 
 			// 	d3.scaleLinear().domain([0,d3.max(maxImp)]).range([0,planta_graph.maxCirc]);
 			// planta_graph.viz.scale.circExp = 
@@ -323,6 +373,7 @@ var planta_graph = {
 			// planta_graph.data.prod = countries;
 			// planta_graph.data.links = links;
 
+
 				// iniciación inicial de líneas
 			if(!planta_graph.viz.links) {
 			  planta_graph.viz.links = planta_graph.viz.svg
@@ -338,6 +389,7 @@ var planta_graph = {
 								$('#texto').text('');
 							});
 			}
+
 
 				// actualización de líneas
 			planta_graph.viz.links.data(links)
@@ -355,16 +407,16 @@ var planta_graph = {
 					.append('circle')
 						.attr('class', 'circImp')
 						.on("mouseenter", planta_graph.evs.circInEnter)
-						.on("mouseout", function(d){
-							$('#texto').text('');
-						});
+						.on("mousedown", planta_graph.evs.circClick)
+						.on("mouseout", function(d){ $('#texto').text(''); });
 
 				planta_graph.viz.circExp = planta_graph.viz.svg
 					.selectAll('.circExp').data(countries).enter()
 					.append('circle')
 						.attr('class', 'circExp')
 						.on("mouseenter", planta_graph.evs.circExpEnter)
-						.on("mouseout", planta_graph.evs.circExpOut);
+						.on("mouseout", planta_graph.evs.circExpOut)
+						.on("mousedown", planta_graph.evs.circClick);
 
 				planta_graph.viz.texts = planta_graph.viz.svg
 					.selectAll('.text').data(countries).enter()
@@ -394,8 +446,7 @@ var planta_graph = {
 			planta_graph.viz.force = d3.forceSimulation(countries)
 				.force("link", d3.forceLink(links).strength(0.0000001))
 				.force("charge", d3.forceManyBody().strength(0.01))
-    			.force("collide", 
-    				d3.forceCollide().radius(planta_graph.evs.collideRadiusFn).iterations(1).strength(2))
+    			.force("collide", d3.forceCollide().radius(planta_graph.evs.collideRadiusFn).iterations(1).strength(2))
 				// .force("link", d3.forceLink(links).strength(function(d){return d.val / 1000 }).distance(20))
 				// .force("center", d3.forceCenter(planta_graph.viz.width / 2, planta_graph.viz.height / 2))
 
@@ -444,18 +495,29 @@ var planta_graph = {
 
 			$(planta_graph.actType).each(function(e, f){
 				$('#type a[data-type=' +  f + ']').addClass('act');
-			})
+			});
+
+			$('#contrySelect').change(function(e) { 
+				planta_graph.evs.activaCountry($('#contrySelect option:selected').attr('value'));
+			});
 
 		}
 	},
 
 	evs: { // planta_graph.evs.circInEnter
+		activaCountry: function(countryKey) {
+			console.log(countryKey)
+		},
+
+		desactivaCountry: function() {
+			console.log('desactivaCountry');
+		},
+
 		circInEnter: function(d){ 
 			$('#texto').text(d.name + ': Total importaciones ' + numberThousandsDots(d.totalImp) + ' dollars, total exportaciones ' + numberThousandsDots(d.totalExp) + ' dollars');
 		},
 
 		circExpEnter: function(d){
-
 			planta_graph.viz.links
 				.attr('class', function(e){
 					return e.source.name == d.name || e.target.name == d.name ? 'link link-act' : 'link';
@@ -463,7 +525,9 @@ var planta_graph = {
 
 			$('#texto').text(d.name + ': Total importaciones ' + numberThousandsDots(d.totalImp) + ' dollars, total exportaciones ' + numberThousandsDots(d.totalExp) + ' dollars');
 		},
-
+		circClick: function(d) {
+			planta_graph.evs.activaCountry(d.key);
+		},
 		circExpOut: function(d){
 			planta_graph.viz.links
 				.attr('class', 'link');
@@ -509,15 +573,6 @@ var planta_graph = {
 			return d.rTot + 5;
 		},
 
-		showTooltipBar: function() {
-
-		},
-		showTooltipCirc: function() {
-
-		},
-		clearTooltip: function() {
-
-		},
 		change_product: function(e) {
 			
 			e.preventDefault();
