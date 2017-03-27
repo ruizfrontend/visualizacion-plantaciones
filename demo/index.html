@@ -128,8 +128,6 @@ var planta_graph = {
 		$(window).bind('orientationchange resize', throttle(planta_graph.tools.handleResize, 300));
 
 		planta_graph.tools.handleResize();
-
-		planta_graph.tools.update();
 	},
 
 	tools: {
@@ -372,7 +370,7 @@ var planta_graph = {
 					.selectAll('.text').data(countries).enter()
 					.append('text')
 						.attr('class', 'text')
-						.text(function(d){ return d.key; })
+						.text(function(d){ return d.key; });
 			}
 
 				// actualización de círculos y textos
@@ -380,20 +378,18 @@ var planta_graph = {
 				.attr("visibility", planta_graph.evs.circImpVisibilityCheck)
 				.attr('r', planta_graph.evs.circImpRadius)
 				.attr('cx', function(d) { return d.x; })
-				.attr('cy', function(d) { return d.y; })
+				.attr('cy', function(d) { return d.y; });
 
 			planta_graph.viz.circExp.data(countries)
 				.attr("visibility", planta_graph.evs.circExpVisibilityCheck)
 				.attr('r', planta_graph.evs.circExpRadius)
 				.attr('cx', function(d) { return d.x; })
-				.attr('cy', function(d) { return d.y; })
+				.attr('cy', function(d) { return d.y; });
 
 			planta_graph.viz.texts
 				.attr("visibility", planta_graph.evs.textVisibilityCheck)
 				.attr('x', function(d) { return d.x; })
-				.attr('y', function(d) { return d.y+5; })
-
-			if(planta_graph.viz.force) planta_graph.viz.force.stop();
+				.attr('y', function(d) { return d.y+5; });
 
 			planta_graph.viz.force = d3.forceSimulation(countries)
 				.force("link", d3.forceLink(links).strength(0.0000001))
@@ -418,21 +414,21 @@ var planta_graph = {
 
 			planta_graph.viz.circsImp
 				.attr('cx', function(d) { return d.x; })
-				.attr('cy', function(d) { return d.y; })
+				.attr('cy', function(d) { return d.y; });
 
 			planta_graph.viz.circExp
 				.attr('cx', function(d) { return d.x; })
-				.attr('cy', function(d) { return d.y; })
+				.attr('cy', function(d) { return d.y; });
 
 			planta_graph.viz.links
 				.attr('x1', function(d) { return d.source.x; })
 				.attr('x2', function(d) { return d.target.x; })
 				.attr('y1', function(d) { return d.source.y; })
-				.attr('y2', function(d) { return d.target.y; })
+				.attr('y2', function(d) { return d.target.y; });
 
 			planta_graph.viz.texts
 				.attr('x', function(d) { return d.x; })
-				.attr('y', function(d) { return d.y+5; })
+				.attr('y', function(d) { return d.y + 5; });
 			
 		},
 
@@ -446,7 +442,9 @@ var planta_graph = {
 			$('#years a[data-year=' +  planta_graph.actYear + ']').addClass('act');
 			$('#prods a[data-prod=' +  planta_graph.actProd + ']').addClass('act');
 
-			$(planta_graph.actType).each(function(e, f){ console.log('#type a[data-type=' +  f + ']');$('#type a[data-type=' +  f + ']').addClass('act'); })
+			$(planta_graph.actType).each(function(e, f){
+				$('#type a[data-type=' +  f + ']').addClass('act');
+			})
 
 		}
 	},
