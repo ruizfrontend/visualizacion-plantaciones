@@ -9,7 +9,7 @@
 
 	.link { stroke: rgba(0,0,0,0.4); fill: none; 
 		-webkit-transition: stroke .2s; -ms-transition: stroke .2s; transition: stroke .2s; }
-		.link:hover { stroke: rgba(60, 4, 4, 0.6); }
+		.link:hover, .link-act { stroke: rgba(60, 4, 4, 0.6); }
 
 	.circImp { fill: rgba(0,0,0,0.4); cursor: pointer;
 		-webkit-transform-origin: center center; -ms-transform-origin: center center; transform-origin: center center;
@@ -350,7 +350,16 @@ var planta_graph = {
 					.enter()
 						.append('circle')
 							.attr('class', 'circExp')
-							.on("mouseenter", function(d){ console.log(d); });
+							.on("mouseenter", function(d){
+								planta_graph.viz.links
+									.attr('class', function(e){
+										return e.source.name == d.name || e.target.name == d.name ? 'link link-act' : 'link';
+									});
+							})
+							.on("mouseout", function(d){
+								planta_graph.viz.links
+									.attr('class', 'link');
+							});
 
 				planta_graph.viz.texts = planta_graph.viz.svg
 					.selectAll('.text')
