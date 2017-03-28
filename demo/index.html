@@ -70,9 +70,7 @@ svg { background: white; }
 
 <script src="http://estaticos.lab.eldiario.es/libs/jquery-1.10.2.min.js"></script>
 <script type="text/javascript" src="http://estaticos.lab.eldiario.es/estaticos/libs/jquery.autocomplete.js"></script>
-<!-- <script src="http://estaticos.lab.eldiario.es/libs/d3-4.7.1.min.js"></script> -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.7.3/d3.js"></script>
-<script src="http://estaticos.lab.eldiario.es/libs/topojson-2.2.0.min.js"></script>
+<script src="http://estaticos.lab.eldiario.es/libs/d3-4.7.1.min.js"></script>
 
 <script>
 
@@ -80,13 +78,13 @@ var planta_graph = {
 
 	pathData: './',
 	pathPaises: './paisesTot.json',
-	urlQuery: '?dd',
+	pathQuery: '?dd',
 
-	actYear: 2014,
-	actProd: 'cafe',
-	actType: ['imp', 'exp'],
-
-	updateTime: 200,
+	act:{
+		year: 2014,
+		prod: 'cafe',
+		type: ['imp', 'exp'],
+	},
 
 	maxCircProp: 20, // relation winWidth to maxCircProp
 	maxCirc: null, // generated max circle size 
@@ -119,18 +117,18 @@ var planta_graph = {
 	},
 
 	data: {
-		prod: null,
-		countries: null,
-		links: null,
-		maxImp: null // importación máxima
+		countries: null, // datos reales
+		
+		yearTopExp: null, // calculo de tops del año activo
+		yearTopImp: null,
 	},
 
 	init: function() {
 
-		planta_graph.viz.$em = $('#viz');
+		planta_graph.viz.$elm = $('#viz');
 		planta_graph.viz.svg = d3.select('#viz');
 		
-		planta_graph.tools.loadCountries();
+		// planta_graph.tools.loadCountries();
 
 		planta_graph.tools.initJqueries();
 
@@ -153,7 +151,7 @@ var planta_graph = {
 		   	planta_graph.viz.width = $(window).width();
 		   	planta_graph.viz.height = planta_graph.viz.width / 2;
 
-		   	planta_graph.viz.$em.css({
+		   	planta_graph.viz.$elm.css({
 		   		width: planta_graph.viz.width,
 		   		height: planta_graph.viz.height
 		   	});
@@ -263,7 +261,7 @@ var planta_graph = {
 		},
 
 		update: function() {
-			d3.json(planta_graph.pathData + planta_graph.actProd + '.json' + planta_graph.urlQuery, function(error, data){
+			d3.json(planta_graph.pathData + planta_graph.act.prod + '.json' + planta_graph.pathQuery, function(error, data){
 			    
 			    if (error) throw error;
 
@@ -280,7 +278,7 @@ var planta_graph = {
 		},
 
 		getdataCountry: function(country) {
-			d3.json(planta_graph.pathData + planta_graph.actProd + '.json' + planta_graph.urlQuery, function(error, data){			    
+			d3.json(planta_graph.pathData + planta_graph.act.prod + '.json' + planta_graph.pathQuery, function(error, data){			    
 			    if (error) throw error;
 
 			    for (var i = planta_graph.data.countries.length - 1; i >= 0; i--) {
@@ -317,19 +315,22 @@ var planta_graph = {
 		processData: function(data) {
 
 			var countries = planta_graph.data.countries; // alias
-			var actData = data[planta_graph.actYear];
+			var actData = data[planta_graph.act.year];
 
 			var links = [];
-
-			planta_graph.data.maxImp = 0;
-			planta_graph.data.maxTotalImp = 0;
+			var tops = {
+				exp: [],
+				imp: []
+			}
 
 			for (var i = countries.length - 1; i >= 0; i--) {
 				countries[i].totalImp = 0;
 				countries[i].totalExp = 0;
 			}
 
+
 			var imps = [];
+
 
 			for (var i = countries.length - 1; i >= 0; i--) {
 				if(actData[countries[i].key]) {
@@ -356,6 +357,19 @@ var planta_graph = {
 				}
 			}
 			
+
+			for (var i = countries.length - 1; i >= 0; i--) {
+				tops.imp.push({
+					key: countries[i].key,
+					val: countries[i].totalImp
+				});
+
+				tops.exp.push({
+					key: countries[i].key,
+					val: countries[i].totalExp
+				});
+			}
+
 			var maxImp = [];
 			var maxExp = [];
 			var maxImpExp = [];
@@ -365,6 +379,16 @@ var planta_graph = {
 				if(countries[i].totalExp > 0) maxExp.push(countries[i].totalExp);
 				if((countries[i].totalImp + countries[i].totalExp) > 0) maxImpExp.push(countries[i].totalImp + countries[i].totalExp);
 			}
+
+			planta_graph.data.yearTopExp = tops.exp.sort(function(x, y){
+				return d3.descending(x.val, y.val);
+			})
+
+			planta_graph.data.yearTopImp = tops.imp.sort(function(x, y){
+				return d3.descending(x.val, y.val);
+			})
+
+			planta_graph.data.yearTopImp
 
 
 			// console.log(maxImp, d3.max(maxImp), maxExp, d3.max(maxExp), maxImpExp, d3.max(maxImpExp), imps, d3.max(imps), countries, links);
@@ -517,10 +541,10 @@ var planta_graph = {
 
 			$('#type a').click(planta_graph.evs.change_type);
 
-			$('#years a[data-year=' +  planta_graph.actYear + ']').addClass('act');
-			$('#prods a[data-prod=' +  planta_graph.actProd + ']').addClass('act');
+			$('#years a[data-year=' +  planta_graph.act.year + ']').addClass('act');
+			$('#prods a[data-prod=' +  planta_graph.act.prod + ']').addClass('act');
 
-			$(planta_graph.actType).each(function(e, f){
+			$(planta_graph.act.type).each(function(e, f){
 				$('#type a[data-type=' +  f + ']').addClass('act');
 			});
 
@@ -562,39 +586,39 @@ var planta_graph = {
 		},
 
 		textVisibilityCheck: function(d) {
-			if(planta_graph.actType.length == 2) {
+			if(planta_graph.act.type.length == 2) {
 				return d.rTot < 13 ? "hidden" : "visible";
 			} else {
-				if($.inArray('imp', planta_graph.actType) == -1) return d.rExp < 13 ? "hidden" : "visible";
+				if($.inArray('imp', planta_graph.act.type) == -1) return d.rExp < 13 ? "hidden" : "visible";
 				return d.rImp < 13 ? "hidden" : "visible";
 			}
 
 		},
 
 		circImpVisibilityCheck: function(d) {
-			if($.inArray('imp', planta_graph.actType) == -1) return "hidden";
+			if($.inArray('imp', planta_graph.act.type) == -1) return "hidden";
 	    	return (d.rImp <  (planta_graph.maxCirc / 50)) ? "hidden" : "visible";
 		},
 
 		circImpRadius: function(d) {
-			if(planta_graph.actType.length == 2) return d.rTotImp;
+			if(planta_graph.act.type.length == 2) return d.rTotImp;
 			else return d.rImp;
 		},
 
 		circExpVisibilityCheck: function(d) {
-			if($.inArray('exp', planta_graph.actType) == -1) return "hidden";
-	    	return (($.inArray('imp', planta_graph.actType) == -1 ? d.rExp : d.rT) <  (planta_graph.maxCirc / 50)) ? "hidden" : "visible";
+			if($.inArray('exp', planta_graph.act.type) == -1) return "hidden";
+	    	return (($.inArray('imp', planta_graph.act.type) == -1 ? d.rExp : d.rT) <  (planta_graph.maxCirc / 50)) ? "hidden" : "visible";
 		},
 
 		circExpRadius: function(d) {
-			return ($.inArray('imp', planta_graph.actType) == -1) ? d.rExp : d.rTot;
+			return ($.inArray('imp', planta_graph.act.type) == -1) ? d.rExp : d.rTot;
 		},
 
 		collideRadiusFn: function(d) {
-			if(planta_graph.actType.length == 2) {
+			if(planta_graph.act.type.length == 2) {
 				return d.rTot + 8;
 			} else {
-				if($.inArray('imp', planta_graph.actType) == -1) return d.rExp + 5;
+				if($.inArray('imp', planta_graph.act.type) == -1) return d.rExp + 5;
 				return d.rImp + 5;
 			}
 			return d.rTot + 5;
@@ -607,9 +631,9 @@ var planta_graph = {
 			$('#prods .act').removeClass('act');
 
 			var prod = $(this).addClass('act').data('prod');
-			if(!prod || planta_graph.actProd == prod) { console.log('no hay producto'); return; };
+			if(!prod || planta_graph.act.prod == prod) { console.log('no hay producto'); return; };
 
-			planta_graph.actProd = prod;
+			planta_graph.act.prod = prod;
 
 				// carga datos nuevos y pinta
 			planta_graph.tools.update();
@@ -622,9 +646,9 @@ var planta_graph = {
 			$('#years .act').removeClass('act');
 			
 			var year = $(this).addClass('act').data('year');
-			if(!year || planta_graph.actYear == year) { console.log('no hay año'); return; };
+			if(!year || planta_graph.act.year == year) { console.log('no hay año'); return; };
 
-			planta_graph.actYear = year;
+			planta_graph.act.year = year;
 
 				// actualiza el dibujo
 			planta_graph.tools.update();
@@ -638,19 +662,19 @@ var planta_graph = {
 			var type = $this.data('type');
 
 				// ya activado => desactiva
-			if($.inArray(type, planta_graph.actType) != -1){
+			if($.inArray(type, planta_graph.act.type) != -1){
 					
 					// para no quedarnos a 0
-				if(planta_graph.actType.length < 2) return;
+				if(planta_graph.act.type.length < 2) return;
 
 				$this.removeClass('act');
-				planta_graph.actType.splice(planta_graph.actType.indexOf(type), 1);
+				planta_graph.act.type.splice(planta_graph.act.type.indexOf(type), 1);
 
 				// no activado => activa
 			} else {
 
 				$this.addClass('act');
-				planta_graph.actType.push(type);
+				planta_graph.act.type.push(type);
 			}
 
 				// actualiza el dibujo
