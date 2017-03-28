@@ -47,20 +47,20 @@ svg { background: white; }
 	#texto { position: absolute; right: 0; top: 0; color: red; }
 #graph { background: #efefef; }
 
-	.link { stroke: rgba(0,0,0,0.4); fill: none; 
-		-webkit-transition: stroke .2s; -ms-transition: stroke .2s; transition: stroke .2s; }
+	.link { stroke: rgba(0,0,0,0.4); fill: none;  }
 		.link:hover, .link-act { stroke: rgba(60, 4, 4, 0.6); }
+		.anim .link { -webkit-transition: stroke .2s; -ms-transition: stroke .2s; transition: stroke .2s; }
 
-	.circImp { fill: #126567; cursor: pointer;
-		-webkit-transform-origin: center center; -ms-transform-origin: center center; transform-origin: center center;
-		-webkit-transition: all .2s; -ms-transition: all .2s; transition: all .2s; }
-		.circImp:hover { fill: rgba(6, 3, 68, 0.4);
-			-webkit-transform: -ms-scale(1.1); transform: scale(1.1); transform: scale(1.1); }
+	.circImp { fill: #126567; cursor: pointer; }
+		.anim .circImp {  -webkit-transform-origin: center center; -ms-transform-origin: center center; transform-origin: center center;
+				-webkit-transition: all .2s; -ms-transition: all .2s; transition: all .2s; }
+		.anim .circImp:hover { fill: rgba(6, 3, 68, 0.4);
+		-webkit-transform: -ms-scale(1.1); transform: scale(1.1); transform: scale(1.1); }
 
-	.circExp { fill: #d35d33; cursor: pointer;
-		-webkit-transform-origin: center center; -ms-transform-origin: center center; transform-origin: center center;
-		-webkit-transition: all .2s; -ms-transition: all .2s; transition: all .2s; }
-		.circExp:hover { fill: rgba(6, 3, 68, 0.4);
+	.circExp { fill: #d35d33; cursor: pointer; }
+		.anim .circExp {  -webkit-transform-origin: center center; -ms-transform-origin: center center; transform-origin: center center;
+				-webkit-transition: all .2s; -ms-transition: all .2s; transition: all .2s; }
+		.anim .circExp:hover { fill: rgba(6, 3, 68, 0.4);
 			-webkit-transform: -ms-scale(1.1); transform: scale(1.1); transform: scale(1.1); }
 
 	.text {  fill: white; font-weight: 900; font-family: arial, sans-serif; font-size: 12px; pointer-events: none; text-anchor: middle; }
@@ -248,13 +248,13 @@ var planta_graph = {
 				};
 
 			planta_graph.maxCirc = parseInt(planta_graph.viz.width / planta_graph.maxCircProp);
-			planta_graph.minCirc = parseInt(planta_graph.maxCirc / planta_graph.minCircProp);
+			planta_graph.minCirc = Math.ceil(planta_graph.maxCirc / planta_graph.minCircProp);
 			planta_graph.maxLine = parseInt(planta_graph.viz.width / planta_graph.maxLineProp);
-			planta_graph.minLine = parseInt(planta_graph.maxLine / planta_graph.minLineProp);
+			planta_graph.minLine = Math.ceil(planta_graph.maxLine / planta_graph.minLineProp);
 
-			if(planta_graph.viz.width < 400) {
-				planta_graph.maxCirc = 2 * planta_graph.maxCirc;
-			}
+			// if(planta_graph.viz.width < 400) {
+			// 	planta_graph.maxCirc = planta_graph.maxCirc;
+			// }
 
 		},
 			// fondo de paises
@@ -644,6 +644,7 @@ var planta_graph = {
 			planta_graph.viz.links.data(links)
 				.attr('stroke-width', function(d){ return planta_graph.viz.scale.lines(d.val); })
 				.attr("visibility", function (d) {
+					if(planta_graph.act.type.length != 2) return "hidden";
 			    	return (planta_graph.viz.scale.lines(d.val) < planta_graph.minLine) ? "hidden" : "visible";
 			  	});
 
