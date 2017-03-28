@@ -148,6 +148,8 @@ var planta_graph = {
 		type: ['imp', 'exp'],
 	},
 
+	breakPoint: 400,
+
 	maxCircProp: 20, // relation winWidth to maxCircProp
 	maxCirc: null, // generated max circle size 
 	maxLineProp: 100,
@@ -228,6 +230,13 @@ var planta_graph = {
 
 		   	planta_graph.viz.width = $(window).width();
 		   	planta_graph.viz.height = planta_graph.viz.width / 2;
+			
+			if(planta_graph.viz.width < planta_graph.breakPoint) {
+				planta_graph.viz.height = planta_graph.viz.width / 1.4;
+				$('body').removeClass('anim')
+			} else {
+				$('body').addClass('anim')
+			}
 
 		   	planta_graph.viz.$elm.css({
 		   		width: planta_graph.viz.width,
@@ -251,10 +260,6 @@ var planta_graph = {
 			planta_graph.minCirc = Math.ceil(planta_graph.maxCirc / planta_graph.minCircProp);
 			planta_graph.maxLine = parseInt(planta_graph.viz.width / planta_graph.maxLineProp);
 			planta_graph.minLine = Math.ceil(planta_graph.maxLine / planta_graph.minLineProp);
-
-			// if(planta_graph.viz.width < 400) {
-			// 	planta_graph.maxCirc = planta_graph.maxCirc;
-			// }
 
 		},
 			// fondo de paises
