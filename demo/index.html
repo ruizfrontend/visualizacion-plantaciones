@@ -44,7 +44,7 @@ svg { background: white; }
 	<a href="" data-prod="banana" class="">Banana</a>
 	<a href="" data-prod="azucar" class="">Azucar</a>
 	<a href="" data-prod="aceite" class="">Aceite</a>
-	<a href="" data-prod="cafe" class="">Cafe</a>
+	<a href="" data-prod="cafe" class="">Café</a>
 </div>
 <div id="years">
 	<a href="" data-year="2004" class="">2004</a>
@@ -78,7 +78,7 @@ var planta_graph = {
 
 	pathData: './',
 	pathPaises: './paisesTot.json',
-	pathQuery: '?dd',
+	pathQuery: '?mls3',
 
 	act:{
 		year: 2014,
@@ -121,6 +121,18 @@ var planta_graph = {
 		
 		yearTopExp: null, // calculo de tops del año activo
 		yearTopImp: null,
+
+		totalExp: null,
+		totalImp: null,
+	},
+	txt: {
+		articulos: {
+			cafe: 'el cafe',
+			aceite: 'el aceite',
+			cacao: 'el cacao',
+			banana: 'la banana',
+			azucar: 'el azucar'
+		}
 	},
 
 	init: function() {
@@ -179,7 +191,7 @@ var planta_graph = {
 			}
 
 		},
-
+			// fondo de paises
 		initBG: function() {
 
 			d3.json("./world-50m.json", function(error, world) {
@@ -253,7 +265,6 @@ var planta_graph = {
 		          }
 		        });
 
-
 				planta_graph.data.countries = paises;
 				
 				if(cb) cb();
@@ -281,35 +292,110 @@ var planta_graph = {
 			d3.json(planta_graph.pathData + planta_graph.act.prod + '.json' + planta_graph.pathQuery, function(error, data){			    
 			    if (error) throw error;
 
-			    for (var i = planta_graph.data.countries.length - 1; i >= 0; i--) {
-					if(planta_graph.data.countries[i].key == country) console.log(planta_graph.data.countries[i])
-				}
-
-			    var out = {
+			    var dataCountry = {
+			    	actCountry: null,
 			    	expByYear: [],
 			    	impByYear: [],
 			    };
 
+			    for (var i = planta_graph.data.countries.length - 1; i >= 0; i--) {
+					if(planta_graph.data.countries[i].key == country) dataCountry.actCountry = planta_graph.data.countries[i];
+				}
+				if(!dataCountry.actCountry) throw 'No se encontró el pais activo';
+
 			  	for(var year = 2004; year <= 2014; year++) {
 
-			  		out.expByYear[year] = 0
-			  		out.impByYear[year] = 0
+			  		dataCountry.expByYear[year] = 0
+			  		dataCountry.impByYear[year] = 0
 
 					for (var i = planta_graph.data.countries.length - 1; i >= 0; i--) {
 						if(planta_graph.data.countries[i].key == country) {
 							for (var k = planta_graph.data.countries.length - 1; k >= 0; k--) {
-								if(data[year][country][planta_graph.data.countries[k].key]) out.impByYear[year] += data[year][country][planta_graph.data.countries[k].key];
+								if(data[year][country][planta_graph.data.countries[k].key]) dataCountry.impByYear[year] += data[year][country][planta_graph.data.countries[k].key];
 							}
 						} else if (data[year][planta_graph.data.countries[i].key] && data[year][planta_graph.data.countries[i].key][country]) {
-							out.expByYear[year] += data[year][planta_graph.data.countries[i].key][country];
+							dataCountry.expByYear[year] += data[year][planta_graph.data.countries[i].key][country];
 						}
 					}
 
 			  	}
 
-			  	console.log(out);
+			  	planta_graph.tools.getFrases(dataCountry);
 
 			});
+		},
+
+		getFrases(dataCountry) {
+
+			var name = dataCountry.actCountry.name;
+			var out = [];
+
+			if(planta_graph.act.type.length == 2) {
+
+				var balance = dataCountry.actCountry.totalExp - dataCountry.actCountry.totalImp;console.log(balance);
+				var positionImp = planta_graph.tools.getPosition(dataCountry, 'imp');
+				var positionExp = planta_graph.tools.getPosition(dataCountry, 'exp');
+
+				if(balance > 0) {
+					out.push(name + ' exportó ' + planta_graph.tools.parseAmmount(balance) + ' más en ' + planta_graph.act.prod + ' de los que importó.');
+				} else {
+					out.push(name + ' importó ' + planta_graph.tools.parseAmmount(-1 * balance) + ' más en ' + planta_graph.act.prod + ' de los que exportó.');
+				}
+				out.push(name + ' ocupa el puesto número ' + positionExp + ' de países exportadores y el puesto número ' + positionImp + ' de paises exportadores de ' + planta_graph.act.prod + '.');
+
+
+			} else if(planta_graph.act.type.indexOf('imp') != -1) {
+
+				var position = planta_graph.tools.fixPosition(planta_graph.tools.getPosition(dataCountry, 'imp'));
+				var percent = 100 * dataCountry.actCountry.totalImp / planta_graph.data.totalImp;
+				var total = 100 * dataCountry.actCountry.totalImp / dataCountry.actCountry.resumen.imps[planta_graph.act.year];
+
+				out.push(name + ' ocupa el ' + position + ' puesto en el ranking de países importadores de ' + planta_graph.act.prod + '.');
+				out.push(name + ' controla el ' + percent.toFixed(2) + '% de las importaciones mundiales de ' + planta_graph.act.prod + '.');
+				out.push(firstCapital(planta_graph.txt.articulos[planta_graph.act.prod]) + ' supone el ' + total.toFixed(2) + '% de las importaciones de ' + name +  ', ' + planta_graph.tools.parseAmmount(dataCountry.actCountry.totalImp) + '.');
+
+			} else {
+
+				var position = planta_graph.tools.fixPosition(planta_graph.tools.getPosition(dataCountry, 'exp'));
+				var percent = 100 * dataCountry.actCountry.totalExp / planta_graph.data.totalExp;
+				var total = 100 * dataCountry.actCountry.totalExp / dataCountry.actCountry.resumen.exps[planta_graph.act.year];
+
+				out.push(name + ' ocupa el ' + position + ' puesto en el ranking de países exportadores de ' + planta_graph.act.prod + '.');
+				out.push(name + ' controla el ' + percent.toFixed(2) + '% de las exportaciones mundiales de ' + planta_graph.act.prod + '.');
+				out.push(firstCapital(planta_graph.txt.articulos[planta_graph.act.prod]) + ' supone el ' + total.toFixed(2) + '% de las exportaciones de ' + name +  ', ' + planta_graph.tools.parseAmmount(dataCountry.actCountry.totalImp) + '.');
+			}
+
+			return out;
+		},
+
+		parseAmmount(ammout) {
+			if(ammout / 1000000 > 1) {
+				return numberThousandsDots(parseInt(ammout / 1000000)) + ' millones de dólares';
+			} else {
+				return numberThousandsDots(ammout) + ' dólares';
+			}
+		},
+
+		fixPosition (number) {
+			switch(number){
+				case 1: return 'primer'; break;
+				case 2: return 'segundo'; break;
+				case 3: return 'tercer'; break;
+				default: return number + 'º'; break;
+			}
+		},
+
+		getPosition(dataCountry, type) {
+			if(type == 'imp') {
+				for (var i = planta_graph.data.yearTopImp.length - 1; i >= 0; i--) {
+					if(planta_graph.data.yearTopImp[i].key == dataCountry.actCountry.key) return i + 1;
+				}
+			} else {
+				for (var i = planta_graph.data.yearTopExp.length - 1; i >= 0; i--) {
+					if(planta_graph.data.yearTopExp[i].key == dataCountry.actCountry.key) return i + 1;
+				}
+			} 
+			return null;
 		},
 
 		processData: function(data) {
@@ -357,8 +443,14 @@ var planta_graph = {
 				}
 			}
 			
+			planta_graph.data.totalExp = 0;
+			planta_graph.data.totalImp = 0;
 
 			for (var i = countries.length - 1; i >= 0; i--) {
+
+				planta_graph.data.totalExp += countries[i].totalExp;
+				planta_graph.data.totalImp += countries[i].totalImp;
+
 				tops.imp.push({
 					key: countries[i].key,
 					val: countries[i].totalImp
@@ -703,7 +795,12 @@ function throttle (callback, limit) {   // http://sampsonblog.com/749/simple-thr
 
 function numberThousandsDots (number) {
  	return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
-}
+};
+
+function firstCapital(string) {
+	return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
 </script>
 </body>
 </html>
