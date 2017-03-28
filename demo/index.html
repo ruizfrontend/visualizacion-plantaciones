@@ -30,6 +30,8 @@ svg { background: white; }
 
 	.text {  fill: white; font-weight: 900; font-family: arial, sans-serif; font-size: 12px; pointer-events: none; text-anchor: middle; }
 
+	#pop { display: none; position: absolute; top: 82px; padding: 1em; right: 0; width: 100%; max-width: 500px; background: white; }
+
 </style>
 <body>
 
@@ -60,13 +62,30 @@ svg { background: white; }
 	<a href="" data-year="2014" class="">2014</a>
 </div>
 
-<input type="text" id="contryImput">
-<select name="contrySelect" id="contrySelect">
+
+<input type="text" id="countryImput">
+<select name="countrySelect" id="countrySelect">
 	
 </select>
 
 
 <svg id="viz"></svg>
+
+<div id="pop">
+	<div id="closePop">Close</div>
+	<div id="frases">
+		
+	</div>
+	<div id="graphLines">
+		
+	</div>
+	<div id="graphBars1">
+		
+	</div>
+	<div id="graphBars2">
+		
+	</div>
+</div>
 
 <script src="http://estaticos.lab.eldiario.es/libs/jquery-1.10.2.min.js"></script>
 <script type="text/javascript" src="http://estaticos.lab.eldiario.es/estaticos/libs/jquery.autocomplete.js"></script>
@@ -95,6 +114,8 @@ var planta_graph = {
 	minLine: null,
 	minCircProp: 10, // relation of max circ
 	minCirc: null,
+
+	graphsElms: 5,
 
 	viz: {
 		width: 0,
@@ -139,6 +160,8 @@ var planta_graph = {
 
 		planta_graph.viz.$elm = $('#viz');
 		planta_graph.viz.svg = d3.select('#viz');
+
+		planta_graph.countryPop.init();
 		
 		// planta_graph.tools.loadCountries();
 
@@ -247,12 +270,12 @@ var planta_graph = {
 				    });
 
 
-				    $('#contrySelect').append('<option value="' + pais.key + '">' + pais.name + '</option>')
+				    $('#countrySelect').append('<option value="' + pais.key + '">' + pais.name + '</option>')
 
 				  }
 				};
 				
-				$('#contryImput').autocomplete({
+				$('#countryImput').autocomplete({
 		          lookup: autoComplete,
 		          minChars: 3,
 		          orientation: 'bottom',
@@ -261,7 +284,7 @@ var planta_graph = {
 		          noSuggestionNotice: 'No se encontraron coincidencias',
 		          groupBy: 'p',
 		          onSelect: function (suggestion) {
-		            planta_graph.evs.activaCountry(suggestion.data.key);
+		            planta_graph.countryPop.activa(suggestion.data.key);
 		          }
 		        });
 
@@ -285,6 +308,9 @@ var planta_graph = {
 				});
 
 				planta_graph.tools.processData(data);
+
+				planta_graph.countryPop.update();
+
 			});
 		},
 
@@ -320,9 +346,44 @@ var planta_graph = {
 
 			  	}
 
-			  	planta_graph.tools.getFrases(dataCountry);
+			  	planta_graph.countryPop.draw(dataCountry);
 
 			});
+		},
+
+		getTop(country, type) {
+			
+			var top = [];
+			var topCountries = type == 'imp' ? planta_graph.data.yearTopImp : planta_graph.data.yearTopExp;
+			var found = false;
+
+			for (var i = 0; i < planta_graph.graphsElms; i++) {
+				
+				if(topCountries[i].key == country) {
+					found = true;
+				}
+
+				top.push({
+					data: topCountries[i],
+					pos: i
+				});
+
+			}
+
+			if(found) return top;
+
+			for (var i = topCountries.length - 1; i >= 0; i--) {
+				if(topCountries[i].key == country) {
+					
+					top.push({
+						data: topCountries[i],
+						pos: i
+					});
+
+					return top;
+				}
+			}
+
 		},
 
 		getFrases(dataCountry) {
@@ -332,7 +393,7 @@ var planta_graph = {
 
 			if(planta_graph.act.type.length == 2) {
 
-				var balance = dataCountry.actCountry.totalExp - dataCountry.actCountry.totalImp;console.log(balance);
+				var balance = dataCountry.actCountry.totalExp - dataCountry.actCountry.totalImp;
 				var positionImp = planta_graph.tools.getPosition(dataCountry, 'imp');
 				var positionExp = planta_graph.tools.getPosition(dataCountry, 'exp');
 
@@ -453,12 +514,14 @@ var planta_graph = {
 
 				tops.imp.push({
 					key: countries[i].key,
-					val: countries[i].totalImp
+					val: countries[i].totalImp,
+					name: countries[i].name
 				});
 
 				tops.exp.push({
 					key: countries[i].key,
-					val: countries[i].totalExp
+					val: countries[i].totalExp,
+					name: countries[i].name
 				});
 			}
 
@@ -640,20 +703,127 @@ var planta_graph = {
 				$('#type a[data-type=' +  f + ']').addClass('act');
 			});
 
-			$('#contrySelect').change(function(e) { 
-				planta_graph.evs.activaCountry($('#contrySelect option:selected').attr('value'));
+			$('#countrySelect').change(function(e) { 
+				planta_graph.countryPop.activa($('#countrySelect option:selected').attr('value'));
 			});
 
 		}
 	},
 
-	evs: { // planta_graph.evs.circInEnter
-		activaCountry: function(countryKey) {
-			planta_graph.tools.getdataCountry(countryKey);
+	countryPop: {
+		active: false,
+		$elm: '#pop',
+		$frases: '#frases',
+		$graphLines: '#graphLines',
+		$graphBars1: '#graphBars1',
+		$graphBars2: '#graphBars2',
+
+		init: function() {
+
+			planta_graph.countryPop.$elm = $(planta_graph.countryPop.$elm);
+			planta_graph.countryPop.$frases = $(planta_graph.countryPop.$frases);
+			planta_graph.countryPop.$graphLines = $(planta_graph.countryPop.$graphLines);
+			planta_graph.countryPop.$graphBars1 = $(planta_graph.countryPop.$graphBars1);
+			planta_graph.countryPop.$graphBars2 = $(planta_graph.countryPop.$graphBars2);
+			
+			$('#closePop').click(function(){
+				planta_graph.countryPop.hide();
+			});
+
+			$('body').delegate('.activaCountry', 'click', function(e){
+				e.preventDefault();
+
+				var $elm = $(this);
+				var target = $elm.data('country');
+
+				if(!target) throw 'No se encontró el pais clickado';
+
+				planta_graph.countryPop.activa(target);
+			})
 		},
 
+		activa: function(countryKey) {
+			
+			planta_graph.countryPop.clear();
+
+			planta_graph.tools.getdataCountry(countryKey);
+			
+			planta_graph.countryPop.active = countryKey;
+			
+			$('#pop').fadeIn(400);
+		},
+
+		draw: function(data) {
+
+		  	var frases = planta_graph.tools.getFrases(data);
+		  	$.each(frases, function(e, f){
+		  		planta_graph.countryPop.$frases.append($('<li>' + f + '</li>'));
+		  	});
+
+		  	var topExp = planta_graph.tools.getTop(data.actCountry.key, 'exp');
+		  	var topImp = planta_graph.tools.getTop(data.actCountry.key, 'imp');
+
+
+		  	planta_graph.countryPop.$graphBars1.append('<h2>Historico</h2>')
+		  	planta_graph.countryPop.$graphBars1.append('<h3>exportaciones</h3>')
+		  	
+		  	$.each(data.actCountry.resumen.exps, function(e, f){
+		  		planta_graph.countryPop.$graphBars1.append($('<li>' + e + ' - ' + planta_graph.tools.parseAmmount(f) + '</li>'));
+		  	});
+
+		  	planta_graph.countryPop.$graphBars1.append('<h3>importaciones</h3>')
+		  	$.each(data.actCountry.resumen.imps, function(e, f){
+		  		planta_graph.countryPop.$graphBars1.append($('<li>' + e + ' - ' + planta_graph.tools.parseAmmount(f) + '</li>'));
+		  	});
+
+		  	
+		  	planta_graph.countryPop.$graphBars1.append('<h2>Principales exportadores</h2>');
+
+		  	$.each(topExp, function(e, f){
+		  		
+		  		if(e == planta_graph.graphsElms) planta_graph.countryPop.$graphBars1.append('<li>....</li>');
+
+		  		planta_graph.countryPop.$graphBars1.append($('<li><a href="#" class="activaCountry" data-country="' + f.data.key + '">' + (f.pos + 1) + ' - ' + f.data.name + ' - ' + planta_graph.tools.parseAmmount(f.data.val) + '</li>'));
+		  	});
+
+
+		  	planta_graph.countryPop.$graphBars1.append('<h2>Principales importadores</h2>')
+
+		  	$.each(topImp, function(e, f){
+		  		
+		  		if(e == planta_graph.graphsElms) planta_graph.countryPop.$graphBars1.append('<li>....</li>');
+		  		
+		  		planta_graph.countryPop.$graphBars1.append($('<li><a href="#" class="activaCountry" data-country="' + f.data.key + '">' + (f.pos + 1) + ' - ' + f.data.name + ' - ' + planta_graph.tools.parseAmmount(f.data.val) + '</li>'));
+		  	});
+
+		},
+
+		hide: function() {
+			$('#pop').fadeOut(400, function(){
+				planta_graph.countryPop.clear();
+			});
+		},
+
+		clear: function() {
+
+			planta_graph.countryPop.active = null;
+
+			planta_graph.countryPop.$frases.html('');
+			planta_graph.countryPop.$graphBars2.html('');
+			planta_graph.countryPop.$graphBars1.html('');
+			planta_graph.countryPop.$graphLines.html('');
+
+		},
+
+		update: function() {
+			if(planta_graph.countryPop.active) planta_graph.countryPop.activa(planta_graph.countryPop.active);
+		}
+	},
+
+	evs: { // planta_graph.evs.circInEnter
+
+
 		desactivaCountry: function() {
-			console.log('desactivaCountry');
 		},
 
 		circInEnter: function(d){ 
@@ -669,7 +839,7 @@ var planta_graph = {
 			$('#texto').text(d.name + ': Total importaciones ' + numberThousandsDots(d.totalImp) + ' dollars, total exportaciones ' + numberThousandsDots(d.totalExp) + ' dollars');
 		},
 		circClick: function(d) {
-			planta_graph.evs.activaCountry(d.key);
+			planta_graph.countryPop.activa(d.key);
 		},
 		circExpOut: function(d){
 			planta_graph.viz.links
