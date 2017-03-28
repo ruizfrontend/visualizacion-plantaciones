@@ -32,11 +32,18 @@
 </head>
 <style>
 body { background: #ccc; }
-svg { background: white; }
+#viz { background: white; }
 
 .btn { background: #999999; color: white;
 	padding: 0.2em 0.8em; border-radius: 0;}
 .btn.act { background: #d35d33; color: white; }
+
+#prods img { height: 25px; }
+#prods svg path { -webkit-transform: scale(0.22); -ms-transform-origin: left top;
+	-webkit-transform: scale(0.22); -ms-transform-origin: left top;
+	transform: scale(0.22); transform-origin: left top; }
+#prods span { display: none; }
+	.anim #prods span { display: initial; padding-left: 0.6em; }
 
 #typeImp.act { background: #126567; }
 #typeExp.act { background: #d35d33; }
@@ -55,15 +62,16 @@ svg { background: white; }
 		.anim .circImp {  -webkit-transform-origin: center center; -ms-transform-origin: center center; transform-origin: center center;
 				-webkit-transition: all .2s; -ms-transition: all .2s; transition: all .2s; }
 		.anim .circImp:hover { fill: rgba(6, 3, 68, 0.4);
-		-webkit-transform: -ms-scale(1.1); transform: scale(1.1); transform: scale(1.1); }
+		  		-webkit-transform: -ms-scale(1.1); transform: scale(1.1); transform: scale(1.1); }
 
 	.circExp { fill: #d35d33; cursor: pointer; }
 		.anim .circExp {  -webkit-transform-origin: center center; -ms-transform-origin: center center; transform-origin: center center;
 				-webkit-transition: all .2s; -ms-transition: all .2s; transition: all .2s; }
 		.anim .circExp:hover { fill: rgba(6, 3, 68, 0.4);
-			-webkit-transform: -ms-scale(1.1); transform: scale(1.1); transform: scale(1.1); }
+				-webkit-transform: -ms-scale(1.1); transform: scale(1.1); transform: scale(1.1); }
 
 	.text {  fill: white; font-weight: 900; font-family: arial, sans-serif; font-size: 12px; pointer-events: none; text-anchor: middle; }
+
 
 	#pop { display: none; position: absolute; top: 82px; padding: 1em; right: 0; width: 100%; max-width: 500px; background: white; }
 
@@ -85,11 +93,11 @@ svg { background: white; }
 	<h2>¿Por qué producto quieres filtrar?</h2>
 	<p>Selecciona una opción</p>
 
-	<a href="#" data-prod="cacao" class="btn">Cacao</a>
-	<a href="#" data-prod="banana" class="btn">Banana</a>
-	<a href="#" data-prod="azucar" class="btn">Azucar</a>
-	<a href="#" data-prod="aceite" class="btn">Aceite</a>
-	<a href="#" data-prod="cafe" class="btn">Café</a>
+	<a href="#" data-prod="cacao" class="btn"><img src="./icons/chocolate.svg"><span>Cacao</span></a>
+	<a href="#" data-prod="banana" class="btn"><img src="./icons/banana.svg"><span>Banana</span></a>
+	<a href="#" data-prod="azucar" class="btn"><img src="./icons/sugar.svg"><span>Azucar</span></a>
+	<a href="#" data-prod="aceite" class="btn"><img src="./icons/palm_oil.svg"><span>Aceite</span></a>
+	<a href="#" data-prod="cafe" class="btn"><img src="./icons/coffee.svg"><span>Café</span></a>
 </div>
 <div id="years">
 	<a href="#" data-year="2004" class="">2004</a>
@@ -956,7 +964,7 @@ var planta_graph = {
 			planta_graph.tools.update();
 		},
 
-		change_year: function(e){
+		change_year: function(e) {
 			
 			e.preventDefault();
 
