@@ -48,6 +48,8 @@ body { background: #ccc; }
 #typeImp.act { background: #126567; }
 #typeExp.act { background: #d35d33; }
 
+#years .disabled { cursor: inherit; color: #333; }
+
 #head {  }
 	/*#type .act, #prods .act, #years .act { color: red; }*/
 
@@ -112,7 +114,7 @@ body { background: #ccc; }
 	<a href="#" data-year="2012" class="gotoYear btn">2012</a>
 	<a href="#" data-year="2013" class="gotoYear btn">2013</a>
 	<a href="#" data-year="2014" class="gotoYear btn">2014</a>
-	<a href="#" class="nextYear btn">></a>
+	<a href="#" class="nextYear btn disabled">></a>
 </div>
 
 
@@ -976,8 +978,11 @@ var planta_graph = {
 			planta_graph.act.year = year;
 			
 			$('#years .act').removeClass('act');
-console.log($('#years [data-year="' + year + '"]'))
-			$('#years [data-year="' + year + '"]').addClass('act')
+			$('#years .disabled').removeClass('disabled');
+			$('#years [data-year="' + year + '"]').addClass('act');
+
+			if(year == 2014) $('#years .nextYear').addClass('disabled');
+			if(year == 2004) $('#years .prevYear').addClass('disabled');
 
 				// actualiza el dibujo
 			planta_graph.tools.update();
@@ -990,7 +995,7 @@ console.log($('#years [data-year="' + year + '"]'))
 			planta_graph.evs.gotoYear($(this).data('year'));
 		},
 
-		nextYear: function(e) {
+		prevYear: function(e) {
 			
 			e.preventDefault();
 
@@ -1000,7 +1005,7 @@ console.log($('#years [data-year="' + year + '"]'))
 
 		},
 
-		prevYear: function(e) {
+		nextYear: function(e) {
 			
 			e.preventDefault();
 
