@@ -100,17 +100,19 @@ body { background: #ccc; }
 	<a href="#" data-prod="cafe" class="btn"><img src="./icons/coffee.svg"><span>Café</span></a>
 </div>
 <div id="years">
-	<a href="#" data-year="2004" class="">2004</a>
-	<a href="#" data-year="2005" class="">2005</a>
-	<a href="#" data-year="2006" class="">2006</a>
-	<a href="#" data-year="2007" class="">2007</a>
-	<a href="#" data-year="2008" class="">2008</a>
-	<a href="#" data-year="2009" class="">2009</a>
-	<a href="#" data-year="2010" class="">2010</a>
-	<a href="#" data-year="2011" class="">2011</a>
-	<a href="#" data-year="2012" class="">2012</a>
-	<a href="#" data-year="2013" class="">2013</a>
-	<a href="#" data-year="2014" class="">2014</a>
+	<a href="#" class="prevYear btn"><</a>
+	<a href="#" data-year="2004" class="gotoYear btn">2004</a>
+	<a href="#" data-year="2005" class="gotoYear btn">2005</a>
+	<a href="#" data-year="2006" class="gotoYear btn">2006</a>
+	<a href="#" data-year="2007" class="gotoYear btn">2007</a>
+	<a href="#" data-year="2008" class="gotoYear btn">2008</a>
+	<a href="#" data-year="2009" class="gotoYear btn">2009</a>
+	<a href="#" data-year="2010" class="gotoYear btn">2010</a>
+	<a href="#" data-year="2011" class="gotoYear btn">2011</a>
+	<a href="#" data-year="2012" class="gotoYear btn">2012</a>
+	<a href="#" data-year="2013" class="gotoYear btn">2013</a>
+	<a href="#" data-year="2014" class="gotoYear btn">2014</a>
+	<a href="#" class="nextYear btn">></a>
 </div>
 
 
@@ -391,9 +393,9 @@ var planta_graph = {
 			  		dataCountry.impByYear[year] = 0
 
 					for (var i = planta_graph.data.countries.length - 1; i >= 0; i--) {
-						if(planta_graph.data.countries[i].key == country) {
-							for (var k = planta_graph.data.countries.length - 1; k >= 0; k--) {
-								if(data[year][country][planta_graph.data.countries[k].key]) dataCountry.impByYear[year] += data[year][country][planta_graph.data.countries[k].key];
+						if(planta_graph.data.countries[i].key == country) {console.log(planta_graph.data.countries[i].key, country)
+							for (var k = planta_graph.data.countries.length - 1; k >= 0; k--) { 
+								if(data[year][country] && data[year][country][planta_graph.data.countries[k].key]) dataCountry.impByYear[year] += data[year][country][planta_graph.data.countries[k].key];
 							}
 						} else if (data[year][planta_graph.data.countries[i].key] && data[year][planta_graph.data.countries[i].key][country]) {
 							dataCountry.expByYear[year] += data[year][planta_graph.data.countries[i].key][country];
@@ -748,10 +750,14 @@ var planta_graph = {
 
 		initJqueries: function() {
 
-			$('#years a').click(planta_graph.evs.change_year);
-			$('#prods a').click(planta_graph.evs.change_product);
+			$('#years')
+				.find('.gotoYear').click(planta_graph.evs.changeYear).end()
+				.find('.nextYear').click(planta_graph.evs.nextYear).end()
+				.find('.prevYear').click(planta_graph.evs.prevYear);
 
-			$('#type a').click(planta_graph.evs.change_type);
+			$('#prods a').click(planta_graph.evs.changeProduct);
+
+			$('#type a').click(planta_graph.evs.changeType);
 
 			$('#years a[data-year=' +  planta_graph.act.year + ']').addClass('act');
 			$('#prods a[data-prod=' +  planta_graph.act.prod + ']').addClass('act');
@@ -917,7 +923,6 @@ var planta_graph = {
 				if($.inArray('imp', planta_graph.act.type) == -1) return d.rExp < 13 ? "hidden" : "visible";
 				return d.rImp < 13 ? "hidden" : "visible";
 			}
-
 		},
 
 		circImpVisibilityCheck: function(d) {
@@ -949,7 +954,7 @@ var planta_graph = {
 			return d.rTot + 5;
 		},
 
-		change_product: function(e) {
+		changeProduct: function(e) {
 			
 			e.preventDefault();
 			
@@ -964,22 +969,47 @@ var planta_graph = {
 			planta_graph.tools.update();
 		},
 
-		change_year: function(e) {
-			
-			e.preventDefault();
+		gotoYear: function(year) {
 
-			$('#years .act').removeClass('act');
-			
-			var year = $(this).addClass('act').data('year');
-			if(!year || planta_graph.act.year == year) { console.log('no hay año'); return; };
+			if(!year || planta_graph.act.year == year || year > 2014 || year < 2004) return;
 
 			planta_graph.act.year = year;
+			
+			$('#years .act').removeClass('act');
+console.log($('#years [data-year="' + year + '"]'))
+			$('#years [data-year="' + year + '"]').addClass('act')
 
 				// actualiza el dibujo
 			planta_graph.tools.update();
 		},
 
-		change_type: function(e) {
+		changeYear: function(e) {
+			
+			e.preventDefault();
+
+			planta_graph.evs.gotoYear($(this).data('year'));
+		},
+
+		nextYear: function(e) {
+			
+			e.preventDefault();
+
+			if(planta_graph.act.year == 2004) return;
+
+			planta_graph.evs.gotoYear(planta_graph.act.year - 1);
+
+		},
+
+		prevYear: function(e) {
+			
+			e.preventDefault();
+
+			if(planta_graph.act.year == 2014) return;
+
+			planta_graph.evs.gotoYear(planta_graph.act.year + 1);
+		},
+
+		changeType: function(e) {
 			
 			e.preventDefault();
 
