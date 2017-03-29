@@ -77,7 +77,6 @@
 
 	.link {  fill: none; stroke: rgba(0,0,0,0.4); }
 		.link:hover, .link-act { stroke: rgba(60, 4, 4, 0.6); }
-		.fullGraph .link { -webkit-transition: stroke .5s; -ms-transition: stroke .5s; transition: stroke .5s; }
 
 	.circImp { fill: #126567; cursor: pointer; }
 		.fullGraph .circImp {  -webkit-transform-origin: center center; -ms-transform-origin: center center; transform-origin: center center;
@@ -100,7 +99,7 @@
 		#plantiGraph.fullGraph.actPop #pop { right: 0; }
 		#plantiGraph.fullGraph.actPop #viz { opacity: 0.6; -webkit-transform: translateX(-800px); -webkit-transform: translateX(-800px); transform: translateX(-800px); pointer-events: none; }
 	#viz { -webkit-transition: all 1s; -ms-transition: all 1s; transition: all 1s; }
-	#closePop { position: absolute; left: -300px; top: 1em; font-weight: 900; -webkit-transition: all 1s; -ms-transition: all 1s; transition: all 1s; }
+	#closePop { position: absolute; left: -300px; top: 1em; font-weight: 900; -webkit-transition: all 1s; -ms-transition: all 1s; transition: all 1s; cursor: pointer; }
 		#plantiGraph.fullGraph.actPop #closePop { left: 1em; }
 	
 	#popWrap { padding: 1em; }
@@ -148,6 +147,15 @@
 	</div>
 	<div id="years">
 		<a href="#" class="prevYear btn"><</a>
+		<a href="#" data-year="1995" class="gotoYear btn">1995</a>
+		<a href="#" data-year="1996" class="gotoYear btn">1996</a>
+		<a href="#" data-year="1997" class="gotoYear btn">1997</a>
+		<a href="#" data-year="1998" class="gotoYear btn">1998</a>
+		<a href="#" data-year="1999" class="gotoYear btn">1999</a>
+		<a href="#" data-year="2000" class="gotoYear btn">2000</a>
+		<a href="#" data-year="2001" class="gotoYear btn">2001</a>
+		<a href="#" data-year="2002" class="gotoYear btn">2002</a>
+		<a href="#" data-year="2003" class="gotoYear btn">2003</a>
 		<a href="#" data-year="2004" class="gotoYear btn">2004</a>
 		<a href="#" data-year="2005" class="gotoYear btn">2005</a>
 		<a href="#" data-year="2006" class="gotoYear btn">2006</a>
@@ -211,7 +219,7 @@ var plantiGraph = {
 
 	maxCircProp: 20, // relation winWidth to maxCircProp
 	maxCirc: null, // generated max circle size 
-	maxLineProp: 100,
+	maxLineProp: 6,
 	maxLine: null,
 
 	minLineProp: 40, // relation of max circ
@@ -702,7 +710,9 @@ var plantiGraph = {
 
 				// iniciación inicial de círculos y textos
 			if(!plantiGraph.viz.circsImp) {
-
+for (var i = plantiGraph.data.countries.length - 1; i >= 0; i--) {
+	if(plantiGraph.data.countries[i].name == 'Burma') console.log(plantiGraph.data.countries[i])
+}
 
 				plantiGraph.viz.links = plantiGraph.viz.svg
 					.selectAll('.link').data(links).enter()
@@ -762,9 +772,9 @@ var plantiGraph = {
 				.attr('y', function(d) { return d.y + 5; });
 
 			plantiGraph.viz.force = d3.forceSimulation(countries)
-				.force("link", d3.forceLink(links).strength(0.0000001))
+				.force("link", d3.forceLink(links).strength(0.0000000001))
 				// .force("charge", d3.forceManyBody().strength(0.01))
-    			.force("collide", d3.forceCollide().radius(plantiGraph.evs.collideRadiusFn).iterations(1).strength(2))
+    			.force("collide", d3.forceCollide().radius(plantiGraph.evs.collideRadiusFn).iterations(2).strength(4))
 				// .force("link", d3.forceLink(links).strength(function(d){return d.val / 1000 }).distance(20))
 				// .force("center", d3.forceCenter(plantiGraph.viz.width / 2, plantiGraph.viz.height / 2))
 
@@ -890,7 +900,7 @@ var plantiGraph = {
 		  		
 		  		var val = f.data.val * 100 / max;console.log(val)
 		  		
-		  		var $elm = $('<li><a data-toggle="tooltip" href="#" class="activaCountry' + (f.data.key == data.actCountry.key ? ' activeBar' : '' ) +'" data-country="' + f.data.key + '"><span class="key">' + f.data.key + '</span><div class="bar" title="' + f.data.name + '<br> Exportaciones de ' + ' ' + plantiGraph.tools.parseAmmount(f.data.val) + ' de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + ' en el año ' + plantiGraph.act.year + '" data-width=""><span class="text">' + millionsParser(f.data.val) + '</span></div></a></li>');
+		  		var $elm = $('<li><a data-toggle="tooltip" href="#" class="activaCountry' + (f.data.key == data.actCountry.key ? ' activeBar' : '' ) +'" data-country="' + f.data.key + '"><span class="key">' + f.data.key + '</span><div class="bar" title="' + f.data.name + ' Exportaciones de ' + ' ' + plantiGraph.tools.parseAmmount(f.data.val) + ' de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + ' en el año ' + plantiGraph.act.year + '" data-width=""><span class="text">' + millionsParser(f.data.val) + '</span></div></a></li>');
 		  		
 		  		plantiGraph.countryPop.$graphBars1.append($elm);
 
