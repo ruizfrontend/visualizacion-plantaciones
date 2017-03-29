@@ -73,8 +73,6 @@
 #head {  }
 	#type, #prods, #years { width: 33.33333333%; float: left; }
 
-	#texto { position: absolute; right: 0; top: 0; color: red; }
-
 #graph { background: #efefef; position: relative; }
 
 	.link {  fill: none; stroke: rgba(0,0,0,0.4); }
@@ -128,8 +126,6 @@
 <body>
 <div id="plantiGraph">
 	<h1>Lorem ipsum dolor sit amet</h1>
-
-	<div id="texto"></div>
 
 	<div id="type">
 		<h4>¿Qué datos quieres mostrar?</h4>
@@ -448,7 +444,7 @@ var plantiGraph = {
 			  		dataCountry.impByYear[year] = 0
 
 					for (var i = plantiGraph.data.countries.length - 1; i >= 0; i--) {
-						if(plantiGraph.data.countries[i].key == country) {console.log(plantiGraph.data.countries[i].key, country)
+						if(plantiGraph.data.countries[i].key == country) {
 							for (var k = plantiGraph.data.countries.length - 1; k >= 0; k--) { 
 								if(data[year][country] && data[year][country][plantiGraph.data.countries[k].key]) dataCountry.impByYear[year] += data[year][country][plantiGraph.data.countries[k].key];
 							}
@@ -764,14 +760,12 @@ var plantiGraph = {
 				.velocityDecay(.7)
 
 				.on('tick', plantiGraph.tools.tick)
-				// .on('end', function(){ console.log('end') })
 				.restart();
 
 		},
 
 			// each forze loop
 		tick: function() {
-			// console.log('tick')
 
 			plantiGraph.viz.circsImp
 				.attr('cx', function(d) { return d.x; })
@@ -965,23 +959,53 @@ var plantiGraph = {
 		desactivaCountry: function() {
 		},
 
+		circTooltip: function(d) {
+
+			var posY = d.y;
+			var posX = d.x - 100;
+			var textoTT = '';
+			
+			if(plantiGraph.act.type.length == 2) {
+				textoTT = '<strong>' + d.name + '</strong> exportó ' + plantiGraph.tools.parseAmmount(d.totalExp) + ' e importó ' + plantiGraph.tools.parseAmmount(d.totalImp) + ' de ' + plantiGraph.act.prod + ' en el año ' + plantiGraph.act.year;
+				posY -= (d.rTot + 4);
+			} else {
+				if(plantiGraph.act.type.indexOf('imp') != -1) {
+					textoTT = '<strong>' + d.name + '</strong> exportó ' + plantiGraph.tools.parseAmmount(d.totalExp) + ' de ' + plantiGraph.act.prod + ' en el año ' + plantiGraph.act.year;
+					posY -= (d.rImp + 4);
+				} else {
+					textoTT = '<strong>' + d.name + '</strong> importó ' + plantiGraph.tools.parseAmmount(d.totalImp) + ' de ' + plantiGraph.act.prod + ' en el año ' + plantiGraph.act.year;
+					posY -= (d.rExp + 4);
+				}
+			}
+
+			posY = $('#graph').height() - posY;
+			
+			var $tooltip = $('<div class="tooltip top" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner">' + textoTT + '</div></div>')
+			
+			$tooltip.css({ bottom: posY, left: posX, }).appendTo('#graph')
+			$tooltip.animate({opacity: 1}, 400);
+		},
+
+		circExpEnter: function(d) {
+			$('#graph .tooltip').remove();
+
+			plantiGraph.viz.links
+				.attr('class', function(e){
+					return e.source.name == d.name || e.target.name == d.name ? 'link link-act' : 'link';
+				});
+
+			plantiGraph.evs.circTooltip(d);
+		},
+
 		circInEnter: function(d) {
 			plantiGraph.viz.links
 				.attr('class', function(e){
 					return e.source.name == d.name || e.target.name == d.name ? 'link link-act' : 'link';
 				});
 
-			$('#texto').text(d.name + ': Total importaciones ' + numberThousandsDots(d.totalImp) + ' dollars, total exportaciones ' + numberThousandsDots(d.totalExp) + ' dollars');
+			plantiGraph.evs.circTooltip(d);
 		},
 
-		circExpEnter: function(d) {
-			plantiGraph.viz.links
-				.attr('class', function(e){
-					return e.source.name == d.name || e.target.name == d.name ? 'link link-act' : 'link';
-				});
-
-			$('#texto').text(d.name + ': Total importaciones ' + numberThousandsDots(d.totalImp) + ' dollars, total exportaciones ' + numberThousandsDots(d.totalExp) + ' dollars');
-		},
 		circClick: function(d) {
 			plantiGraph.countryPop.activa(d.key);
 		},
@@ -989,7 +1013,8 @@ var plantiGraph = {
 		circOut: function(d){
 			plantiGraph.viz.links
 				.attr('class', 'link');
-			$('#texto').text('');
+
+			$('#graph .tooltip').remove();
 		},
 
 		textVisibilityCheck: function(d) {
