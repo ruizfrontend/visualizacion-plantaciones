@@ -71,8 +71,7 @@
 #years .disabled { cursor: inherit; color: #333; }
 
 #head {  }
-	#type, #prods, #years { width: 33%; float: left; }
-	#type, #prods, #years { width: 33%; float: left; }
+	#type, #prods, #years { width: 33.33333333%; float: left; }
 
 	#texto { position: absolute; right: 0; top: 0; color: red; }
 
@@ -124,6 +123,7 @@
 	#graphBars1 .activeBar .bar { background: #d35d33; }
 	#graphBars2 .activeBar .bar { background: #126567; }
 
+#frases li { list-style: none; padding: 0.8em 50px 0.8em 0.8em; background: white; margin: 0 0.4em 0.8em 0.4em; }
 </style>
 <body>
 <div id="plantiGraph">
@@ -834,9 +834,7 @@ var plantiGraph = {
 			plantiGraph.countryPop.$graphBars1 = $(plantiGraph.countryPop.$graphBars1).find('.inn');
 			plantiGraph.countryPop.$graphBars2 = $(plantiGraph.countryPop.$graphBars2).find('.inn');
 			
-			$('#closePop').click(function(){
-				plantiGraph.countryPop.hide();
-			});
+			$('#closePop').click(plantiGraph.countryPop.hide);
 
 			plantiGraph.viz.$wrap.delegate('.activaCountry', 'click', function(e){
 				e.preventDefault();
@@ -941,6 +939,7 @@ var plantiGraph = {
 		},
 
 		hide: function() {
+			plantiGraph.countryPop.active = null;
 			plantiGraph.viz.$wrap.removeClass('actPop');
 		},
 
