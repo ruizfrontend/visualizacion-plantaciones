@@ -93,16 +93,26 @@
 	.text {  fill: white; font-weight: 900; font-family: arial, sans-serif; font-size: 12px; pointer-events: none; text-anchor: middle; }
 		.fullGraph .text { -webkit-transition: stroke .5s; -ms-transition: stroke .5s; transition: stroke .5s; }
 
-	#plantiGraph.fullGraph #pop { position: absolute; top: 0; height: 100%; overflow: auto; right: -100%; width: 100%; max-width: 800px; background: #efefef; z-index: 1;
+	#plantiGraph.fullGraph #pop { position: absolute; top: 0; height: 100%; overflow: auto; right: 0; width: 300px; max-width: 800px; background: #efefef; z-index: 1;
 				-webkit-transition: all 1s; -ms-transition: all 1s; transition: all 1s;
 			    border-left: 2px solid white; }
-		#plantiGraph.fullGraph.actPop #pop { right: 0; }
+		#plantiGraph.fullGraph.actPop #pop { width: 100%; }
 		#plantiGraph.fullGraph.actPop #viz { opacity: 0.6; -webkit-transform: translateX(-800px); -webkit-transform: translateX(-800px); transform: translateX(-800px); pointer-events: none; }
 	#viz { -webkit-transition: all 1s; -ms-transition: all 1s; transition: all 1s; }
+		#viz.blur { filter:url(#blur); }
+		/*#viz #blur feGaussianBlur { stdDeviation: 1;}*/
+
 	#closePop { position: absolute; left: -300px; top: 1em; font-weight: 900; -webkit-transition: all 1s; -ms-transition: all 1s; transition: all 1s; cursor: pointer; }
 		#plantiGraph.fullGraph.actPop #closePop { left: 1em; }
 	
-	#popWrap { padding: 1em; }
+	#popWrap { padding: 1em; display: block; opacity: 0; -webkit-transition: all .2s; -ms-transition: all .3s; transition: all .3s; }
+		.actPop #popWrap { opacity: 1; -webkit-transition-delay: .2s; -ms-transition-delay: .3s; transition-delay: .3s; }
+
+	#search { padding: 1.4em; padding-bottom: 0; position: relative; max-width: 400px; line-height: 1.2em; }
+		#search i { position: absolute; left: 1.6em; top: 1.5em; font-size: 1.2em; }
+		#countryImput { padding-left: 30px; margin-bottom: 0.4em; }
+		#searchSelected { display: none; }
+
 	#graphBars1, #graphBars2, #graphLines { width: 33%; float: left; box-sizing: border-box; padding: 0.4em; padding-top: 0; 		display: none; }
 		.fullGraph #graphBars1, .fullGraph #graphBars2, .fullGraph #graphLines { display: block; }
 	#graphBars1 li, #graphBars2 li { list-style: none; line-height: 1.8em; }
@@ -124,6 +134,9 @@
 #frases li { list-style: none; padding: 0.8em 50px 0.8em 0.8em; background: white; margin: 0 0.4em 0.8em 0.4em; position: relative; cursor: pointer; }
 #frases li:hover { text-decoration: underline; }
 #frases li i { position: absolute; right: 0; bottom: 0; padding: 0.4em; font-size: 1.6em; color: #00aced; text-decoration: none!important; }
+
+.autocomplete-suggestions { padding: 1em; line-height: 1.2em;background: #efefef; }
+.autocomplete-suggestion { text-decoration: underline; line-height: 1.6em; }
 </style>
 <body>
 <div id="plantiGraph">
@@ -159,14 +172,21 @@
 
 
 	<div id="graph">
-		<svg id="viz">
+		<svg id="viz" class="blur">
+			<defs><filter id="blur"><feGaussianBlur in="SourceGraphic" stdDeviation="0"></feGaussianBlur></filter></defs>
 		</svg>
-		<div id="closePop">< Volver a la visualización Global</div>
+		<div id="closePop">
+			< Volver a la visualización Global
+		</div>
 
 		<div id="pop">
 
 			<div id="search">
-				<input type="text" id="countryImput">
+				<i class="fa fa-search" aria-hidden="true"></i>
+				<input placeholder="Busca un país" type="text" id="countryImput" class="form-control">
+				<p id="searchHelp"><strong>Selecciona un pais</strong> o <strong>búscalo</strong> para conocer sus datos de comercio de plantaciones.</p>
+				<p id="searchSelected"></p>
+				<div id="searchResults"></div>
 			</div>
 			<div id="popWrap">
 				<div id="frases">
@@ -297,10 +317,15 @@ var plantiGraph = {
 		   	plantiGraph.viz.height = plantiGraph.viz.width / 2;
 			
 			if(plantiGraph.viz.width < plantiGraph.breakPoint) {
+				
 				plantiGraph.viz.height = plantiGraph.viz.width / 1.4;
-				plantiGraph.viz.$wrap.removeClass(plantiGraph.breakPointClass)
+				plantiGraph.viz.$wrap.removeClass(plantiGraph.breakPointClass);
+
 			} else {
-				plantiGraph.viz.$wrap.addClass(plantiGraph.breakPointClass)
+				plantiGraph.viz.$wrap.addClass(plantiGraph.breakPointClass);
+
+			   	plantiGraph.viz.width = plantiGraph.viz.width - 300;
+			   	plantiGraph.viz.height = plantiGraph.viz.width / 2;
 			}
 
 		   	plantiGraph.viz.$elm.css({
@@ -394,6 +419,7 @@ var plantiGraph = {
 		          orientation: 'bottom',
 		          autoSelectFirst: true,
 		          showNoSuggestionNotice: true,
+		          // appendTo: '#searchResults',
 		          noSuggestionNotice: 'No se encontraron coincidencias',
 		          groupBy: 'p',
 		          onSelect: function (suggestion) {
@@ -849,11 +875,14 @@ var plantiGraph = {
 			
 			plantiGraph.countryPop.clear();
 
-			plantiGraph.tools.getdataCountry(countryKey);
+			var countryData = plantiGraph.tools.getdataCountry(countryKey);
 			
 			plantiGraph.countryPop.active = countryKey;
 			
 			plantiGraph.viz.$wrap.addClass('actPop');
+
+			$('#searchHelp').hide();
+			d3.selectAll('feGaussianBlur').transition().attr('stdDeviation', 4);
 		},
 
 		draw: function(data) {
@@ -923,6 +952,9 @@ var plantiGraph = {
 		  	// $.each(data.actCountry.resumen.exps, function(e, f){
 		  	// 	plantiGraph.countryPop.$graphBars1.append($('<li><span class="sigla">' + e + '</span>' + plantiGraph.tools.parseAmmount(f) + '</li>'));
 		  	// });
+		  	// 
+		 
+			$('#searchSelected').show().append('<a href="#" class="clearPop">' + data.actCountry.name + '</a>');
 
 
 		},
@@ -930,6 +962,8 @@ var plantiGraph = {
 		hide: function() {
 			plantiGraph.countryPop.active = null;
 			plantiGraph.viz.$wrap.removeClass('actPop');
+
+			d3.selectAll('feGaussianBlur').transition().attr('stdDeviation', 0);
 		},
 
 		clear: function() {
