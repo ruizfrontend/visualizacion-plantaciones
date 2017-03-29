@@ -97,7 +97,7 @@
 	.text {  fill: white; font-weight: 900; font-family: arial, sans-serif; font-size: 12px; pointer-events: none; text-anchor: middle; }
 		.fullGraph .text { -webkit-transition: stroke .5s; -ms-transition: stroke .5s; transition: stroke .5s; }
 
-	#plantiGraph.fullGraph #pop { position: absolute; top: 0; height: 100%; overflow: auto; right: -100%; width: 100%; max-width: 800px;
+	#plantiGraph.fullGraph #pop { position: absolute; top: 0; height: 100%; overflow: auto; right: -100%; width: 100%; max-width: 800px; background: #efefef; z-index: 1;
 				-webkit-transition: all 1s; -ms-transition: all 1s; transition: all 1s;
 			    border-left: 2px solid white; }
 		#plantiGraph.fullGraph.actPop #pop { right: 0; }
@@ -111,12 +111,13 @@
 	#graphBars1 li, #graphBars2 li { list-style: none; line-height: 1.8em; }
 	#graphBars1 .key, #graphBars2 .key { display: inline-block; width: 33px; text-align: center; font-weight: 900; text-transform: uppercase; line-height: 1.7em; }
 	#popWrap .inn { padding: 1em; background: white; }
+#pop h4 { font-size: 1em; font-family: roboto, sans-serif; font-weight: 900; }
 
 .bar { background: #ccc; position: relative; display: inline-block; line-height: 1.5em; margin-left: 1em; height: 1.7em; vertical-align: middle; width: 0; }
 	.bar span { position: absolute; right: 0; padding: 0.7em; line-height: 1em; }
 
 	.bar-left span { right: inherit; left: 100%; }
-	
+
 	.activeBar .bar span { color: white; }
 	.activeBar .bar-left span { color: #484848; }
 
@@ -871,7 +872,7 @@ var plantiGraph = {
 		  	var topImp = plantiGraph.tools.getTop(data.actCountry.key, 'imp');
 
 
-		  	plantiGraph.countryPop.$graphBars1.append('<h4 style="text-transform: uppercase">Ranking de países <br>exportadores</h4><p>En millones de dolares</p>');
+		  	plantiGraph.countryPop.$graphBars1.append('<h4 style="text-transform: uppercase">Ranking de países <br>exportadores</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
 
 		  	var max = d3.max(topExp, function(e){ return e.data.val; });
 
@@ -892,7 +893,7 @@ var plantiGraph = {
 		  	});
 
 
-		  	plantiGraph.countryPop.$graphBars2.append('<h4 style="text-transform: uppercase">Ranking de países <br>importadores</h4><p>En millones de dolares</p>');
+		  	plantiGraph.countryPop.$graphBars2.append('<h4 style="text-transform: uppercase">Ranking de países <br>importadores</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
 
 		  	var max = d3.max(topImp, function(e){ return e.data.val; });
 
