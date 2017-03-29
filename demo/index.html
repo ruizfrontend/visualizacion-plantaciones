@@ -418,6 +418,10 @@ var plantiGraph = {
 					return;
 				});
 
+				for (var i = plantiGraph.data.countries.length - 1; i >= 0; i--) {
+					plantiGraph.data.countries[i].x = plantiGraph.data.countries[i].posX;
+					plantiGraph.data.countries[i].y = plantiGraph.data.countries[i].posY;
+				}
 				plantiGraph.tools.processData(data);
 
 				plantiGraph.countryPop.update();
@@ -750,7 +754,7 @@ var plantiGraph = {
 
 			plantiGraph.viz.force = d3.forceSimulation(countries)
 				.force("link", d3.forceLink(links).strength(0.0000001))
-				.force("charge", d3.forceManyBody().strength(0.01))
+				// .force("charge", d3.forceManyBody().strength(0.01))
     			.force("collide", d3.forceCollide().radius(plantiGraph.evs.collideRadiusFn).iterations(1).strength(2))
 				// .force("link", d3.forceLink(links).strength(function(d){return d.val / 1000 }).distance(20))
 				// .force("center", d3.forceCenter(plantiGraph.viz.width / 2, plantiGraph.viz.height / 2))
