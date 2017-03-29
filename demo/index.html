@@ -52,7 +52,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1"/>
 </head>
 <style>
-#plantiGraph { width: 100%; overflow: hidden; }
+#plantiGraph { width: 100%; overflow: hidden; font-family: 'Roboto'; }
 
 .btn { background: #999999; color: white;
 	padding: 0.2em 0.8em; border-radius: 0;}
@@ -103,7 +103,8 @@
 		#plantiGraph.fullGraph.actPop #closePop { left: 1em; }
 	
 	#popWrap { padding: 1em; }
-	#graphBars1, #graphBars2, #graphLines { width: 33%; float: left; box-sizing: border-box; padding: 0.4em; padding-top: 0; }
+	#graphBars1, #graphBars2, #graphLines { width: 33%; float: left; box-sizing: border-box; padding: 0.4em; padding-top: 0; 		display: none; }
+		.fullGraph #graphBars1, .fullGraph #graphBars2, .fullGraph #graphLines { display: block; }
 	#graphBars1 li, #graphBars2 li { list-style: none; line-height: 1.8em; }
 	#graphBars1 .key, #graphBars2 .key { display: inline-block; width: 33px; text-align: center; font-weight: 900; text-transform: uppercase; line-height: 1.7em; }
 	#popWrap .inn { padding: 1em; background: white; }
@@ -863,6 +864,8 @@ for (var i = plantiGraph.data.countries.length - 1; i >= 0; i--) {
 		  	$.each(frases, function(e, f){
 		  		plantiGraph.countryPop.$frases.append($('<li>' + f + '<i class="fa fa-twitter" aria-hidden="true"></i></li>'));
 		  	});
+
+		  	if(plantiGraph.viz.width < plantiGraph.breakPoint) return;
 
 		  	var topExp = plantiGraph.tools.getTop(data.actCountry.key, 'exp');
 		  	var topImp = plantiGraph.tools.getTop(data.actCountry.key, 'imp');
