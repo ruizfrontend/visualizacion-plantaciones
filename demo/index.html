@@ -5,7 +5,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Merriweather:900|Open+Sans|Roboto:400,700,900" rel="stylesheet">
     
     <link rel="stylesheet" href="http://artesansatwork.com/eldiario/wp-content/themes/appress/css/bootstrap-3.3.5.min.css">
-    <link rel="stylesheet" href="http://artesansatwork.com/eldiario/wp-content/themes/appress/css/font-awesome-4.4.0.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="http://artesansatwork.com/eldiario/wp-content/themes/appress/css/font-faces.css?v=1490716027">
     <link rel="stylesheet" href="http://artesansatwork.com/eldiario/wp-content/themes/appress/css/app-template.css?v=1490716027">
     <link rel="stylesheet" href="http://artesansatwork.com/eldiario/wp-content/themes/appress/style.css?v=1490716027">
@@ -104,7 +104,7 @@
 		#plantiGraph.fullGraph.actPop #closePop { left: 1em; }
 	
 	#popWrap { padding: 1em; }
-	#graphBars1, #graphBars2, #graphLines { width: 33%; float: left; box-sizing: border-box; padding: 0.4em; }
+	#graphBars1, #graphBars2, #graphLines { width: 33%; float: left; box-sizing: border-box; padding: 0.4em; padding-top: 0; }
 	#graphBars1 li, #graphBars2 li { list-style: none; line-height: 1.8em; }
 	#graphBars1 .key, #graphBars2 .key { display: inline-block; width: 33px; text-align: center; font-weight: 900; text-transform: uppercase; line-height: 1.7em; }
 	#popWrap .inn { padding: 1em; background: white; }
@@ -121,7 +121,9 @@
 	#graphBars1 .activeBar .bar { background: #d35d33; }
 	#graphBars2 .activeBar .bar { background: #126567; }
 
-#frases li { list-style: none; padding: 0.8em 50px 0.8em 0.8em; background: white; margin: 0 0.4em 0.8em 0.4em; }
+#frases li { list-style: none; padding: 0.8em 50px 0.8em 0.8em; background: white; margin: 0 0.4em 0.8em 0.4em; position: relative; cursor: pointer; }
+#frases li:hover { text-decoration: underline; }
+#frases li i { position: absolute; right: 0; bottom: 0; padding: 0.4em; font-size: 1.6em; color: #00aced; text-decoration: none!important; }
 </style>
 <body>
 <div id="plantiGraph">
@@ -806,6 +808,10 @@ var plantiGraph = {
 				plantiGraph.countryPop.activa($('#countrySelect option:selected').attr('value'));
 			});
 
+			$('body').delegate('#frases li', 'click', function(){
+				shareTweet($(this).text().slice(0, -1) + ' en el año ' + plantiGraph.act.year, 'http://www.eldiario.es/', 'pruebaHash', 'eldiarioes');
+			})
+
 		}
 	},
 
@@ -854,7 +860,7 @@ var plantiGraph = {
 
 		  	var frases = plantiGraph.tools.getFrases(data);
 		  	$.each(frases, function(e, f){
-		  		plantiGraph.countryPop.$frases.append($('<li>' + f + '</li>'));
+		  		plantiGraph.countryPop.$frases.append($('<li>' + f + '<i class="fa fa-twitter" aria-hidden="true"></i></li>'));
 		  	});
 
 		  	var topExp = plantiGraph.tools.getTop(data.actCountry.key, 'exp');
@@ -1222,26 +1228,26 @@ function shareTweet (texto, url, hash, via) {
 };
 
 
-function shareFacebook (url) {
+// function shareFacebook (url) {
 
-    var windowOptions = 'scrollbars=yes,resizable=yes,toolbar=no,location=yes',
-        width = 550,
-        height = 420,
-        winHeight = screen.height,
-        winWidth = screen.width;
+//     var windowOptions = 'scrollbars=yes,resizable=yes,toolbar=no,location=yes',
+//         width = 550,
+//         height = 420,
+//         winHeight = screen.height,
+//         winWidth = screen.width;
 
-    var left = Math.round((winWidth / 2) - (width / 2));
-    var top = 0;
+//     var left = Math.round((winWidth / 2) - (width / 2));
+//     var top = 0;
 
-    if (winHeight > height) {
-      top = Math.round((winHeight / 2) - (height / 2));
-    }
+//     if (winHeight > height) {
+//       top = Math.round((winHeight / 2) - (height / 2));
+//     }
 
-    var target = 'https://www.facebook.com/sharer/sharer.php?app_id=435567026494540&u=' + url
-    window.open(target, 'intent', windowOptions + ',width=' + width +
-                                       ',height=' + height + ',left=' + left + ',top=' + top);
+//     var target = 'https://www.facebook.com/sharer/sharer.php?app_id=435567026494540&u=' + url
+//     window.open(target, 'intent', windowOptions + ',width=' + width +
+//                                        ',height=' + height + ',left=' + left + ',top=' + top);
 
-};
+// };
 
 </script>
 </body>
