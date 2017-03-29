@@ -52,6 +52,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1"/>
 </head>
 <style>
+body { font-size: 14px; }
 #plantiGraph { width: 100%; overflow: hidden; font-family: 'Roboto'; }
 
 .btn { background: #999999; color: white;
@@ -72,6 +73,7 @@
 
 #head {  }
 	#type, #prods, #years { width: 33.33333333%; float: left; }
+	#yearsSel a, #yearsSel div { display: inline-block; }
 
 #graph { background: #efefef; position: relative; }
 
@@ -97,22 +99,26 @@
 				-webkit-transition: all 1s; -ms-transition: all 1s; transition: all 1s;
 			    border-left: 2px solid white; }
 		#plantiGraph.fullGraph.actPop #pop { width: 100%; }
-		#plantiGraph.fullGraph.actPop #viz { opacity: 0.6; -webkit-transform: translateX(-800px); -webkit-transform: translateX(-800px); transform: translateX(-800px); pointer-events: none; }
+		#plantiGraph.fullGraph.actPop #viz { opacity: 0.6; pointer-events: none; }
 	#viz { -webkit-transition: all 1s; -ms-transition: all 1s; transition: all 1s; }
 		#viz.blur { filter:url(#blur); }
 		/*#viz #blur feGaussianBlur { stdDeviation: 1;}*/
 
-	#closePop { position: absolute; left: -300px; top: 1em; font-weight: 900; -webkit-transition: all 1s; -ms-transition: all 1s; transition: all 1s; cursor: pointer; }
-		#plantiGraph.fullGraph.actPop #closePop { left: 1em; }
+	#closePop { position: absolute; left: -100%;     position: absolute; top: 0; font-weight: 900;
+			-webkit-transition: all 1s; -ms-transition: all 1s; transition: all 1s;
+			cursor: pointer; padding: 1em; height: 100%; width: 100%; }
+		#plantiGraph.fullGraph.actPop #closePop { left: 0; }
 	
 	#popWrap { padding: 1em; display: block; opacity: 0; -webkit-transition: all .2s; -ms-transition: all .3s; transition: all .3s; }
 		.actPop #popWrap { opacity: 1; -webkit-transition-delay: .2s; -ms-transition-delay: .3s; transition-delay: .3s; }
 
-	#search { padding: 1.4em; padding-bottom: 0; position: relative; max-width: 400px; line-height: 1.2em; }
+	#search { padding: 1.4em; padding-bottom: 0; position: relative; max-width: 400px; line-height: 1.3em; }
 		#search i { position: absolute; left: 1.6em; top: 1.5em; font-size: 1.2em; }
-		#countryImput { padding-left: 30px; margin-bottom: 0.4em; }
+		#countryImput { padding-left: 30px; margin-bottom: 0.8em; }
 		#searchSelected { display: none; }
-
+			#searchSelected a { display: inline-block; background: #666666; padding: 0.4em 2.5em 0.4em 0.8em; position: relative; color: white; font-weight: 900; }
+				#searchSelected a:before { content: '\f00d'; display: block; font-family: FontAwesome; position: absolute; right: 0.8em; }
+	
 	#graphBars1, #graphBars2, #graphLines { width: 33%; float: left; box-sizing: border-box; padding: 0.4em; padding-top: 0; 		display: none; }
 		.fullGraph #graphBars1, .fullGraph #graphBars2, .fullGraph #graphLines { display: block; }
 	#graphBars1 li, #graphBars2 li { list-style: none; line-height: 1.8em; }
@@ -135,7 +141,7 @@
 #frases li:hover { text-decoration: underline; }
 #frases li i { position: absolute; right: 0; bottom: 0; padding: 0.4em; font-size: 1.6em; color: #00aced; text-decoration: none!important; }
 
-.autocomplete-suggestions { padding: 1em; line-height: 1.2em;background: #efefef; }
+.autocomplete-suggestions { padding: 1em; line-height: 1.2em;background: #efefef; cursor: pointer; }
 .autocomplete-suggestion { text-decoration: underline; line-height: 1.6em; }
 </style>
 <body>
@@ -163,9 +169,11 @@
 		<div id="years">
 			<h4>Año</h4>
 			<p>Selecciona un año</p>
-			<a href="#" class="prevYear btn"><</a>
-			<div id="activeYear"></div>
-			<a href="#" class="nextYear btn disabled">></a>
+			<div id="yearsSel">
+				<a href="#" class="prevYear"><</a>
+				<div id="activeYear"></div>
+				<a href="#" class="nextYear disabled">></a>
+			</div>
 		</div>
 	</div>
 
@@ -184,7 +192,7 @@
 			<div id="search">
 				<i class="fa fa-search" aria-hidden="true"></i>
 				<input placeholder="Busca un país" type="text" id="countryImput" class="form-control">
-				<p id="searchHelp"><strong>Selecciona un pais</strong> o <strong>búscalo</strong> para conocer sus datos de comercio de plantaciones.</p>
+				<p id="searchHelp" style="width: 260px;"><strong>Selecciona un pais</strong> o <strong>búscalo</strong> para conocer sus datos de comercio de plantaciones.</p>
 				<p id="searchSelected"></p>
 				<div id="searchResults"></div>
 			</div>
@@ -317,6 +325,7 @@ var plantiGraph = {
 		   	plantiGraph.viz.height = plantiGraph.viz.width / 2;
 			
 			if(plantiGraph.viz.width < plantiGraph.breakPoint) {
+				$('#blur').remove();
 				
 				plantiGraph.viz.height = plantiGraph.viz.width / 1.4;
 				plantiGraph.viz.$wrap.removeClass(plantiGraph.breakPointClass);
@@ -834,9 +843,15 @@ var plantiGraph = {
 				$('#type a[data-type=' +  f + ']').addClass('act');
 			});
 
-			$('body').delegate('#frases li', 'click', function(){
-				shareTweet($(this).text().slice(0, -1) + ' en el año ' + plantiGraph.act.year, 'http://www.eldiario.es/', 'pruebaHash', 'eldiarioes');
-			})
+			$('body')
+				.delegate('#frases li', 'click', function(){
+					shareTweet($(this).text().slice(0, -1) + ' en el año ' + plantiGraph.act.year, 'http://www.eldiario.es/', 'pruebaHash', 'eldiarioes');
+					return false;
+				})
+				.delegate('#searchSelected a', 'click', function(){
+					plantiGraph.countryPop.hide();
+					return false;
+				})
 
 		}
 	},
@@ -859,6 +874,7 @@ var plantiGraph = {
 			
 			$('#closePop').click(plantiGraph.countryPop.hide);
 
+				// clase genérica para mostrar popups
 			plantiGraph.viz.$wrap.delegate('.activaCountry', 'click', function(e){
 				e.preventDefault();
 
@@ -892,6 +908,9 @@ var plantiGraph = {
 		  		plantiGraph.countryPop.$frases.append($('<li>' + f + '<i class="fa fa-twitter" aria-hidden="true"></i></li>'));
 		  	});
 
+			$('#searchSelected').show().html('<a href="#" class="clearPop">' + data.actCountry.name + '</a>');
+
+				// en móvil, hasta aquí
 		  	if(plantiGraph.viz.width < plantiGraph.breakPoint) return;
 
 		  	var topExp = plantiGraph.tools.getTop(data.actCountry.key, 'exp');
@@ -954,7 +973,6 @@ var plantiGraph = {
 		  	// });
 		  	// 
 		 
-			$('#searchSelected').show().append('<a href="#" class="clearPop">' + data.actCountry.name + '</a>');
 
 
 		},
@@ -964,6 +982,8 @@ var plantiGraph = {
 			plantiGraph.viz.$wrap.removeClass('actPop');
 
 			d3.selectAll('feGaussianBlur').transition().attr('stdDeviation', 0);
+			
+			plantiGraph.countryPop.clear();
 		},
 
 		clear: function() {
@@ -974,6 +994,9 @@ var plantiGraph = {
 			plantiGraph.countryPop.$graphBars2.find('*').remove();
 			plantiGraph.countryPop.$graphBars1.find('*').remove();
 			plantiGraph.countryPop.$graphLines.find('*').remove();
+
+			$('#searchHelp').show();
+			$('#searchSelected').hide().html('');
 
 		},
 
