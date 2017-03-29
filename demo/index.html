@@ -694,11 +694,8 @@ var plantiGraph = {
 					.append('line')
 						.attr('class', 'link')
 						.attr('stroke-width', function(d){ return plantiGraph.viz.scale.lines(d.val); })
-						.on("mouseenter", function(d){
-							$('#texto').text('Importaciones de ' + d.source.name + ' a ' + d.target.name + ': ' + d.val + ' dollars');
-						}).on("mouseout", function(d){
-							$('#texto').text('');
-						});
+						.on("mouseenter", plantiGraph.evs.linksEnter)
+						.on("mouseout", plantiGraph.evs.circOut)
 
 				plantiGraph.viz.circExp = plantiGraph.viz.svg
 					.selectAll('.circExp').data(countries).enter()
@@ -874,11 +871,11 @@ var plantiGraph = {
 		  		
 		  		var val = f.data.val * 100 / max;console.log(val)
 		  		
-		  		var $elm = $('<li><a data-toggle="tooltip" title="' + f.data.name + ' exportó ' + plantiGraph.tools.parseAmmount(f.data.val) + ' de ' + plantiGraph.act.prod + ' en el año ' + plantiGraph.act.year + '" href="#" class="activaCountry' + (f.data.key == data.actCountry.key ? ' activeBar' : '' ) +'" data-country="' + f.data.key + '"><span class="key">' + f.data.key + '</span><div class="bar" data-width=""><span class="text">' + millionsParser(f.data.val) + '</span></div></a></li>');
+		  		var $elm = $('<li><a data-toggle="tooltip" href="#" class="activaCountry' + (f.data.key == data.actCountry.key ? ' activeBar' : '' ) +'" data-country="' + f.data.key + '"><span class="key">' + f.data.key + '</span><div class="bar" title="' + f.data.name + ' exportó ' + plantiGraph.tools.parseAmmount(f.data.val) + ' de ' + plantiGraph.act.prod + ' en el año ' + plantiGraph.act.year + '" data-width=""><span class="text">' + millionsParser(f.data.val) + '</span></div></a></li>');
 		  		
 		  		plantiGraph.countryPop.$graphBars1.append($elm);
 
-		  		$elm.find('a').tooltip();
+		  		$elm.find('.bar').tooltip();
 		  		$elm.find('.bar').stop(false, false).css('width', 0).animate({'width': val}, 1000);
 		  		if(val < 40) $elm.find('.bar').addClass('bar-left');
 
@@ -895,11 +892,11 @@ var plantiGraph = {
 		  		
 		  		var val = f.data.val * 100 / max;console.log(val)
 		  		
-		  		var $elm = $('<li><a data-toggle="tooltip" title="' + f.data.name + ' importó ' + plantiGraph.tools.parseAmmount(f.data.val) + ' de ' + plantiGraph.act.prod + ' en el año ' + plantiGraph.act.year + '" href="#" class="activaCountry' + (f.data.key == data.actCountry.key ? ' activeBar' : '' ) +'" data-country="' + f.data.key + '"><span class="key">' + f.data.key + '</span><div class="bar" data-width=""><span class="text">' + millionsParser(f.data.val) + '</span></div></a></li>');
+		  		var $elm = $('<li><a data-toggle="tooltip" href="#" class="activaCountry' + (f.data.key == data.actCountry.key ? ' activeBar' : '' ) +'" data-country="' + f.data.key + '"><span class="key">' + f.data.key + '</span><div class="bar"title="' + f.data.name + ' importó ' + plantiGraph.tools.parseAmmount(f.data.val) + ' de ' + plantiGraph.act.prod + ' en el año ' + plantiGraph.act.year + '"  data-width=""><span class="text">' + millionsParser(f.data.val) + '</span></div></a></li>');
 		  		
 		  		plantiGraph.countryPop.$graphBars2.append($elm);
 
-		  		$elm.find('a').tooltip();
+		  		$elm.find('.bar').tooltip();
 		  		$elm.find('.bar').stop(false, false).css('width', 0).animate({'width': val}, 1000);
 		  		if(val < 40) $elm.find('.bar').addClass('bar-left');
 
@@ -966,17 +963,32 @@ var plantiGraph = {
 			var textoTT = '';
 			
 			if(plantiGraph.act.type.length == 2) {
-				textoTT = '<strong>' + d.name + '</strong> exportó ' + plantiGraph.tools.parseAmmount(d.totalExp) + ' e importó ' + plantiGraph.tools.parseAmmount(d.totalImp) + ' de ' + plantiGraph.act.prod + ' en el año ' + plantiGraph.act.year;
+				textoTT = '<strong>' + d.name + '</strong> exportó ' + plantiGraph.tools.parseAmmount(d.totalExp) + ' e importó ' + plantiGraph.tools.parseAmmount(d.totalImp) + ' de <strong>' + plantiGraph.act.prod + '</strong> en el año ' + plantiGraph.act.year;
 				posY -= (d.rTot + 4);
 			} else {
 				if(plantiGraph.act.type.indexOf('imp') != -1) {
-					textoTT = '<strong>' + d.name + '</strong> exportó ' + plantiGraph.tools.parseAmmount(d.totalExp) + ' de ' + plantiGraph.act.prod + ' en el año ' + plantiGraph.act.year;
+					textoTT = '<strong>' + d.name + '</strong> exportó ' + plantiGraph.tools.parseAmmount(d.totalExp) + ' de <strong>' + plantiGraph.act.prod + '</strong> en el año ' + plantiGraph.act.year;
 					posY -= (d.rImp + 4);
 				} else {
-					textoTT = '<strong>' + d.name + '</strong> importó ' + plantiGraph.tools.parseAmmount(d.totalImp) + ' de ' + plantiGraph.act.prod + ' en el año ' + plantiGraph.act.year;
+					textoTT = '<strong>' + d.name + '</strong> importó ' + plantiGraph.tools.parseAmmount(d.totalImp) + ' de <strong>' + plantiGraph.act.prod + '</strong> en el año ' + plantiGraph.act.year;
 					posY -= (d.rExp + 4);
 				}
 			}
+
+			posY = $('#graph').height() - posY;
+			
+			var $tooltip = $('<div class="tooltip top" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner">' + textoTT + '</div></div>')
+			
+			$tooltip.css({ bottom: posY, left: posX, }).appendTo('#graph')
+			$tooltip.animate({opacity: 1}, 400);
+		},
+
+		linksEnter: function(d) {
+
+			var posX = ((d.source.x + d.target.x) / 2) - 100;
+			var posY = ((d.source.y + d.target.y) / 2) - 5;
+
+			var textoTT = '<strong>' + d.source.name + '</strong> exportó ' + plantiGraph.tools.parseAmmount(d.val) +  ' de <strong>' + plantiGraph.act.prod + '</strong> a <strong>' + d.target.name + '</strong> en el año ' + plantiGraph.act.year;
 
 			posY = $('#graph').height() - posY;
 			
