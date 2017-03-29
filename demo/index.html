@@ -126,7 +126,7 @@
 </style>
 <body>
 <div id="plantiGraph">
-	<h1>Lorem ipsum dolor sit amet</h1>
+	<h1>Comercio internacional</h1>
 
 	<div id="type">
 		<h4>¿Qué datos quieres mostrar?</h4>
@@ -146,35 +146,15 @@
 		<a href="#" data-prod="cafe" class="btn"><img src="./icons/coffee.svg"><span>Café</span></a>
 	</div>
 	<div id="years">
+		<h4>Año</h4>
+		<p>Selecciona un año</p>
 		<a href="#" class="prevYear btn"><</a>
-		<a href="#" data-year="1995" class="gotoYear btn">1995</a>
-		<a href="#" data-year="1996" class="gotoYear btn">1996</a>
-		<a href="#" data-year="1997" class="gotoYear btn">1997</a>
-		<a href="#" data-year="1998" class="gotoYear btn">1998</a>
-		<a href="#" data-year="1999" class="gotoYear btn">1999</a>
-		<a href="#" data-year="2000" class="gotoYear btn">2000</a>
-		<a href="#" data-year="2001" class="gotoYear btn">2001</a>
-		<a href="#" data-year="2002" class="gotoYear btn">2002</a>
-		<a href="#" data-year="2003" class="gotoYear btn">2003</a>
-		<a href="#" data-year="2004" class="gotoYear btn">2004</a>
-		<a href="#" data-year="2005" class="gotoYear btn">2005</a>
-		<a href="#" data-year="2006" class="gotoYear btn">2006</a>
-		<a href="#" data-year="2007" class="gotoYear btn">2007</a>
-		<a href="#" data-year="2008" class="gotoYear btn">2008</a>
-		<a href="#" data-year="2009" class="gotoYear btn">2009</a>
-		<a href="#" data-year="2010" class="gotoYear btn">2010</a>
-		<a href="#" data-year="2011" class="gotoYear btn">2011</a>
-		<a href="#" data-year="2012" class="gotoYear btn">2012</a>
-		<a href="#" data-year="2013" class="gotoYear btn">2013</a>
-		<a href="#" data-year="2014" class="gotoYear btn">2014</a>
+		<div id="activeYear"></div>
 		<a href="#" class="nextYear btn disabled">></a>
 	</div>
 
 
 	<input type="text" id="countryImput">
-	<select name="countrySelect" id="countrySelect">
-		
-	</select>
 
 	<div id="graph">
 		<svg id="viz"></svg>
@@ -389,7 +369,6 @@ var plantiGraph = {
 				    paises.push(pais);
 
 				    if(pais.x && pais.y) { // limita paises chungos
-				    	$('#countrySelect').append('<option value="' + pais.key + '">' + pais.name + '</option>');
 
 					    autoComplete.push({
 					    	value: pais.name,
@@ -821,15 +800,13 @@ for (var i = plantiGraph.data.countries.length - 1; i >= 0; i--) {
 
 			$('#type a').click(plantiGraph.evs.changeType);
 
-			$('#years a[data-year=' +  plantiGraph.act.year + ']').addClass('act');
+			// $('#years a[data-year=' +  plantiGraph.act.year + ']').addClass('act');
+
+			$('#activeYear').html(plantiGraph.act.year);
 			$('#prods a[data-prod=' +  plantiGraph.act.prod + ']').addClass('act');
 
 			$(plantiGraph.act.type).each(function(e, f){
 				$('#type a[data-type=' +  f + ']').addClass('act');
-			});
-
-			$('#countrySelect').change(function(e) { 
-				plantiGraph.countryPop.activa($('#countrySelect option:selected').attr('value'));
 			});
 
 			$('body').delegate('#frases li', 'click', function(){
@@ -1114,6 +1091,8 @@ for (var i = plantiGraph.data.countries.length - 1; i >= 0; i--) {
 
 			if(year == 2014) $('#years .nextYear').addClass('disabled');
 			if(year == 1995) $('#years .prevYear').addClass('disabled');
+
+			$('#activeYear').html(year);
 
 				// actualiza el dibujo
 			plantiGraph.tools.update();
