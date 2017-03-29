@@ -214,7 +214,7 @@ var plantiGraph = {
 	maxLineProp: 100,
 	maxLine: null,
 
-	minLineProp: 4, // relation of max circ
+	minLineProp: 40, // relation of max circ
 	minLine: null,
 	minCircProp: 10, // relation of max circ
 	minCirc: null,
@@ -253,6 +253,7 @@ var plantiGraph = {
 		totalExp: null,
 		totalImp: null,
 	},
+
 	txt: {
 		articulos: {
 			cafe: 'el café',
@@ -261,6 +262,7 @@ var plantiGraph = {
 			banana: 'la banana',
 			azucar: 'el azúcar'
 		},
+
 		productos: {
 			cafe: 'café',
 			aceite: 'aceite de palma',
@@ -730,7 +732,7 @@ var plantiGraph = {
 					.selectAll('.text').data(countries).enter()
 					.append('text')
 						.attr('class', 'text')
-						.text(function(d){ return d.key; });
+						.text(function(d){ return d.key.toUpperCase(); });
 			}
 
 				// actualización de líneas
@@ -888,7 +890,7 @@ var plantiGraph = {
 		  		
 		  		var val = f.data.val * 100 / max;console.log(val)
 		  		
-		  		var $elm = $('<li><a data-toggle="tooltip" href="#" class="activaCountry' + (f.data.key == data.actCountry.key ? ' activeBar' : '' ) +'" data-country="' + f.data.key + '"><span class="key">' + f.data.key + '</span><div class="bar" title="' + f.data.name + ' exportó ' + plantiGraph.tools.parseAmmount(f.data.val) + ' de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + ' en el año ' + plantiGraph.act.year + '" data-width=""><span class="text">' + millionsParser(f.data.val) + '</span></div></a></li>');
+		  		var $elm = $('<li><a data-toggle="tooltip" href="#" class="activaCountry' + (f.data.key == data.actCountry.key ? ' activeBar' : '' ) +'" data-country="' + f.data.key + '"><span class="key">' + f.data.key + '</span><div class="bar" title="' + f.data.name + '<br> Exportaciones de ' + ' ' + plantiGraph.tools.parseAmmount(f.data.val) + ' de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + ' en el año ' + plantiGraph.act.year + '" data-width=""><span class="text">' + millionsParser(f.data.val) + '</span></div></a></li>');
 		  		
 		  		plantiGraph.countryPop.$graphBars1.append($elm);
 
