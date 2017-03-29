@@ -75,7 +75,7 @@
 
 #graph { background: #efefef; position: relative; }
 
-	.link {  fill: none; stroke: rgba(0,0,0,0.4); }
+	.link {  fill: none; stroke: rgba(0,0,0,0.4); stroke: url(#line-gradient); }
 		.link:hover, .link-act { stroke: rgba(60, 4, 4, 0.6); }
 
 	.circImp { fill: #126567; cursor: pointer; }
@@ -158,7 +158,12 @@
 	<input type="text" id="countryImput">
 
 	<div id="graph">
-		<svg id="viz"></svg>
+		<svg id="viz">
+			<linearGradient id="line-gradient">
+	            <stop offset="0%"  stop-color="#126567"/>
+	            <stop offset="100%" stop-color="#d35d33"/>
+			</linearGradient>
+		</svg>
 		<div id="closePop">< Volver a la visualización Global</div>
 
 		<div id="pop">
