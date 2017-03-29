@@ -1132,20 +1132,26 @@ var plantiGraph = {
 			var $this = $(this);
 			var type = $this.data('type');
 
-				// ya activado => desactiva
-			if($.inArray(type, plantiGraph.act.type) != -1){
+			if($.inArray(type, plantiGraph.act.type) == -1){
 					
-					// para no quedarnos a 0
-				if(plantiGraph.act.type.length < 2) return;
-
-				$this.removeClass('act');
-				plantiGraph.act.type.splice(plantiGraph.act.type.indexOf(type), 1);
-
-				// no activado => activa
-			} else {
-
 				$this.addClass('act');
 				plantiGraph.act.type.push(type);
+
+			} else {
+
+				if(plantiGraph.act.type.length == 1) {
+					plantiGraph.act.type = ['imp', 'exp'];
+					
+					$('#type a').addClass('act');
+
+				} else {
+					plantiGraph.act.type = [type];
+					
+					$('#type a.act').removeClass('act');
+					
+					$this.addClass('act');
+
+				}
 			}
 
 				// actualiza el dibujo
