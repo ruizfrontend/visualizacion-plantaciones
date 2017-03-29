@@ -2,7 +2,28 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<link rel="stylesheet" href="http://estaticos.lab.eldiario.es/libs/bootstrap.cerulean.3.3.5.min.css">
+	<link href="https://fonts.googleapis.com/css?family=Merriweather:900|Open+Sans|Roboto:400,700,900" rel="stylesheet">
+    
+    <link rel="stylesheet" href="http://artesansatwork.com/eldiario/wp-content/themes/appress/css/bootstrap-3.3.5.min.css">
+    <link rel="stylesheet" href="http://artesansatwork.com/eldiario/wp-content/themes/appress/css/font-awesome-4.4.0.min.css">
+    <link rel="stylesheet" href="http://artesansatwork.com/eldiario/wp-content/themes/appress/css/font-faces.css?v=1490716027">
+    <link rel="stylesheet" href="http://artesansatwork.com/eldiario/wp-content/themes/appress/css/app-template.css?v=1490716027">
+    <link rel="stylesheet" href="http://artesansatwork.com/eldiario/wp-content/themes/appress/style.css?v=1490716027">
+    <link rel="stylesheet" href="http://artesansatwork.com/eldiario/wp-content/themes/appress/css/responsive.css?v=1490716028">
+    <link rel="stylesheet" href="http://artesansatwork.com/eldiario/wp-content/themes/appress/css/slick.css">
+    <link rel="stylesheet" href="http://artesansatwork.com/eldiario/wp-content/themes/appress/css/slick-theme.css">
+    
+    
+    <script src="http://artesansatwork.com/eldiario/wp-content/themes/appress/js/jquery-2.1.4.min.js"></script>
+    <script src="http://artesansatwork.com/eldiario/wp-content/themes/appress/js/bootstrap-3.3.5.min.js"></script>
+    <script src="http://artesansatwork.com/eldiario/wp-content/themes/appress/js/slick.min.js"></script>
+    <script src="http://artesansatwork.com/eldiario/wp-content/themes/appress/js/app-template-scripts.js?v=1490716028"></script>
+
+	<script type="text/javascript" src="http://estaticos.lab.eldiario.es/estaticos/libs/jquery.autocomplete.js"></script>
+	<script src="http://estaticos.lab.eldiario.es/libs/d3-4.7.1.min.js"></script>
+    
+    
+    <link rel="shortcut icon" href="http://artesansatwork.com/eldiario/wp-content/themes/appress/images/favicon.png">
 	
 	<title>TITEL - eldiario.es</title>
 	<meta name="description" content="DESC">
@@ -31,8 +52,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1"/>
 </head>
 <style>
-body { background: #ccc; }
-#viz { background: white; }
+#plantiGraph { width: 100%; overflow: hidden; }
 
 .btn { background: #999999; color: white;
 	padding: 0.2em 0.8em; border-radius: 0;}
@@ -43,7 +63,7 @@ body { background: #ccc; }
 	-webkit-transform: scale(0.22); -ms-transform-origin: left top;
 	transform: scale(0.22); transform-origin: left top; }
 #prods span { display: none; }
-	.anim #prods span { display: initial; padding-left: 0.6em; }
+	.fullGraph #prods span { display: initial; padding-left: 0.6em; }
 
 #typeImp.act { background: #126567; }
 #typeExp.act { background: #d35d33; }
@@ -51,104 +71,131 @@ body { background: #ccc; }
 #years .disabled { cursor: inherit; color: #333; }
 
 #head {  }
-	/*#type .act, #prods .act, #years .act { color: red; }*/
+	#type, #prods, #years { width: 33%; float: left; }
+	#type, #prods, #years { width: 33%; float: left; }
 
 	#texto { position: absolute; right: 0; top: 0; color: red; }
-#graph { background: #efefef; }
+
+#graph { background: #efefef; position: relative; }
 
 	.link {  fill: none; stroke: rgba(0,0,0,0.4); }
 		.link:hover, .link-act { stroke: rgba(60, 4, 4, 0.6); }
-		.anim .link { -webkit-transition: stroke .5s; -ms-transition: stroke .5s; transition: stroke .5s; }
+		.fullGraph .link { -webkit-transition: stroke .5s; -ms-transition: stroke .5s; transition: stroke .5s; }
 
 	.circImp { fill: #126567; cursor: pointer; }
-		.anim .circImp {  -webkit-transform-origin: center center; -ms-transform-origin: center center; transform-origin: center center;
+		.fullGraph .circImp {  -webkit-transform-origin: center center; -ms-transform-origin: center center; transform-origin: center center;
 				-webkit-transition: all .5s; -ms-transition: all .5s; transition: all .5s; }
-		.anim .circImp:hover { /*fill: rgba(6, 3, 68, 0.4);*/
+		.fullGraph .circImp:hover { /*fill: rgba(6, 3, 68, 0.4);*/
 		  		-webkit-transform: -ms-scale(1.1); transform: scale(1.1); transform: scale(1.1); }
 
 	.circExp { fill: #d35d33; cursor: pointer; }
-		.anim .circExp {  -webkit-transform-origin: center center; -ms-transform-origin: center center; transform-origin: center center;
+		.fullGraph .circExp {  -webkit-transform-origin: center center; -ms-transform-origin: center center; transform-origin: center center;
 				-webkit-transition: all .5s; -ms-transition: all .5s; transition: all .5s; }
-		.anim .circExp:hover { /*fill: rgba(6, 3, 68, 0.4);*/
+		.fullGraph .circExp:hover { /*fill: rgba(6, 3, 68, 0.4);*/
 				-webkit-transform: -ms-scale(1.1); transform: scale(1.1); transform: scale(1.1); }
 
 	.text {  fill: white; font-weight: 900; font-family: arial, sans-serif; font-size: 12px; pointer-events: none; text-anchor: middle; }
+		.fullGraph .text { -webkit-transition: stroke .5s; -ms-transition: stroke .5s; transition: stroke .5s; }
 
+	#plantiGraph.fullGraph #pop { position: absolute; top: 0; height: 100%; overflow: auto; right: -100%; width: 100%; max-width: 800px;
+				-webkit-transition: all 1s; -ms-transition: all 1s; transition: all 1s;
+			    border-left: 2px solid white; }
+		#plantiGraph.fullGraph.actPop #pop { right: 0; }
+		#plantiGraph.fullGraph.actPop #viz { opacity: 0.6; -webkit-transform: translateX(-800px); -webkit-transform: translateX(-800px); transform: translateX(-800px); }
+	#viz { -webkit-transition: all 1s; -ms-transition: all 1s; transition: all 1s; }
+	#closePop { position: absolute; left: -300px; top: 1em; font-weight: 900; -webkit-transition: all 1s; -ms-transition: all 1s; transition: all 1s; }
+		#plantiGraph.fullGraph.actPop #closePop { left: 1em; }
+	
+	#popWrap { padding: 1em; }
+	#graphBars1, #graphBars2, #graphLines { width: 33%; float: left; box-sizing: border-box; padding: 0.4em; }
+	#graphBars1 li, #graphBars2 li { list-style: none; line-height: 1.8em; }
+	#graphBars1 .key, #graphBars2 .key { display: inline-block; width: 33px; text-align: center; font-weight: 900; text-transform: uppercase; line-height: 1.7em; }
+	#popWrap .inn { padding: 1em; background: white; }
 
-	#pop { display: none; position: absolute; top: 82px; padding: 1em; right: 0; width: 100%; max-width: 500px; background: white; }
+.bar { background: #ccc; position: relative; display: inline-block; line-height: 1.5em; margin-left: 1em; height: 1.7em; vertical-align: middle; width: 0; }
+	.bar span { position: absolute; right: 0; padding: 0.7em; line-height: 1em; }
+
+	.bar-left span { right: inherit; left: 100%; }
+	
+	.activeBar .bar span { color: white; }
+	.activeBar .bar-left span { color: #484848; }
+
+	#graphBars1 .activeBar .bar { background: #d35d33; }
+	#graphBars2 .activeBar .bar { background: #126567; }
 
 </style>
 <body>
+<div id="plantiGraph">
+	<h1>Lorem ipsum dolor sit amet</h1>
 
-<h1>Comercio internacional</h1>
+	<div id="texto"></div>
 
-<div id="texto"></div>
+	<div id="type">
+		<h4>¿Qué datos quieres mostrar?</h4>
+		<p>Filtra por datos de exportación o importación</p>
 
-<div id="type">
-	<h2>¿Qué datos quieres mostrar?</h2>
-	<p>Filtra por datos de exportación o importación</p>
+		<a href="#" data-type="imp" id="typeImp" class="btn">Importaciones</a>
+		<a href="#" data-type="exp" id="typeExp" class="btn">Exportaciones</a>
+	</div>
+	<div id="prods">
+		<h4>¿Por qué producto quieres filtrar?</h4>
+		<p>Selecciona una opción</p>
 
-	<a href="#" data-type="imp" id="typeImp" class="btn">Importaciones</a>
-	<a href="#" data-type="exp" id="typeExp" class="btn">Exportaciones</a>
-</div>
-<div id="prods">
-	<h2>¿Por qué producto quieres filtrar?</h2>
-	<p>Selecciona una opción</p>
-
-	<a href="#" data-prod="cacao" class="btn"><img src="./icons/chocolate.svg"><span>Cacao</span></a>
-	<a href="#" data-prod="banana" class="btn"><img src="./icons/banana.svg"><span>Banana</span></a>
-	<a href="#" data-prod="azucar" class="btn"><img src="./icons/sugar.svg"><span>Azucar</span></a>
-	<a href="#" data-prod="aceite" class="btn"><img src="./icons/palm_oil.svg"><span>Aceite</span></a>
-	<a href="#" data-prod="cafe" class="btn"><img src="./icons/coffee.svg"><span>Café</span></a>
-</div>
-<div id="years">
-	<a href="#" class="prevYear btn"><</a>
-	<a href="#" data-year="2004" class="gotoYear btn">2004</a>
-	<a href="#" data-year="2005" class="gotoYear btn">2005</a>
-	<a href="#" data-year="2006" class="gotoYear btn">2006</a>
-	<a href="#" data-year="2007" class="gotoYear btn">2007</a>
-	<a href="#" data-year="2008" class="gotoYear btn">2008</a>
-	<a href="#" data-year="2009" class="gotoYear btn">2009</a>
-	<a href="#" data-year="2010" class="gotoYear btn">2010</a>
-	<a href="#" data-year="2011" class="gotoYear btn">2011</a>
-	<a href="#" data-year="2012" class="gotoYear btn">2012</a>
-	<a href="#" data-year="2013" class="gotoYear btn">2013</a>
-	<a href="#" data-year="2014" class="gotoYear btn">2014</a>
-	<a href="#" class="nextYear btn disabled">></a>
-</div>
-
-
-<input type="text" id="countryImput">
-<select name="countrySelect" id="countrySelect">
-	
-</select>
+		<a href="#" data-prod="cacao" class="btn"><img src="./icons/chocolate.svg"><span>Cacao</span></a>
+		<a href="#" data-prod="banana" class="btn"><img src="./icons/banana.svg"><span>Banana</span></a>
+		<a href="#" data-prod="azucar" class="btn"><img src="./icons/sugar.svg"><span>Azucar</span></a>
+		<a href="#" data-prod="aceite" class="btn"><img src="./icons/palm_oil.svg"><span>Aceite</span></a>
+		<a href="#" data-prod="cafe" class="btn"><img src="./icons/coffee.svg"><span>Café</span></a>
+	</div>
+	<div id="years">
+		<a href="#" class="prevYear btn"><</a>
+		<a href="#" data-year="2004" class="gotoYear btn">2004</a>
+		<a href="#" data-year="2005" class="gotoYear btn">2005</a>
+		<a href="#" data-year="2006" class="gotoYear btn">2006</a>
+		<a href="#" data-year="2007" class="gotoYear btn">2007</a>
+		<a href="#" data-year="2008" class="gotoYear btn">2008</a>
+		<a href="#" data-year="2009" class="gotoYear btn">2009</a>
+		<a href="#" data-year="2010" class="gotoYear btn">2010</a>
+		<a href="#" data-year="2011" class="gotoYear btn">2011</a>
+		<a href="#" data-year="2012" class="gotoYear btn">2012</a>
+		<a href="#" data-year="2013" class="gotoYear btn">2013</a>
+		<a href="#" data-year="2014" class="gotoYear btn">2014</a>
+		<a href="#" class="nextYear btn disabled">></a>
+	</div>
 
 
-<svg id="viz"></svg>
+	<input type="text" id="countryImput">
+	<select name="countrySelect" id="countrySelect">
+		
+	</select>
 
-<div id="pop">
-	<div id="closePop">Close</div>
-	<div id="frases">
+	<div id="graph">
+		<svg id="viz"></svg>
+		<div id="closePop">< Volver a la visualización Global</div>
+
+		<div id="pop">
+			<div id="popWrap">
+				<div id="frases">
+					
+				</div>
+				<div id="graphLines"><div class="inn"></div>
+					
+				</div>
+				<div id="graphBars1"><div class="inn"></div>
+					
+				</div>
+				<div id="graphBars2"><div class="inn"></div>
+					
+				</div>
+			</div>
+		</div>
 		
 	</div>
-	<div id="graphLines">
-		
-	</div>
-	<div id="graphBars1">
-		
-	</div>
-	<div id="graphBars2">
-		
-	</div>
 </div>
-
-<script src="http://estaticos.lab.eldiario.es/libs/jquery-1.10.2.min.js"></script>
-<script type="text/javascript" src="http://estaticos.lab.eldiario.es/estaticos/libs/jquery.autocomplete.js"></script>
-<script src="http://estaticos.lab.eldiario.es/libs/d3-4.7.1.min.js"></script>
 
 <script>
 
-var planta_graph = {
+var plantiGraph = {
 
 	pathData: './',
 	pathPaises: './paisesTot.json',
@@ -160,7 +207,8 @@ var planta_graph = {
 		type: ['imp', 'exp'],
 	},
 
-	breakPoint: 400,
+	breakPoint: 800,
+	breakPointClass: 'fullGraph',
 
 	maxCircProp: 20, // relation winWidth to maxCircProp
 	maxCirc: null, // generated max circle size 
@@ -177,8 +225,11 @@ var planta_graph = {
 	viz: {
 		width: 0,
 		height: 0,
-		$elm: null,
+
+		$wrap: '#plantiGraph',
+		$elm: '#viz',
 		svg: null,
+
 		projection: null,
 		path: null,
 		map: null,
@@ -215,63 +266,64 @@ var planta_graph = {
 
 	init: function() {
 
-		planta_graph.viz.$elm = $('#viz');
-		planta_graph.viz.svg = d3.select('#viz');
+		plantiGraph.viz.svg = d3.select(plantiGraph.viz.$elm);
+		plantiGraph.viz.$elm = $(plantiGraph.viz.$elm);
+		plantiGraph.viz.$wrap = $(plantiGraph.viz.$wrap);
 
-		planta_graph.countryPop.init();
+		plantiGraph.countryPop.init();
 		
-		// planta_graph.tools.loadCountries();
+		// plantiGraph.tools.loadCountries();
 
-		planta_graph.tools.initJqueries();
+		plantiGraph.tools.initJqueries();
 
-		$(window).bind('orientationchange resize', throttle(planta_graph.tools.handleResize, 300));
+		$(window).bind('orientationchange resize', throttle(plantiGraph.tools.handleResize, 300));
 
-		planta_graph.tools.handleResize();
+		plantiGraph.tools.handleResize();
 	},
 
 	tools: {
 
 		handleResize: function() {
-			planta_graph.tools.loadCountries();
-			planta_graph.tools.updateProjection();
-			planta_graph.tools.update();
-			// planta_graph.tools.initBG();
+			plantiGraph.tools.loadCountries();
+			plantiGraph.tools.updateProjection();
+			plantiGraph.tools.update();
+			// plantiGraph.tools.initBG();
 		},
 
 		updateProjection: function() {
 
-		   	planta_graph.viz.width = $(window).width();
-		   	planta_graph.viz.height = planta_graph.viz.width / 2;
+		   	plantiGraph.viz.width = $(window).width();
+		   	plantiGraph.viz.height = plantiGraph.viz.width / 2;
 			
-			if(planta_graph.viz.width < planta_graph.breakPoint) {
-				planta_graph.viz.height = planta_graph.viz.width / 1.4;
-				$('body').removeClass('anim')
+			if(plantiGraph.viz.width < plantiGraph.breakPoint) {
+				plantiGraph.viz.height = plantiGraph.viz.width / 1.4;
+				plantiGraph.viz.$wrap.removeClass(plantiGraph.breakPointClass)
 			} else {
-				$('body').addClass('anim')
+				plantiGraph.viz.$wrap.addClass(plantiGraph.breakPointClass)
 			}
 
-		   	planta_graph.viz.$elm.css({
-		   		width: planta_graph.viz.width,
-		   		height: planta_graph.viz.height
+		   	plantiGraph.viz.$elm.css({
+		   		width: plantiGraph.viz.width,
+		   		height: plantiGraph.viz.height
 		   	});
 
-		   	planta_graph.viz.projection = d3.geoMercator()
-		   		.scale(170 * (planta_graph.viz.width / 1000))
-		   		.translate([(planta_graph.viz.width / 2) - (planta_graph.viz.width / 14), (planta_graph.viz.height / 2) + (planta_graph.viz.height / 5)])
+		   	plantiGraph.viz.projection = d3.geoMercator()
+		   		.scale(170 * (plantiGraph.viz.width / 1000))
+		   		.translate([(plantiGraph.viz.width / 2) - (plantiGraph.viz.width / 14), (plantiGraph.viz.height / 2) + (plantiGraph.viz.height / 5)])
 				.precision(51);
 
-			planta_graph.viz.path = d3.geoPath().projection(planta_graph.viz.projection);
+			plantiGraph.viz.path = d3.geoPath().projection(plantiGraph.viz.projection);
 
-			if(planta_graph.data.prod)
-				for (var i = 0; i < planta_graph.data.prod.length; i++) {
-					planta_graph.data.prod[i].x = planta_graph.viz.projection([planta_graph.data.prod[i].lon, planta_graph.data.prod[i].lat])[0];
-					planta_graph.data.prod[i].y = planta_graph.viz.projection([planta_graph.data.prod[i].lon, planta_graph.data.prod[i].lat])[1];
+			if(plantiGraph.data.prod)
+				for (var i = 0; i < plantiGraph.data.prod.length; i++) {
+					plantiGraph.data.prod[i].x = plantiGraph.viz.projection([plantiGraph.data.prod[i].lon, plantiGraph.data.prod[i].lat])[0];
+					plantiGraph.data.prod[i].y = plantiGraph.viz.projection([plantiGraph.data.prod[i].lon, plantiGraph.data.prod[i].lat])[1];
 				};
 
-			planta_graph.maxCirc = parseInt(planta_graph.viz.width / planta_graph.maxCircProp);
-			planta_graph.minCirc = Math.ceil(planta_graph.maxCirc / planta_graph.minCircProp);
-			planta_graph.maxLine = parseInt(planta_graph.viz.width / planta_graph.maxLineProp);
-			planta_graph.minLine = Math.ceil(planta_graph.maxLine / planta_graph.minLineProp);
+			plantiGraph.maxCirc = parseInt(plantiGraph.viz.width / plantiGraph.maxCircProp);
+			plantiGraph.minCirc = Math.ceil(plantiGraph.maxCirc / plantiGraph.minCircProp);
+			plantiGraph.maxLine = parseInt(plantiGraph.viz.width / plantiGraph.maxLineProp);
+			plantiGraph.minLine = Math.ceil(plantiGraph.maxLine / plantiGraph.minLineProp);
 
 		},
 			// fondo de paises
@@ -283,13 +335,13 @@ var planta_graph = {
 				var countries = topojson.feature(world, world.objects.countries).features;
 				// var neighbors = topojson.neighbors(world.objects.countries.geometries);
 
-				if(planta_graph.viz.map) planta_graph.viz.map.remove()
+				if(plantiGraph.viz.map) plantiGraph.viz.map.remove()
 
-				planta_graph.viz.map = planta_graph.viz.svg.selectAll(".country")
+				plantiGraph.viz.map = plantiGraph.viz.svg.selectAll(".country")
 					.data(countries)
 					.enter()
 						.insert("path", ".graticule")
-							.attr('d', planta_graph.viz.path)
+							.attr('d', plantiGraph.viz.path)
 							.attr('class', "country")
 							.style('stroke', '#ccc')
 							.style('fill', 'none')
@@ -300,7 +352,7 @@ var planta_graph = {
 
 		loadCountries: function(cb) {
 
-			d3.json(planta_graph.pathPaises, function(error, world) {
+			d3.json(plantiGraph.pathPaises, function(error, world) {
 			  	
 			  	if (error) throw error;
 
@@ -313,8 +365,8 @@ var planta_graph = {
 				    var pais = world[key];
 
 				    pais.key = key;
-				    pais.posX = planta_graph.viz.projection([pais.lon, pais.lat])[0];
-				    pais.posY = planta_graph.viz.projection([pais.lon, pais.lat])[1];
+				    pais.posX = plantiGraph.viz.projection([pais.lon, pais.lat])[0];
+				    pais.posY = plantiGraph.viz.projection([pais.lon, pais.lat])[1];
 				    pais.x = pais.posX;
 				    pais.y = pais.posY;
 
@@ -344,38 +396,38 @@ var planta_graph = {
 		          noSuggestionNotice: 'No se encontraron coincidencias',
 		          groupBy: 'p',
 		          onSelect: function (suggestion) {
-		            planta_graph.countryPop.activa(suggestion.data.key);
+		            plantiGraph.countryPop.activa(suggestion.data.key);
 		          }
 		        });
 
-				planta_graph.data.countries = paises;
+				plantiGraph.data.countries = paises;
 				
 				if(cb) cb();
 			});
 		},
 
 		update: function() {
-			d3.json(planta_graph.pathData + planta_graph.act.prod + '.json' + planta_graph.pathQuery, function(error, data){
+			d3.json(plantiGraph.pathData + plantiGraph.act.prod + '.json' + plantiGraph.pathQuery, function(error, data){
 			    
 			    if (error) throw error;
 
 			    	// si no hay paises los carga asyncronos
-				if(!planta_graph.data.countries) planta_graph.tools.loadCountries(function(){ 
+				if(!plantiGraph.data.countries) plantiGraph.tools.loadCountries(function(){ 
 					
-					planta_graph.tools.processData(data);
+					plantiGraph.tools.processData(data);
 
 					return;
 				});
 
-				planta_graph.tools.processData(data);
+				plantiGraph.tools.processData(data);
 
-				planta_graph.countryPop.update();
+				plantiGraph.countryPop.update();
 
 			});
 		},
 
 		getdataCountry: function(country) {
-			d3.json(planta_graph.pathData + planta_graph.act.prod + '.json' + planta_graph.pathQuery, function(error, data){			    
+			d3.json(plantiGraph.pathData + plantiGraph.act.prod + '.json' + plantiGraph.pathQuery, function(error, data){			    
 			    if (error) throw error;
 
 			    var dataCountry = {
@@ -384,8 +436,8 @@ var planta_graph = {
 			    	impByYear: [],
 			    };
 
-			    for (var i = planta_graph.data.countries.length - 1; i >= 0; i--) {
-					if(planta_graph.data.countries[i].key == country) dataCountry.actCountry = planta_graph.data.countries[i];
+			    for (var i = plantiGraph.data.countries.length - 1; i >= 0; i--) {
+					if(plantiGraph.data.countries[i].key == country) dataCountry.actCountry = plantiGraph.data.countries[i];
 				}
 				if(!dataCountry.actCountry) throw 'No se encontró el pais activo';
 
@@ -394,19 +446,19 @@ var planta_graph = {
 			  		dataCountry.expByYear[year] = 0
 			  		dataCountry.impByYear[year] = 0
 
-					for (var i = planta_graph.data.countries.length - 1; i >= 0; i--) {
-						if(planta_graph.data.countries[i].key == country) {console.log(planta_graph.data.countries[i].key, country)
-							for (var k = planta_graph.data.countries.length - 1; k >= 0; k--) { 
-								if(data[year][country] && data[year][country][planta_graph.data.countries[k].key]) dataCountry.impByYear[year] += data[year][country][planta_graph.data.countries[k].key];
+					for (var i = plantiGraph.data.countries.length - 1; i >= 0; i--) {
+						if(plantiGraph.data.countries[i].key == country) {console.log(plantiGraph.data.countries[i].key, country)
+							for (var k = plantiGraph.data.countries.length - 1; k >= 0; k--) { 
+								if(data[year][country] && data[year][country][plantiGraph.data.countries[k].key]) dataCountry.impByYear[year] += data[year][country][plantiGraph.data.countries[k].key];
 							}
-						} else if (data[year][planta_graph.data.countries[i].key] && data[year][planta_graph.data.countries[i].key][country]) {
-							dataCountry.expByYear[year] += data[year][planta_graph.data.countries[i].key][country];
+						} else if (data[year][plantiGraph.data.countries[i].key] && data[year][plantiGraph.data.countries[i].key][country]) {
+							dataCountry.expByYear[year] += data[year][plantiGraph.data.countries[i].key][country];
 						}
 					}
 
 			  	}
 
-			  	planta_graph.countryPop.draw(dataCountry);
+			  	plantiGraph.countryPop.draw(dataCountry);
 
 			});
 		},
@@ -414,10 +466,10 @@ var planta_graph = {
 		getTop(country, type) {
 			
 			var top = [];
-			var topCountries = type == 'imp' ? planta_graph.data.yearTopImp : planta_graph.data.yearTopExp;
+			var topCountries = type == 'imp' ? plantiGraph.data.yearTopImp : plantiGraph.data.yearTopExp;
 			var found = false;
 
-			for (var i = 0; i < planta_graph.graphsElms; i++) {
+			for (var i = 0; i < plantiGraph.graphsElms; i++) {
 				
 				if(topCountries[i].key == country) {
 					found = true;
@@ -451,39 +503,39 @@ var planta_graph = {
 			var name = dataCountry.actCountry.name;
 			var out = [];
 
-			if(planta_graph.act.type.length == 2) {
+			if(plantiGraph.act.type.length == 2) {
 
 				var balance = dataCountry.actCountry.totalExp - dataCountry.actCountry.totalImp;
-				var positionImp = planta_graph.tools.getPosition(dataCountry, 'imp');
-				var positionExp = planta_graph.tools.getPosition(dataCountry, 'exp');
+				var positionImp = plantiGraph.tools.getPosition(dataCountry, 'imp');
+				var positionExp = plantiGraph.tools.getPosition(dataCountry, 'exp');
 
 				if(balance > 0) {
-					out.push(name + ' exportó ' + planta_graph.tools.parseAmmount(balance) + ' más en ' + planta_graph.act.prod + ' de los que importó.');
+					out.push('<strong>' + name + '</strong> exportó <strong>' + plantiGraph.tools.parseAmmount(balance) + ' más</strong> en <strong>' + plantiGraph.act.prod + '</strong> de los que importó.');
 				} else {
-					out.push(name + ' importó ' + planta_graph.tools.parseAmmount(-1 * balance) + ' más en ' + planta_graph.act.prod + ' de los que exportó.');
+					out.push('<strong>' + name + '</strong> importó <strong>' + plantiGraph.tools.parseAmmount(-1 * balance) + ' más</strong> en <strong>' + plantiGraph.act.prod + '</strong> de los que exportó.');
 				}
-				out.push(name + ' ocupa el puesto número ' + positionExp + ' de países exportadores y el puesto número ' + positionImp + ' de paises exportadores de ' + planta_graph.act.prod + '.');
+				out.push('<strong>' + name + '</strong> ocupa el puesto número <strong>' + positionExp + '</strong> de países exportadores y el puesto número <strong>' + positionImp + '</strong> de paises exportadores de <strong>' + plantiGraph.act.prod + '</strong>.');
 
 
-			} else if(planta_graph.act.type.indexOf('imp') != -1) {
+			} else if(plantiGraph.act.type.indexOf('imp') != -1) {
 
-				var position = planta_graph.tools.fixPosition(planta_graph.tools.getPosition(dataCountry, 'imp'));
-				var percent = 100 * dataCountry.actCountry.totalImp / planta_graph.data.totalImp;
-				var total = 100 * dataCountry.actCountry.totalImp / dataCountry.actCountry.resumen.imps[planta_graph.act.year];
+				var position = plantiGraph.tools.fixPosition(plantiGraph.tools.getPosition(dataCountry, 'imp'));
+				var percent = 100 * dataCountry.actCountry.totalImp / plantiGraph.data.totalImp;
+				var total = 100 * dataCountry.actCountry.totalImp / dataCountry.actCountry.resumen.imps[plantiGraph.act.year];
 
-				out.push(name + ' ocupa el ' + position + ' puesto en el ranking de países importadores de ' + planta_graph.act.prod + '.');
-				out.push(name + ' controla el ' + percent.toFixed(2) + '% de las importaciones mundiales de ' + planta_graph.act.prod + '.');
-				out.push(firstCapital(planta_graph.txt.articulos[planta_graph.act.prod]) + ' supone el ' + total.toFixed(2) + '% de las importaciones de ' + name +  ', ' + planta_graph.tools.parseAmmount(dataCountry.actCountry.totalImp) + '.');
+				out.push('<strong>' + name + '</strong> ocupa el <strong>' + position + ' puesto</strong> en el ranking de países importadores de <strong>' + plantiGraph.act.prod + '</strong>.');
+				out.push('<strong>' + name + '</strong> controla el <strong>' + percent.toFixed(2) + '%</strong> de las importaciones mundiales de <strong>' + plantiGraph.act.prod + '</strong>.');
+				out.push('<strong>' + firstCapital(plantiGraph.txt.articulos[plantiGraph.act.prod]) + '</strong> supone el ' + total.toFixed(2) + '% de las importaciones de <strong>' + name +  '</strong>, ' + plantiGraph.tools.parseAmmount(dataCountry.actCountry.totalImp) + '</strong>.');
 
 			} else {
 
-				var position = planta_graph.tools.fixPosition(planta_graph.tools.getPosition(dataCountry, 'exp'));
-				var percent = 100 * dataCountry.actCountry.totalExp / planta_graph.data.totalExp;
-				var total = 100 * dataCountry.actCountry.totalExp / dataCountry.actCountry.resumen.exps[planta_graph.act.year];
+				var position = plantiGraph.tools.fixPosition(plantiGraph.tools.getPosition(dataCountry, 'exp'));
+				var percent = 100 * dataCountry.actCountry.totalExp / plantiGraph.data.totalExp;
+				var total = 100 * dataCountry.actCountry.totalExp / dataCountry.actCountry.resumen.exps[plantiGraph.act.year];
 
-				out.push(name + ' ocupa el ' + position + ' puesto en el ranking de países exportadores de ' + planta_graph.act.prod + '.');
-				out.push(name + ' controla el ' + percent.toFixed(2) + '% de las exportaciones mundiales de ' + planta_graph.act.prod + '.');
-				out.push(firstCapital(planta_graph.txt.articulos[planta_graph.act.prod]) + ' supone el ' + total.toFixed(2) + '% de las exportaciones de ' + name +  ', ' + planta_graph.tools.parseAmmount(dataCountry.actCountry.totalImp) + '.');
+				out.push('<strong>' + name + '</strong> ocupa el <strong>' + position + ' puesto</strong> en el ranking de países exportadores de <strong>' + plantiGraph.act.prod + '</strong>.');
+				out.push('<strong>' + name + '</strong> controla el <strong>' + percent.toFixed(2) + '%</strong> de las exportaciones mundiales de <strong>' + plantiGraph.act.prod + '</strong>.');
+				out.push('<strong>' + firstCapital(plantiGraph.txt.articulos[plantiGraph.act.prod]) + ' supone el ' + total.toFixed(2) + '% de las exportaciones de <strong>' + name +  '</strong>, ' + plantiGraph.tools.parseAmmount(dataCountry.actCountry.totalImp) + '.');
 			}
 
 			return out;
@@ -508,12 +560,12 @@ var planta_graph = {
 
 		getPosition(dataCountry, type) {
 			if(type == 'imp') {
-				for (var i = planta_graph.data.yearTopImp.length - 1; i >= 0; i--) {
-					if(planta_graph.data.yearTopImp[i].key == dataCountry.actCountry.key) return i + 1;
+				for (var i = plantiGraph.data.yearTopImp.length - 1; i >= 0; i--) {
+					if(plantiGraph.data.yearTopImp[i].key == dataCountry.actCountry.key) return i + 1;
 				}
 			} else {
-				for (var i = planta_graph.data.yearTopExp.length - 1; i >= 0; i--) {
-					if(planta_graph.data.yearTopExp[i].key == dataCountry.actCountry.key) return i + 1;
+				for (var i = plantiGraph.data.yearTopExp.length - 1; i >= 0; i--) {
+					if(plantiGraph.data.yearTopExp[i].key == dataCountry.actCountry.key) return i + 1;
 				}
 			} 
 			return null;
@@ -521,8 +573,8 @@ var planta_graph = {
 
 		processData: function(data) {
 
-			var countries = planta_graph.data.countries; // alias
-			var actData = data[planta_graph.act.year];
+			var countries = plantiGraph.data.countries; // alias
+			var actData = data[plantiGraph.act.year];
 
 			var links = [];
 			var tops = {
@@ -564,13 +616,13 @@ var planta_graph = {
 				}
 			}
 			
-			planta_graph.data.totalExp = 0;
-			planta_graph.data.totalImp = 0;
+			plantiGraph.data.totalExp = 0;
+			plantiGraph.data.totalImp = 0;
 
 			for (var i = countries.length - 1; i >= 0; i--) {
 
-				planta_graph.data.totalExp += countries[i].totalExp;
-				planta_graph.data.totalImp += countries[i].totalImp;
+				plantiGraph.data.totalExp += countries[i].totalExp;
+				plantiGraph.data.totalImp += countries[i].totalImp;
 
 				tops.imp.push({
 					key: countries[i].key,
@@ -595,79 +647,79 @@ var planta_graph = {
 				if((countries[i].totalImp + countries[i].totalExp) > 0) maxImpExp.push(countries[i].totalImp + countries[i].totalExp);
 			}
 
-			planta_graph.data.yearTopExp = tops.exp.sort(function(x, y){
+			plantiGraph.data.yearTopExp = tops.exp.sort(function(x, y){
 				return d3.descending(x.val, y.val);
 			})
 
-			planta_graph.data.yearTopImp = tops.imp.sort(function(x, y){
+			plantiGraph.data.yearTopImp = tops.imp.sort(function(x, y){
 				return d3.descending(x.val, y.val);
 			})
 
-			planta_graph.data.yearTopImp
+			plantiGraph.data.yearTopImp
 
 
 			// console.log(maxImp, d3.max(maxImp), maxExp, d3.max(maxExp), maxImpExp, d3.max(maxImpExp), imps, d3.max(imps), countries, links);
 
 
 				// scalas lineales
-			// planta_graph.viz.scale.circImp = 
-			// 	d3.scaleLinear().domain([0,d3.max(maxImp)]).range([0,planta_graph.maxCirc]);
-			// planta_graph.viz.scale.circExp = 
-			// 	d3.scaleLinear().domain([0,d3.max(maxExp)]).range([0,planta_graph.maxCirc]);
-			// planta_graph.viz.scale.circImpExp = 
-			// 	d3.scaleLinear().domain([0,d3.max(maxImpExp)]).range([0,planta_graph.maxCirc]);
-			// planta_graph.viz.scale.lines = 
-			// 	d3.scaleLinear().domain([0,d3.max(imps)]).range([0,planta_graph.maxLine]);
+			// plantiGraph.viz.scale.circImp = 
+			// 	d3.scaleLinear().domain([0,d3.max(maxImp)]).range([0,plantiGraph.maxCirc]);
+			// plantiGraph.viz.scale.circExp = 
+			// 	d3.scaleLinear().domain([0,d3.max(maxExp)]).range([0,plantiGraph.maxCirc]);
+			// plantiGraph.viz.scale.circImpExp = 
+			// 	d3.scaleLinear().domain([0,d3.max(maxImpExp)]).range([0,plantiGraph.maxCirc]);
+			// plantiGraph.viz.scale.lines = 
+			// 	d3.scaleLinear().domain([0,d3.max(imps)]).range([0,plantiGraph.maxLine]);
 
-			planta_graph.viz.scale.circImp = 
-				d3.scalePow().exponent(.7).domain([0,d3.max(maxImp)]).range([0,planta_graph.maxCirc]);
-			planta_graph.viz.scale.circExp = 
-				d3.scalePow().exponent(.7).domain([0,d3.max(maxExp)]).range([0,planta_graph.maxCirc]);
-			planta_graph.viz.scale.circImpExp = 
-				d3.scalePow().exponent(.7).domain([0,d3.max(maxImpExp)]).range([0,planta_graph.maxCirc]);
-			planta_graph.viz.scale.lines = 
-				d3.scalePow().exponent(.9).domain([0,d3.max(imps)]).range([0,planta_graph.maxLine]);
+			plantiGraph.viz.scale.circImp = 
+				d3.scalePow().exponent(.7).domain([0,d3.max(maxImp)]).range([0,plantiGraph.maxCirc]);
+			plantiGraph.viz.scale.circExp = 
+				d3.scalePow().exponent(.7).domain([0,d3.max(maxExp)]).range([0,plantiGraph.maxCirc]);
+			plantiGraph.viz.scale.circImpExp = 
+				d3.scalePow().exponent(.7).domain([0,d3.max(maxImpExp)]).range([0,plantiGraph.maxCirc]);
+			plantiGraph.viz.scale.lines = 
+				d3.scalePow().exponent(.9).domain([0,d3.max(imps)]).range([0,plantiGraph.maxLine]);
 
 			for (var i = countries.length - 1; i >= 0; i--) {
-				countries[i].rTot = planta_graph.viz.scale.circImpExp(countries[i].totalImp + countries[i].totalExp);
-				countries[i].rTotImp = planta_graph.viz.scale.circImpExp(countries[i].totalImp);
-				countries[i].rTotExp = planta_graph.viz.scale.circImpExp(countries[i].totalExp);
-				countries[i].rImp = planta_graph.viz.scale.circImp(countries[i].totalImp);
-				countries[i].rExp = planta_graph.viz.scale.circExp(countries[i].totalExp);
+				countries[i].rTot = plantiGraph.viz.scale.circImpExp(countries[i].totalImp + countries[i].totalExp);
+				countries[i].rTotImp = plantiGraph.viz.scale.circImpExp(countries[i].totalImp);
+				countries[i].rTotExp = plantiGraph.viz.scale.circImpExp(countries[i].totalExp);
+				countries[i].rImp = plantiGraph.viz.scale.circImp(countries[i].totalImp);
+				countries[i].rExp = plantiGraph.viz.scale.circExp(countries[i].totalExp);
 			}
 
 				// iniciación inicial de círculos y textos
-			if(!planta_graph.viz.circsImp) {
+			if(!plantiGraph.viz.circsImp) {
 
 
-				planta_graph.viz.links = planta_graph.viz.svg
+				plantiGraph.viz.links = plantiGraph.viz.svg
 					.selectAll('.link').data(links).enter()
 					.append('line')
 						.attr('class', 'link')
-						.attr('stroke-width', function(d){ return planta_graph.viz.scale.lines(d.val); })
+						.attr('stroke-width', function(d){ return plantiGraph.viz.scale.lines(d.val); })
 						.on("mouseenter", function(d){
 							$('#texto').text('Importaciones de ' + d.source.name + ' a ' + d.target.name + ': ' + d.val + ' dollars');
 						}).on("mouseout", function(d){
 							$('#texto').text('');
 						});
 
-				planta_graph.viz.circExp = planta_graph.viz.svg
+				plantiGraph.viz.circExp = plantiGraph.viz.svg
 					.selectAll('.circExp').data(countries).enter()
 					.append('circle')
 						.attr('class', 'circExp')
-						.on("mouseenter", planta_graph.evs.circExpEnter)
-						.on("mousedown", planta_graph.evs.circClick)
-						.on("mouseout", planta_graph.evs.circOut);
+						.on("mouseenter", plantiGraph.evs.circExpEnter)
+						.on("mousedown", plantiGraph.evs.circClick)
+						.on("mouseout", plantiGraph.evs.circOut);
 
-				planta_graph.viz.circsImp = planta_graph.viz.svg
+				plantiGraph.viz.circsImp = plantiGraph.viz.svg
 					.selectAll('.circImp').data(countries).enter()
 					.append('circle')
 						.attr('class', 'circImp')
-						.on("mouseenter", planta_graph.evs.circInEnter)
-						.on("mousedown", planta_graph.evs.circClick)
-						.on("mouseout", planta_graph.evs.circOut);
+						.on("mouseenter", plantiGraph.evs.circInEnter)
+						.on("mousedown", plantiGraph.evs.circClick)
+						.on("mouseout", plantiGraph.evs.circOut);
 
-				planta_graph.viz.texts = planta_graph.viz.svg
+				plantiGraph.viz.texts = plantiGraph.viz.svg
 					.selectAll('.text').data(countries).enter()
 					.append('text')
 						.attr('class', 'text')
@@ -675,42 +727,42 @@ var planta_graph = {
 			}
 
 				// actualización de líneas
-			planta_graph.viz.links.data(links)
-				.attr('stroke-width', function(d){ return planta_graph.viz.scale.lines(d.val); })
+			plantiGraph.viz.links.data(links)
+				.attr('stroke-width', function(d){ return plantiGraph.viz.scale.lines(d.val); })
 				.attr("visibility", function (d) {
-					if(planta_graph.act.type.length != 2) return "hidden";
-			    	return (planta_graph.viz.scale.lines(d.val) < planta_graph.minLine) ? "hidden" : "visible";
+					if(plantiGraph.act.type.length != 2) return "hidden";
+			    	return (plantiGraph.viz.scale.lines(d.val) < plantiGraph.minLine) ? "hidden" : "visible";
 			  	});
 
 				// actualización de círculos y textos
-			planta_graph.viz.circsImp.data(countries)
-				.attr("visibility", planta_graph.evs.circImpVisibilityCheck)
-				.attr('r', planta_graph.evs.circImpRadius)
+			plantiGraph.viz.circsImp.data(countries)
+				.attr("visibility", plantiGraph.evs.circImpVisibilityCheck)
+				.attr('r', plantiGraph.evs.circImpRadius)
 				.attr('cx', function(d) { return d.x; })
 				.attr('cy', function(d) { return d.y; });
 
-			planta_graph.viz.circExp.data(countries)
-				.attr("visibility", planta_graph.evs.circExpVisibilityCheck)
-				.attr('r', planta_graph.evs.circExpRadius)
+			plantiGraph.viz.circExp.data(countries)
+				.attr("visibility", plantiGraph.evs.circExpVisibilityCheck)
+				.attr('r', plantiGraph.evs.circExpRadius)
 				.attr('cx', function(d) { return d.x; })
 				.attr('cy', function(d) { return d.y; });
 
-			planta_graph.viz.texts.data(countries)
-				.attr("visibility", planta_graph.evs.textVisibilityCheck)
+			plantiGraph.viz.texts.data(countries)
+				.attr("visibility", plantiGraph.evs.textVisibilityCheck)
 				.attr('x', function(d) { return d.x; })
 				.attr('y', function(d) { return d.y + 5; });
 
-			planta_graph.viz.force = d3.forceSimulation(countries)
+			plantiGraph.viz.force = d3.forceSimulation(countries)
 				.force("link", d3.forceLink(links).strength(0.0000001))
 				.force("charge", d3.forceManyBody().strength(0.01))
-    			.force("collide", d3.forceCollide().radius(planta_graph.evs.collideRadiusFn).iterations(1).strength(2))
+    			.force("collide", d3.forceCollide().radius(plantiGraph.evs.collideRadiusFn).iterations(1).strength(2))
 				// .force("link", d3.forceLink(links).strength(function(d){return d.val / 1000 }).distance(20))
-				// .force("center", d3.forceCenter(planta_graph.viz.width / 2, planta_graph.viz.height / 2))
+				// .force("center", d3.forceCenter(plantiGraph.viz.width / 2, plantiGraph.viz.height / 2))
 
 				.alphaDecay(.5)
 				.velocityDecay(.7)
 
-				.on('tick', planta_graph.tools.tick)
+				.on('tick', plantiGraph.tools.tick)
 				// .on('end', function(){ console.log('end') })
 				.restart();
 
@@ -720,21 +772,21 @@ var planta_graph = {
 		tick: function() {
 			// console.log('tick')
 
-			planta_graph.viz.circsImp
+			plantiGraph.viz.circsImp
 				.attr('cx', function(d) { return d.x; })
 				.attr('cy', function(d) { return d.y; });
 
-			planta_graph.viz.circExp
+			plantiGraph.viz.circExp
 				.attr('cx', function(d) { return d.x; })
 				.attr('cy', function(d) { return d.y; });
 
-			planta_graph.viz.links
+			plantiGraph.viz.links
 				.attr('x1', function(d) { return d.source.x; })
 				.attr('x2', function(d) { return d.target.x; })
 				.attr('y1', function(d) { return d.source.y; })
 				.attr('y2', function(d) { return d.target.y; });
 
-			planta_graph.viz.texts
+			plantiGraph.viz.texts
 				.attr('x', function(d) { return d.x; })
 				.attr('y', function(d) { return d.y + 5; });
 			
@@ -743,23 +795,23 @@ var planta_graph = {
 		initJqueries: function() {
 
 			$('#years')
-				.find('.gotoYear').click(planta_graph.evs.changeYear).end()
-				.find('.nextYear').click(planta_graph.evs.nextYear).end()
-				.find('.prevYear').click(planta_graph.evs.prevYear);
+				.find('.gotoYear').click(plantiGraph.evs.changeYear).end()
+				.find('.nextYear').click(plantiGraph.evs.nextYear).end()
+				.find('.prevYear').click(plantiGraph.evs.prevYear);
 
-			$('#prods a').click(planta_graph.evs.changeProduct);
+			$('#prods a').click(plantiGraph.evs.changeProduct);
 
-			$('#type a').click(planta_graph.evs.changeType);
+			$('#type a').click(plantiGraph.evs.changeType);
 
-			$('#years a[data-year=' +  planta_graph.act.year + ']').addClass('act');
-			$('#prods a[data-prod=' +  planta_graph.act.prod + ']').addClass('act');
+			$('#years a[data-year=' +  plantiGraph.act.year + ']').addClass('act');
+			$('#prods a[data-prod=' +  plantiGraph.act.prod + ']').addClass('act');
 
-			$(planta_graph.act.type).each(function(e, f){
+			$(plantiGraph.act.type).each(function(e, f){
 				$('#type a[data-type=' +  f + ']').addClass('act');
 			});
 
 			$('#countrySelect').change(function(e) { 
-				planta_graph.countryPop.activa($('#countrySelect option:selected').attr('value'));
+				plantiGraph.countryPop.activa($('#countrySelect option:selected').attr('value'));
 			});
 
 		}
@@ -775,17 +827,17 @@ var planta_graph = {
 
 		init: function() {
 
-			planta_graph.countryPop.$elm = $(planta_graph.countryPop.$elm);
-			planta_graph.countryPop.$frases = $(planta_graph.countryPop.$frases);
-			planta_graph.countryPop.$graphLines = $(planta_graph.countryPop.$graphLines);
-			planta_graph.countryPop.$graphBars1 = $(planta_graph.countryPop.$graphBars1);
-			planta_graph.countryPop.$graphBars2 = $(planta_graph.countryPop.$graphBars2);
+			plantiGraph.countryPop.$elm = $(plantiGraph.countryPop.$elm);
+			plantiGraph.countryPop.$frases = $(plantiGraph.countryPop.$frases);
+			plantiGraph.countryPop.$graphLines = $(plantiGraph.countryPop.$graphLines).find('.inn');
+			plantiGraph.countryPop.$graphBars1 = $(plantiGraph.countryPop.$graphBars1).find('.inn');
+			plantiGraph.countryPop.$graphBars2 = $(plantiGraph.countryPop.$graphBars2).find('.inn');
 			
 			$('#closePop').click(function(){
-				planta_graph.countryPop.hide();
+				plantiGraph.countryPop.hide();
 			});
 
-			$('body').delegate('.activaCountry', 'click', function(e){
+			plantiGraph.viz.$wrap.delegate('.activaCountry', 'click', function(e){
 				e.preventDefault();
 
 				var $elm = $(this);
@@ -793,96 +845,128 @@ var planta_graph = {
 
 				if(!target) throw 'No se encontró el pais clickado';
 
-				planta_graph.countryPop.activa(target);
+				plantiGraph.countryPop.activa(target);
 			})
 		},
 
 		activa: function(countryKey) {
 			
-			planta_graph.countryPop.clear();
+			plantiGraph.countryPop.clear();
 
-			planta_graph.tools.getdataCountry(countryKey);
+			plantiGraph.tools.getdataCountry(countryKey);
 			
-			planta_graph.countryPop.active = countryKey;
+			plantiGraph.countryPop.active = countryKey;
 			
-			$('#pop').fadeIn(400);
+			plantiGraph.viz.$wrap.addClass('actPop');
 		},
 
 		draw: function(data) {
 
-		  	var frases = planta_graph.tools.getFrases(data);
+		  	var frases = plantiGraph.tools.getFrases(data);
 		  	$.each(frases, function(e, f){
-		  		planta_graph.countryPop.$frases.append($('<li>' + f + '</li>'));
+		  		plantiGraph.countryPop.$frases.append($('<li>' + f + '</li>'));
 		  	});
 
-		  	var topExp = planta_graph.tools.getTop(data.actCountry.key, 'exp');
-		  	var topImp = planta_graph.tools.getTop(data.actCountry.key, 'imp');
+		  	var topExp = plantiGraph.tools.getTop(data.actCountry.key, 'exp');
+		  	var topImp = plantiGraph.tools.getTop(data.actCountry.key, 'imp');
 
 
-		  	planta_graph.countryPop.$graphBars1.append('<h2>Historico</h2>')
-		  	planta_graph.countryPop.$graphBars1.append('<h3>exportaciones</h3>')
-		  	
-		  	$.each(data.actCountry.resumen.exps, function(e, f){
-		  		planta_graph.countryPop.$graphBars1.append($('<li>' + e + ' - ' + planta_graph.tools.parseAmmount(f) + '</li>'));
-		  	});
+		  	plantiGraph.countryPop.$graphBars1.append('<h4 style="text-transform: uppercase">Ranking de países <br>exportadores</h4><p>En millones de dolares</p>');
 
-		  	planta_graph.countryPop.$graphBars1.append('<h3>importaciones</h3>')
-		  	$.each(data.actCountry.resumen.imps, function(e, f){
-		  		planta_graph.countryPop.$graphBars1.append($('<li>' + e + ' - ' + planta_graph.tools.parseAmmount(f) + '</li>'));
-		  	});
-
-		  	
-		  	planta_graph.countryPop.$graphBars1.append('<h2>Principales exportadores</h2>');
+		  	var max = d3.max(topExp, function(e){ return e.data.val; });
 
 		  	$.each(topExp, function(e, f){
 		  		
-		  		if(e == planta_graph.graphsElms) planta_graph.countryPop.$graphBars1.append('<li>....</li>');
+		  		if(e == plantiGraph.graphsElms) plantiGraph.countryPop.$graphBars1.append('<li>....</li>');
+		  		
+		  		var val = f.data.val * 100 / max;console.log(val)
+		  		
+		  		var $elm = $('<li><a data-toggle="tooltip" title="' + f.data.name + ' exportó ' + plantiGraph.tools.parseAmmount(f.data.val) + ' de ' + plantiGraph.act.prod + ' en el año ' + plantiGraph.act.year + '" href="#" class="activaCountry' + (f.data.key == data.actCountry.key ? ' activeBar' : '' ) +'" data-country="' + f.data.key + '"><span class="key">' + f.data.key + '</span><div class="bar" data-width=""><span class="text">' + millionsParser(f.data.val) + '</span></div></a></li>');
+		  		
+		  		plantiGraph.countryPop.$graphBars1.append($elm);
 
-		  		planta_graph.countryPop.$graphBars1.append($('<li><a href="#" class="activaCountry" data-country="' + f.data.key + '">' + (f.pos + 1) + ' - ' + f.data.name + ' - ' + planta_graph.tools.parseAmmount(f.data.val) + '</li>'));
+		  		$elm.find('a').tooltip();
+		  		$elm.find('.bar').stop(false, false).css('width', 0).animate({'width': val}, 1000);
+		  		if(val < 40) $elm.find('.bar').addClass('bar-left');
+
 		  	});
 
 
-		  	planta_graph.countryPop.$graphBars1.append('<h2>Principales importadores</h2>')
+		  	plantiGraph.countryPop.$graphBars2.append('<h4 style="text-transform: uppercase">Ranking de países <br>importadores</h4><p>En millones de dolares</p>');
+
+		  	var max = d3.max(topImp, function(e){ return e.data.val; });
 
 		  	$.each(topImp, function(e, f){
 		  		
-		  		if(e == planta_graph.graphsElms) planta_graph.countryPop.$graphBars1.append('<li>....</li>');
+		  		if(e == plantiGraph.graphsElms) plantiGraph.countryPop.$graphBars2.append('<li>....</li>');
 		  		
-		  		planta_graph.countryPop.$graphBars1.append($('<li><a href="#" class="activaCountry" data-country="' + f.data.key + '">' + (f.pos + 1) + ' - ' + f.data.name + ' - ' + planta_graph.tools.parseAmmount(f.data.val) + '</li>'));
+		  		var val = f.data.val * 100 / max;console.log(val)
+		  		
+		  		var $elm = $('<li><a data-toggle="tooltip" title="' + f.data.name + ' importó ' + plantiGraph.tools.parseAmmount(f.data.val) + ' de ' + plantiGraph.act.prod + ' en el año ' + plantiGraph.act.year + '" href="#" class="activaCountry' + (f.data.key == data.actCountry.key ? ' activeBar' : '' ) +'" data-country="' + f.data.key + '"><span class="key">' + f.data.key + '</span><div class="bar" data-width=""><span class="text">' + millionsParser(f.data.val) + '</span></div></a></li>');
+		  		
+		  		plantiGraph.countryPop.$graphBars2.append($elm);
+
+		  		$elm.find('a').tooltip();
+		  		$elm.find('.bar').stop(false, false).css('width', 0).animate({'width': val}, 1000);
+		  		if(val < 40) $elm.find('.bar').addClass('bar-left');
+
 		  	});
+
+		  	
+		  	// plantiGraph.countryPop.$graphBars1.append('<h3>importaciones</h3>')
+		  	// $.each(data.actCountry.resumen.imps, function(e, f){
+		  	// 	plantiGraph.countryPop.$graphBars1.append($('<li>' + e + ' - ' + plantiGraph.tools.parseAmmount(f) + '</li>'));
+		  	// });
+
+		  	// $.each(data.actCountry.resumen.exps, function(e, f){
+		  	// 	plantiGraph.countryPop.$graphBars1.append($('<li><span class="sigla">' + e + '</span>' + plantiGraph.tools.parseAmmount(f) + '</li>'));
+		  	// });
+
+
+		  	
+		  	// plantiGraph.countryPop.$graphBars1.append('<h4>Principales exportadores</h4>');
+
+
+
+		  	// plantiGraph.countryPop.$graphBars1.append('<h4>Principales importadores</h4>')
+
+		  	// $.each(topImp, function(e, f){
+		  		
+		  	// 	if(e == plantiGraph.graphsElms) plantiGraph.countryPop.$graphBars1.append('<li>....</li>');
+		  		
+		  	// 	plantiGraph.countryPop.$graphBars1.append($('<li><a href="#" class="activaCountry" data-country="' + f.data.key + '">' + (f.pos + 1) + ' - ' + f.data.name + ' - ' + plantiGraph.tools.parseAmmount(f.data.val) + '</li>'));
+		  	// });
 
 		},
 
 		hide: function() {
-			$('#pop').fadeOut(400, function(){
-				planta_graph.countryPop.clear();
-			});
+			plantiGraph.viz.$wrap.removeClass('actPop');
 		},
 
 		clear: function() {
 
-			planta_graph.countryPop.active = null;
+			plantiGraph.countryPop.active = null;
 
-			planta_graph.countryPop.$frases.html('');
-			planta_graph.countryPop.$graphBars2.html('');
-			planta_graph.countryPop.$graphBars1.html('');
-			planta_graph.countryPop.$graphLines.html('');
+			plantiGraph.countryPop.$frases.find('*').remove();
+			plantiGraph.countryPop.$graphBars2.find('*').remove();
+			plantiGraph.countryPop.$graphBars1.find('*').remove();
+			plantiGraph.countryPop.$graphLines.find('*').remove();
 
 		},
 
 		update: function() {
-			if(planta_graph.countryPop.active) planta_graph.countryPop.activa(planta_graph.countryPop.active);
+			if(plantiGraph.countryPop.active) plantiGraph.countryPop.activa(plantiGraph.countryPop.active);
 		}
 	},
 
-	evs: { // planta_graph.evs.circInEnter
+	evs: { // plantiGraph.evs.circInEnter
 
 
 		desactivaCountry: function() {
 		},
 
 		circInEnter: function(d) {
-			planta_graph.viz.links
+			plantiGraph.viz.links
 				.attr('class', function(e){
 					return e.source.name == d.name || e.target.name == d.name ? 'link link-act' : 'link';
 				});
@@ -891,7 +975,7 @@ var planta_graph = {
 		},
 
 		circExpEnter: function(d) {
-			planta_graph.viz.links
+			plantiGraph.viz.links
 				.attr('class', function(e){
 					return e.source.name == d.name || e.target.name == d.name ? 'link link-act' : 'link';
 				});
@@ -899,48 +983,48 @@ var planta_graph = {
 			$('#texto').text(d.name + ': Total importaciones ' + numberThousandsDots(d.totalImp) + ' dollars, total exportaciones ' + numberThousandsDots(d.totalExp) + ' dollars');
 		},
 		circClick: function(d) {
-			planta_graph.countryPop.activa(d.key);
+			plantiGraph.countryPop.activa(d.key);
 		},
 
 		circOut: function(d){
-			planta_graph.viz.links
+			plantiGraph.viz.links
 				.attr('class', 'link');
 			$('#texto').text('');
 		},
 
 		textVisibilityCheck: function(d) {
-			if(planta_graph.act.type.length == 2) {
+			if(plantiGraph.act.type.length == 2) {
 				return d.rTot < 13 ? "hidden" : "visible";
 			} else {
-				if($.inArray('imp', planta_graph.act.type) == -1) return d.rExp < 13 ? "hidden" : "visible";
+				if($.inArray('imp', plantiGraph.act.type) == -1) return d.rExp < 13 ? "hidden" : "visible";
 				return d.rImp < 13 ? "hidden" : "visible";
 			}
 		},
 
 		circImpVisibilityCheck: function(d) {
-			if($.inArray('imp', planta_graph.act.type) == -1) return "hidden";
-	    	return (d.rImp <  (planta_graph.maxCirc / 50)) ? "hidden" : "visible";
+			if($.inArray('imp', plantiGraph.act.type) == -1) return "hidden";
+	    	return (d.rImp <  (plantiGraph.maxCirc / 50)) ? "hidden" : "visible";
 		},
 
 		circImpRadius: function(d) {
-			if(planta_graph.act.type.length == 2) return d.rTotImp;
+			if(plantiGraph.act.type.length == 2) return d.rTotImp;
 			else return d.rImp;
 		},
 
 		circExpVisibilityCheck: function(d) {
-			if($.inArray('exp', planta_graph.act.type) == -1) return "hidden";
-	    	return (($.inArray('imp', planta_graph.act.type) == -1 ? d.rExp : d.rT) <  (planta_graph.maxCirc / 50)) ? "hidden" : "visible";
+			if($.inArray('exp', plantiGraph.act.type) == -1) return "hidden";
+	    	return (($.inArray('imp', plantiGraph.act.type) == -1 ? d.rExp : d.rT) <  (plantiGraph.maxCirc / 50)) ? "hidden" : "visible";
 		},
 
 		circExpRadius: function(d) {
-			return ($.inArray('imp', planta_graph.act.type) == -1) ? d.rExp : d.rTot;
+			return ($.inArray('imp', plantiGraph.act.type) == -1) ? d.rExp : d.rTot;
 		},
 
 		collideRadiusFn: function(d) {
-			if(planta_graph.act.type.length == 2) {
+			if(plantiGraph.act.type.length == 2) {
 				return d.rTot + 8;
 			} else {
-				if($.inArray('imp', planta_graph.act.type) == -1) return d.rExp + 5;
+				if($.inArray('imp', plantiGraph.act.type) == -1) return d.rExp + 5;
 				return d.rImp + 5;
 			}
 			return d.rTot + 5;
@@ -953,19 +1037,19 @@ var planta_graph = {
 			$('#prods .act').removeClass('act');
 
 			var prod = $(this).addClass('act').data('prod');
-			if(!prod || planta_graph.act.prod == prod) { console.log('no hay producto'); return; };
+			if(!prod || plantiGraph.act.prod == prod) { console.log('no hay producto'); return; };
 
-			planta_graph.act.prod = prod;
+			plantiGraph.act.prod = prod;
 
 				// carga datos nuevos y pinta
-			planta_graph.tools.update();
+			plantiGraph.tools.update();
 		},
 
 		gotoYear: function(year) {
 
-			if(!year || planta_graph.act.year == year || year > 2014 || year < 2004) return;
+			if(!year || plantiGraph.act.year == year || year > 2014 || year < 2004) return;
 
-			planta_graph.act.year = year;
+			plantiGraph.act.year = year;
 			
 			$('#years .act').removeClass('act');
 			$('#years .disabled').removeClass('disabled');
@@ -975,23 +1059,23 @@ var planta_graph = {
 			if(year == 2004) $('#years .prevYear').addClass('disabled');
 
 				// actualiza el dibujo
-			planta_graph.tools.update();
+			plantiGraph.tools.update();
 		},
 
 		changeYear: function(e) {
 			
 			e.preventDefault();
 
-			planta_graph.evs.gotoYear($(this).data('year'));
+			plantiGraph.evs.gotoYear($(this).data('year'));
 		},
 
 		prevYear: function(e) {
 			
 			e.preventDefault();
 
-			if(planta_graph.act.year == 2004) return;
+			if(plantiGraph.act.year == 2004) return;
 
-			planta_graph.evs.gotoYear(planta_graph.act.year - 1);
+			plantiGraph.evs.gotoYear(plantiGraph.act.year - 1);
 
 		},
 
@@ -999,9 +1083,9 @@ var planta_graph = {
 			
 			e.preventDefault();
 
-			if(planta_graph.act.year == 2014) return;
+			if(plantiGraph.act.year == 2014) return;
 
-			planta_graph.evs.gotoYear(planta_graph.act.year + 1);
+			plantiGraph.evs.gotoYear(plantiGraph.act.year + 1);
 		},
 
 		changeType: function(e) {
@@ -1012,30 +1096,30 @@ var planta_graph = {
 			var type = $this.data('type');
 
 				// ya activado => desactiva
-			if($.inArray(type, planta_graph.act.type) != -1){
+			if($.inArray(type, plantiGraph.act.type) != -1){
 					
 					// para no quedarnos a 0
-				if(planta_graph.act.type.length < 2) return;
+				if(plantiGraph.act.type.length < 2) return;
 
 				$this.removeClass('act');
-				planta_graph.act.type.splice(planta_graph.act.type.indexOf(type), 1);
+				plantiGraph.act.type.splice(plantiGraph.act.type.indexOf(type), 1);
 
 				// no activado => activa
 			} else {
 
 				$this.addClass('act');
-				planta_graph.act.type.push(type);
+				plantiGraph.act.type.push(type);
 			}
 
 				// actualiza el dibujo
-			planta_graph.tools.update();
+			plantiGraph.tools.update();
 
 		}
 	},
 
 };
 
-planta_graph.init();
+plantiGraph.init();
 
 function throttle (callback, limit) {   // http://sampsonblog.com/749/simple-throttle-function modificado!
     var wait = false;                 // Initially, we're not waiting
@@ -1058,6 +1142,12 @@ function numberThousandsDots (number) {
 function firstCapital(string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);
 };
+
+function millionsParser (ammount) {
+	var data = ammount / 1000000;
+	if(data > 1) return numberThousandsDots(parseInt(data));
+	return data.toFixed(2);
+}
 
 
 function shareTweet (texto, url, hash, via) {
