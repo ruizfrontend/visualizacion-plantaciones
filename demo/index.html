@@ -56,20 +56,20 @@ body { background: #ccc; }
 	#texto { position: absolute; right: 0; top: 0; color: red; }
 #graph { background: #efefef; }
 
-	.link { stroke: rgba(0,0,0,0.4); fill: none;  }
+	.link {  fill: none; stroke: rgba(0,0,0,0.4); }
 		.link:hover, .link-act { stroke: rgba(60, 4, 4, 0.6); }
-		.anim .link { -webkit-transition: stroke .2s; -ms-transition: stroke .2s; transition: stroke .2s; }
+		.anim .link { -webkit-transition: stroke .5s; -ms-transition: stroke .5s; transition: stroke .5s; }
 
 	.circImp { fill: #126567; cursor: pointer; }
 		.anim .circImp {  -webkit-transform-origin: center center; -ms-transform-origin: center center; transform-origin: center center;
-				-webkit-transition: all .2s; -ms-transition: all .2s; transition: all .2s; }
-		.anim .circImp:hover { fill: rgba(6, 3, 68, 0.4);
+				-webkit-transition: all .5s; -ms-transition: all .5s; transition: all .5s; }
+		.anim .circImp:hover { /*fill: rgba(6, 3, 68, 0.4);*/
 		  		-webkit-transform: -ms-scale(1.1); transform: scale(1.1); transform: scale(1.1); }
 
 	.circExp { fill: #d35d33; cursor: pointer; }
 		.anim .circExp {  -webkit-transform-origin: center center; -ms-transform-origin: center center; transform-origin: center center;
-				-webkit-transition: all .2s; -ms-transition: all .2s; transition: all .2s; }
-		.anim .circExp:hover { fill: rgba(6, 3, 68, 0.4);
+				-webkit-transition: all .5s; -ms-transition: all .5s; transition: all .5s; }
+		.anim .circExp:hover { /*fill: rgba(6, 3, 68, 0.4);*/
 				-webkit-transform: -ms-scale(1.1); transform: scale(1.1); transform: scale(1.1); }
 
 	.text {  fill: white; font-weight: 900; font-family: arial, sans-serif; font-size: 12px; pointer-events: none; text-anchor: middle; }
@@ -636,38 +636,20 @@ var planta_graph = {
 				countries[i].rExp = planta_graph.viz.scale.circExp(countries[i].totalExp);
 			}
 
-			// planta_graph.data.prod = countries;
-			// planta_graph.data.links = links;
-
-
-				// iniciación inicial de líneas
-			if(!planta_graph.viz.links) {
-			  planta_graph.viz.links = planta_graph.viz.svg
-			  	.selectAll('.link')
-					.data(links)
-					.enter()
-						.append('line')
-							.attr('class', 'link')
-							.attr('stroke-width', function(d){ return planta_graph.viz.scale.lines(d.val); })
-							.on("mouseenter", function(d){
-								$('#texto').text('Importaciones de ' + d.source.name + ' a ' + d.target.name + ': ' + d.val + ' dollars');
-							}).on("mouseout", function(d){
-								$('#texto').text('');
-							});
-			}
-
-
-				// actualización de líneas
-			planta_graph.viz.links.data(links)
-				.attr('stroke-width', function(d){ return planta_graph.viz.scale.lines(d.val); })
-				.attr("visibility", function (d) {
-					if(planta_graph.act.type.length != 2) return "hidden";
-			    	return (planta_graph.viz.scale.lines(d.val) < planta_graph.minLine) ? "hidden" : "visible";
-			  	});
-
-
 				// iniciación inicial de círculos y textos
 			if(!planta_graph.viz.circsImp) {
+
+
+				planta_graph.viz.links = planta_graph.viz.svg
+					.selectAll('.link').data(links).enter()
+					.append('line')
+						.attr('class', 'link')
+						.attr('stroke-width', function(d){ return planta_graph.viz.scale.lines(d.val); })
+						.on("mouseenter", function(d){
+							$('#texto').text('Importaciones de ' + d.source.name + ' a ' + d.target.name + ': ' + d.val + ' dollars');
+						}).on("mouseout", function(d){
+							$('#texto').text('');
+						});
 
 				planta_graph.viz.circExp = planta_graph.viz.svg
 					.selectAll('.circExp').data(countries).enter()
@@ -692,6 +674,14 @@ var planta_graph = {
 						.text(function(d){ return d.key; });
 			}
 
+				// actualización de líneas
+			planta_graph.viz.links.data(links)
+				.attr('stroke-width', function(d){ return planta_graph.viz.scale.lines(d.val); })
+				.attr("visibility", function (d) {
+					if(planta_graph.act.type.length != 2) return "hidden";
+			    	return (planta_graph.viz.scale.lines(d.val) < planta_graph.minLine) ? "hidden" : "visible";
+			  	});
+
 				// actualización de círculos y textos
 			planta_graph.viz.circsImp.data(countries)
 				.attr("visibility", planta_graph.evs.circImpVisibilityCheck)
@@ -705,10 +695,10 @@ var planta_graph = {
 				.attr('cx', function(d) { return d.x; })
 				.attr('cy', function(d) { return d.y; });
 
-			planta_graph.viz.texts
+			planta_graph.viz.texts.data(countries)
 				.attr("visibility", planta_graph.evs.textVisibilityCheck)
 				.attr('x', function(d) { return d.x; })
-				.attr('y', function(d) { return d.y+5; });
+				.attr('y', function(d) { return d.y + 5; });
 
 			planta_graph.viz.force = d3.forceSimulation(countries)
 				.force("link", d3.forceLink(links).strength(0.0000001))
