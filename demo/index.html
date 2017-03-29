@@ -75,7 +75,7 @@
 
 #graph { background: #efefef; position: relative; }
 
-	.link {  fill: none; stroke: rgba(0,0,0,0.4); }
+	.link {  fill: none; stroke: rgba(0,0,0,0.2); }
 		.link:hover, .link-act { stroke: rgba(60, 4, 4, 0.6); }
 
 	.circImp { fill: #126567; cursor: pointer; }
@@ -129,33 +129,34 @@
 <div id="plantiGraph">
 	<h1>Comercio internacional</h1>
 
-	<div id="type">
-		<h4>¿Qué datos quieres mostrar?</h4>
-		<p>Filtra por datos de exportación o importación</p>
+	<div id="head" class="clearfix">
+		<div id="type">
+			<h4>¿Qué datos quieres mostrar?</h4>
+			<p>Filtra por datos de exportación o importación</p>
 
-		<a href="#" data-type="imp" id="typeImp" class="btn">Importaciones</a>
-		<a href="#" data-type="exp" id="typeExp" class="btn">Exportaciones</a>
+			<a href="#" data-type="imp" id="typeImp" class="btn">Importaciones</a>
+			<a href="#" data-type="exp" id="typeExp" class="btn">Exportaciones</a>
+		</div>
+		<div id="prods">
+			<h4>¿Por qué producto quieres filtrar?</h4>
+			<p>Selecciona una opción</p>
+
+			<a href="#" data-prod="cacao" class="btn"><img src="./icons/chocolate.svg"><span>Cacao</span></a>
+			<a href="#" data-prod="banana" class="btn"><img src="./icons/banana.svg"><span>Banana</span></a>
+			<a href="#" data-prod="azucar" class="btn"><img src="./icons/sugar.svg"><span>Azúcar</span></a>
+			<a href="#" data-prod="aceite" class="btn"><img src="./icons/palm_oil.svg"><span>Aceite de palma</span></a>
+			<a href="#" data-prod="cafe" class="btn"><img src="./icons/coffee.svg"><span>Café</span></a>
+		</div>
+		<div id="years">
+			<h4>Año</h4>
+			<p>Selecciona un año</p>
+			<a href="#" class="prevYear btn"><</a>
+			<div id="activeYear"></div>
+			<a href="#" class="nextYear btn disabled">></a>
+		</div>
 	</div>
-	<div id="prods">
-		<h4>¿Por qué producto quieres filtrar?</h4>
-		<p>Selecciona una opción</p>
-
-		<a href="#" data-prod="cacao" class="btn"><img src="./icons/chocolate.svg"><span>Cacao</span></a>
-		<a href="#" data-prod="banana" class="btn"><img src="./icons/banana.svg"><span>Banana</span></a>
-		<a href="#" data-prod="azucar" class="btn"><img src="./icons/sugar.svg"><span>Azúcar</span></a>
-		<a href="#" data-prod="aceite" class="btn"><img src="./icons/palm_oil.svg"><span>Aceite de palma</span></a>
-		<a href="#" data-prod="cafe" class="btn"><img src="./icons/coffee.svg"><span>Café</span></a>
-	</div>
-	<div id="years">
-		<h4>Año</h4>
-		<p>Selecciona un año</p>
-		<a href="#" class="prevYear btn"><</a>
-		<div id="activeYear"></div>
-		<a href="#" class="nextYear btn disabled">></a>
-	</div>
 
 
-	<input type="text" id="countryImput">
 
 	<div id="graph">
 		<svg id="viz">
@@ -163,6 +164,10 @@
 		<div id="closePop">< Volver a la visualización Global</div>
 
 		<div id="pop">
+
+			<div id="search">
+				<input type="text" id="countryImput">
+			</div>
 			<div id="popWrap">
 				<div id="frases">
 					
@@ -283,7 +288,7 @@ var plantiGraph = {
 			plantiGraph.tools.loadCountries();
 			plantiGraph.tools.updateProjection();
 			plantiGraph.tools.update();
-			plantiGraph.tools.initBG();
+			// plantiGraph.tools.initBG();
 		},
 
 		updateProjection: function() {
@@ -872,7 +877,7 @@ var plantiGraph = {
 		  		
 		  		if(e == plantiGraph.graphsElms) plantiGraph.countryPop.$graphBars1.append('<li>....</li>');
 		  		
-		  		var val = f.data.val * 100 / max;console.log(val)
+		  		var val = f.data.val * 100 / max;
 		  		
 		  		var $elm = $('<li><a data-toggle="tooltip" href="#" class="activaCountry' + (f.data.key == data.actCountry.key ? ' activeBar' : '' ) +'" data-country="' + f.data.key + '"><span class="key">' + f.data.key + '</span><div class="bar" title="' + f.data.name + ' Exportaciones de ' + ' ' + plantiGraph.tools.parseAmmount(f.data.val) + ' de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + ' en el año ' + plantiGraph.act.year + '" data-width=""><span class="text">' + millionsParser(f.data.val) + '</span></div></a></li>');
 		  		
@@ -908,7 +913,7 @@ var plantiGraph = {
 
 		  	plantiGraph.countryPop.$graphLines.append('<h4 style="text-transform: uppercase">Evolución importaciones y exportaciones de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
 
-		  	var max = d3.max([d3.max(d3.entries(data.actCountry.resumen.exps), function(e){ console.log(e); return parseInt(e.value); }), d3.max(d3.entries(data.actCountry.resumen.imps), function(e){ return parseInt(e.value); })]);
+		  	var max = d3.max([d3.max(d3.entries(data.actCountry.resumen.exps), function(e){ return parseInt(e.value); }), d3.max(d3.entries(data.actCountry.resumen.imps), function(e){ return parseInt(e.value); })]);
 
 		  	// plantiGraph.countryPop.$graphBars1.append('<h3>importaciones</h3>')
 		  	// $.each(data.actCountry.resumen.imps, function(e, f){
@@ -1218,13 +1223,13 @@ function shareTweet (texto, url, hash, via) {
       top = Math.round((winHeight / 2) - (height / 2));
     }
 
-    var target = 'https://twitter.com/intent/tweet?text=' + texto
+    var target = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(texto)
     if(url && url != false) {
     	target += '&url=' + clearUrl(url);
     } else if (url != false) { target += '&url=' + encodeURIComponent(window.location.href); }
     
-    if(hash) target += '&hashtags=' + hash;
-    if(via) target += '&via=' + via;
+    if(hash) target += '&hashtags=' + encodeURIComponent(hash);
+    if(via) target += '&via=' + encodeURIComponent(via);
 
     window.open(target, 'intent', windowOptions + ',width=' + width +
                                        ',height=' + height + ',left=' + left + ',top=' + top);
