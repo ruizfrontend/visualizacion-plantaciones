@@ -142,8 +142,8 @@
 
 		<a href="#" data-prod="cacao" class="btn"><img src="./icons/chocolate.svg"><span>Cacao</span></a>
 		<a href="#" data-prod="banana" class="btn"><img src="./icons/banana.svg"><span>Banana</span></a>
-		<a href="#" data-prod="azucar" class="btn"><img src="./icons/sugar.svg"><span>Azucar</span></a>
-		<a href="#" data-prod="aceite" class="btn"><img src="./icons/palm_oil.svg"><span>Aceite</span></a>
+		<a href="#" data-prod="azucar" class="btn"><img src="./icons/sugar.svg"><span>Azúcar</span></a>
+		<a href="#" data-prod="aceite" class="btn"><img src="./icons/palm_oil.svg"><span>Aceite de palma</span></a>
 		<a href="#" data-prod="cafe" class="btn"><img src="./icons/coffee.svg"><span>Café</span></a>
 	</div>
 	<div id="years">
@@ -255,11 +255,18 @@ var plantiGraph = {
 	},
 	txt: {
 		articulos: {
-			cafe: 'el cafe',
-			aceite: 'el aceite',
+			cafe: 'el café',
+			aceite: 'el aceite de palma',
 			cacao: 'el cacao',
 			banana: 'la banana',
-			azucar: 'el azucar'
+			azucar: 'el azúcar'
+		},
+		productos: {
+			cafe: 'café',
+			aceite: 'aceite de palma',
+			cacao: 'cacao',
+			banana: 'banana',
+			azucar: 'azúcar'
 		}
 	},
 
@@ -513,11 +520,11 @@ var plantiGraph = {
 				var positionExp = plantiGraph.tools.getPosition(dataCountry, 'exp');
 
 				if(balance > 0) {
-					out.push('<strong>' + name + '</strong> exportó <strong>' + plantiGraph.tools.parseAmmount(balance) + ' más</strong> en <strong>' + plantiGraph.act.prod + '</strong> de los que importó.');
+					out.push('<strong>' + name + '</strong> exportó <strong>' + plantiGraph.tools.parseAmmount(balance) + ' más</strong> en <strong>' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</strong> de los que importó.');
 				} else {
-					out.push('<strong>' + name + '</strong> importó <strong>' + plantiGraph.tools.parseAmmount(-1 * balance) + ' más</strong> en <strong>' + plantiGraph.act.prod + '</strong> de los que exportó.');
+					out.push('<strong>' + name + '</strong> importó <strong>' + plantiGraph.tools.parseAmmount(-1 * balance) + ' más</strong> en <strong>' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</strong> de los que exportó.');
 				}
-				out.push('<strong>' + name + '</strong> ocupa el puesto número <strong>' + positionExp + '</strong> de países exportadores y el puesto número <strong>' + positionImp + '</strong> de paises exportadores de <strong>' + plantiGraph.act.prod + '</strong>.');
+				out.push('<strong>' + name + '</strong> ocupa el puesto número <strong>' + positionExp + '</strong> de países exportadores y el puesto número <strong>' + positionImp + '</strong> de paises exportadores de <strong>' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</strong>.');
 
 
 			} else if(plantiGraph.act.type.indexOf('imp') != -1) {
@@ -526,9 +533,9 @@ var plantiGraph = {
 				var percent = 100 * dataCountry.actCountry.totalImp / plantiGraph.data.totalImp;
 				var total = 100 * dataCountry.actCountry.totalImp / dataCountry.actCountry.resumen.imps[plantiGraph.act.year];
 
-				out.push('<strong>' + name + '</strong> ocupa el <strong>' + position + ' puesto</strong> en el ranking de países importadores de <strong>' + plantiGraph.act.prod + '</strong>.');
-				out.push('<strong>' + name + '</strong> controla el <strong>' + percent.toFixed(2) + '%</strong> de las importaciones mundiales de <strong>' + plantiGraph.act.prod + '</strong>.');
-				out.push('<strong>' + firstCapital(plantiGraph.txt.articulos[plantiGraph.act.prod]) + '</strong> supone el ' + total.toFixed(2) + '% de las importaciones de <strong>' + name +  '</strong>, ' + plantiGraph.tools.parseAmmount(dataCountry.actCountry.totalImp) + '</strong>.');
+				out.push('<strong>' + name + '</strong> ocupa el <strong>' + position + ' puesto</strong> en el ranking de países importadores de <strong>' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</strong>.');
+				out.push('<strong>' + name + '</strong> controla el <strong>' + percent.toFixed(1).replace('.', ',') + '%</strong> de las importaciones mundiales de <strong>' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</strong>.');
+				out.push('<strong>' + firstCapital(plantiGraph.txt.articulos[plantiGraph.act.prod]) + '</strong> supone el ' + total.toFixed(1).replace('.', ',') + '% de las importaciones de <strong>' + name +  '</strong>, ' + plantiGraph.tools.parseAmmount(dataCountry.actCountry.totalImp) + '</strong>.');
 
 			} else {
 
@@ -536,9 +543,9 @@ var plantiGraph = {
 				var percent = 100 * dataCountry.actCountry.totalExp / plantiGraph.data.totalExp;
 				var total = 100 * dataCountry.actCountry.totalExp / dataCountry.actCountry.resumen.exps[plantiGraph.act.year];
 
-				out.push('<strong>' + name + '</strong> ocupa el <strong>' + position + ' puesto</strong> en el ranking de países exportadores de <strong>' + plantiGraph.act.prod + '</strong>.');
-				out.push('<strong>' + name + '</strong> controla el <strong>' + percent.toFixed(2) + '%</strong> de las exportaciones mundiales de <strong>' + plantiGraph.act.prod + '</strong>.');
-				out.push('<strong>' + firstCapital(plantiGraph.txt.articulos[plantiGraph.act.prod]) + ' supone el ' + total.toFixed(2) + '% de las exportaciones de <strong>' + name +  '</strong>, ' + plantiGraph.tools.parseAmmount(dataCountry.actCountry.totalImp) + '.');
+				out.push('<strong>' + name + '</strong> ocupa el <strong>' + position + ' puesto</strong> en el ranking de países exportadores de <strong>' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</strong>.');
+				out.push('<strong>' + name + '</strong> controla el <strong>' + percent.toFixed(1).replace('.', ',') + '%</strong> de las exportaciones mundiales de <strong>' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</strong>.');
+				out.push('<strong>' + firstCapital(plantiGraph.txt.articulos[plantiGraph.act.prod]) + ' supone el ' + total.toFixed(1).replace('.', ',') + '% de las exportaciones de <strong>' + name +  '</strong>, ' + plantiGraph.tools.parseAmmount(dataCountry.actCountry.totalImp) + '.');
 			}
 
 			return out;
@@ -881,7 +888,7 @@ var plantiGraph = {
 		  		
 		  		var val = f.data.val * 100 / max;console.log(val)
 		  		
-		  		var $elm = $('<li><a data-toggle="tooltip" href="#" class="activaCountry' + (f.data.key == data.actCountry.key ? ' activeBar' : '' ) +'" data-country="' + f.data.key + '"><span class="key">' + f.data.key + '</span><div class="bar" title="' + f.data.name + ' exportó ' + plantiGraph.tools.parseAmmount(f.data.val) + ' de ' + plantiGraph.act.prod + ' en el año ' + plantiGraph.act.year + '" data-width=""><span class="text">' + millionsParser(f.data.val) + '</span></div></a></li>');
+		  		var $elm = $('<li><a data-toggle="tooltip" href="#" class="activaCountry' + (f.data.key == data.actCountry.key ? ' activeBar' : '' ) +'" data-country="' + f.data.key + '"><span class="key">' + f.data.key + '</span><div class="bar" title="' + f.data.name + ' exportó ' + plantiGraph.tools.parseAmmount(f.data.val) + ' de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + ' en el año ' + plantiGraph.act.year + '" data-width=""><span class="text">' + millionsParser(f.data.val) + '</span></div></a></li>');
 		  		
 		  		plantiGraph.countryPop.$graphBars1.append($elm);
 
@@ -902,7 +909,7 @@ var plantiGraph = {
 		  		
 		  		var val = f.data.val * 100 / max;
 		  		
-		  		var $elm = $('<li><a data-toggle="tooltip" href="#" class="activaCountry' + (f.data.key == data.actCountry.key ? ' activeBar' : '' ) +'" data-country="' + f.data.key + '"><span class="key">' + f.data.key + '</span><div class="bar"title="' + f.data.name + ' importó ' + plantiGraph.tools.parseAmmount(f.data.val) + ' de ' + plantiGraph.act.prod + ' en el año ' + plantiGraph.act.year + '"  data-width=""><span class="text">' + millionsParser(f.data.val) + '</span></div></a></li>');
+		  		var $elm = $('<li><a data-toggle="tooltip" href="#" class="activaCountry' + (f.data.key == data.actCountry.key ? ' activeBar' : '' ) +'" data-country="' + f.data.key + '"><span class="key">' + f.data.key + '</span><div class="bar"title="' + f.data.name + ' importó ' + plantiGraph.tools.parseAmmount(f.data.val) + ' de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + ' en el año ' + plantiGraph.act.year + '"  data-width=""><span class="text">' + millionsParser(f.data.val) + '</span></div></a></li>');
 		  		
 		  		plantiGraph.countryPop.$graphBars2.append($elm);
 
@@ -913,7 +920,7 @@ var plantiGraph = {
 		  	});
 
 
-		  	plantiGraph.countryPop.$graphLines.append('<h4 style="text-transform: uppercase">Evolución importaciones y exportaciones de ' + plantiGraph.act.prod + '</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
+		  	plantiGraph.countryPop.$graphLines.append('<h4 style="text-transform: uppercase">Evolución importaciones y exportaciones de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
 
 		  	var max = d3.max([d3.max(d3.entries(data.actCountry.resumen.exps), function(e){ console.log(e); return parseInt(e.value); }), d3.max(d3.entries(data.actCountry.resumen.imps), function(e){ return parseInt(e.value); })]);
 
@@ -963,14 +970,14 @@ var plantiGraph = {
 			var textoTT = '';
 			
 			if(plantiGraph.act.type.length == 2) {
-				textoTT = '<strong>' + d.name + '</strong> exportó ' + plantiGraph.tools.parseAmmount(d.totalExp) + ' e importó ' + plantiGraph.tools.parseAmmount(d.totalImp) + ' de <strong>' + plantiGraph.act.prod + '</strong> en el año ' + plantiGraph.act.year;
+				textoTT = '<strong>' + d.name + '</strong> exportó ' + plantiGraph.tools.parseAmmount(d.totalExp) + ' e importó ' + plantiGraph.tools.parseAmmount(d.totalImp) + ' de <strong>' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</strong> en el año ' + plantiGraph.act.year;
 				posY -= (d.rTot + 4);
 			} else {
 				if(plantiGraph.act.type.indexOf('imp') != -1) {
-					textoTT = '<strong>' + d.name + '</strong> exportó ' + plantiGraph.tools.parseAmmount(d.totalExp) + ' de <strong>' + plantiGraph.act.prod + '</strong> en el año ' + plantiGraph.act.year;
+					textoTT = '<strong>' + d.name + '</strong> exportó ' + plantiGraph.tools.parseAmmount(d.totalExp) + ' de <strong>' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</strong> en el año ' + plantiGraph.act.year;
 					posY -= (d.rImp + 4);
 				} else {
-					textoTT = '<strong>' + d.name + '</strong> importó ' + plantiGraph.tools.parseAmmount(d.totalImp) + ' de <strong>' + plantiGraph.act.prod + '</strong> en el año ' + plantiGraph.act.year;
+					textoTT = '<strong>' + d.name + '</strong> importó ' + plantiGraph.tools.parseAmmount(d.totalImp) + ' de <strong>' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</strong> en el año ' + plantiGraph.act.year;
 					posY -= (d.rExp + 4);
 				}
 			}
@@ -988,7 +995,7 @@ var plantiGraph = {
 			var posX = ((d.source.x + d.target.x) / 2) - 100;
 			var posY = ((d.source.y + d.target.y) / 2) - 5;
 
-			var textoTT = '<strong>' + d.source.name + '</strong> exportó ' + plantiGraph.tools.parseAmmount(d.val) +  ' de <strong>' + plantiGraph.act.prod + '</strong> a <strong>' + d.target.name + '</strong> en el año ' + plantiGraph.act.year;
+			var textoTT = '<strong>' + d.source.name + '</strong> exportó ' + plantiGraph.tools.parseAmmount(d.val) +  ' de <strong>' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</strong> a <strong>' + d.target.name + '</strong> en el año ' + plantiGraph.act.year;
 
 			posY = $('#graph').height() - posY;
 			
@@ -1189,7 +1196,7 @@ function firstCapital(string) {
 function millionsParser (ammount) {
 	var data = ammount / 1000000;
 	if(data > 1) return numberThousandsDots(parseInt(data));
-	return data.toFixed(2);
+	return data.toFixed(2).replace('.', ',');
 }
 
 
