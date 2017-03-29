@@ -896,7 +896,7 @@ var plantiGraph = {
 		  		
 		  		if(e == plantiGraph.graphsElms) plantiGraph.countryPop.$graphBars2.append('<li>....</li>');
 		  		
-		  		var val = f.data.val * 100 / max;console.log(val)
+		  		var val = f.data.val * 100 / max;
 		  		
 		  		var $elm = $('<li><a data-toggle="tooltip" href="#" class="activaCountry' + (f.data.key == data.actCountry.key ? ' activeBar' : '' ) +'" data-country="' + f.data.key + '"><span class="key">' + f.data.key + '</span><div class="bar"title="' + f.data.name + ' importó ' + plantiGraph.tools.parseAmmount(f.data.val) + ' de ' + plantiGraph.act.prod + ' en el año ' + plantiGraph.act.year + '"  data-width=""><span class="text">' + millionsParser(f.data.val) + '</span></div></a></li>');
 		  		
@@ -908,7 +908,11 @@ var plantiGraph = {
 
 		  	});
 
-		  	
+
+		  	plantiGraph.countryPop.$graphLines.append('<h4 style="text-transform: uppercase">Evolución importaciones y exportaciones de ' + plantiGraph.act.prod + '</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
+
+		  	var max = d3.max([d3.max(d3.entries(data.actCountry.resumen.exps), function(e){ console.log(e); return parseInt(e.value); }), d3.max(d3.entries(data.actCountry.resumen.imps), function(e){ return parseInt(e.value); })]);
+
 		  	// plantiGraph.countryPop.$graphBars1.append('<h3>importaciones</h3>')
 		  	// $.each(data.actCountry.resumen.imps, function(e, f){
 		  	// 	plantiGraph.countryPop.$graphBars1.append($('<li>' + e + ' - ' + plantiGraph.tools.parseAmmount(f) + '</li>'));
@@ -918,20 +922,6 @@ var plantiGraph = {
 		  	// 	plantiGraph.countryPop.$graphBars1.append($('<li><span class="sigla">' + e + '</span>' + plantiGraph.tools.parseAmmount(f) + '</li>'));
 		  	// });
 
-
-		  	
-		  	// plantiGraph.countryPop.$graphBars1.append('<h4>Principales exportadores</h4>');
-
-
-
-		  	// plantiGraph.countryPop.$graphBars1.append('<h4>Principales importadores</h4>')
-
-		  	// $.each(topImp, function(e, f){
-		  		
-		  	// 	if(e == plantiGraph.graphsElms) plantiGraph.countryPop.$graphBars1.append('<li>....</li>');
-		  		
-		  	// 	plantiGraph.countryPop.$graphBars1.append($('<li><a href="#" class="activaCountry" data-country="' + f.data.key + '">' + (f.pos + 1) + ' - ' + f.data.name + ' - ' + plantiGraph.tools.parseAmmount(f.data.val) + '</li>'));
-		  	// });
 
 		},
 
