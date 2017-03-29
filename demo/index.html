@@ -388,17 +388,18 @@ var plantiGraph = {
 
 				    paises.push(pais);
 
+				    if(pais.x && pais.y) { // limita paises chungos
+				    	$('#countrySelect').append('<option value="' + pais.key + '">' + pais.name + '</option>');
 
-				    autoComplete.push({
-				    	value: pais.name,
-				    	data: {
-				    		id: pais.name,
-				    		key: pais.key
-				    	}
-				    });
+					    autoComplete.push({
+					    	value: pais.name,
+					    	data: {
+					    		id: pais.name,
+					    		key: pais.key
+					    	}
+					    });
 
-
-				    $('#countrySelect').append('<option value="' + pais.key + '">' + pais.name + '</option>')
+				    }
 
 				  }
 				};
@@ -461,7 +462,7 @@ var plantiGraph = {
 				}
 				if(!dataCountry.actCountry) throw 'No se encontró el pais activo';
 
-			  	for(var year = 2004; year <= 2014; year++) {
+			  	for(var year = 1995; year <= 2014; year++) {
 
 			  		dataCountry.expByYear[year] = 0
 			  		dataCountry.impByYear[year] = 0
@@ -1103,7 +1104,7 @@ for (var i = plantiGraph.data.countries.length - 1; i >= 0; i--) {
 
 		gotoYear: function(year) {
 
-			if(!year || plantiGraph.act.year == year || year > 2014 || year < 2004) return;
+			if(!year || plantiGraph.act.year == year || year > 2014 || year < 1995) return;
 
 			plantiGraph.act.year = year;
 			
@@ -1112,7 +1113,7 @@ for (var i = plantiGraph.data.countries.length - 1; i >= 0; i--) {
 			$('#years [data-year="' + year + '"]').addClass('act');
 
 			if(year == 2014) $('#years .nextYear').addClass('disabled');
-			if(year == 2004) $('#years .prevYear').addClass('disabled');
+			if(year == 1995) $('#years .prevYear').addClass('disabled');
 
 				// actualiza el dibujo
 			plantiGraph.tools.update();
@@ -1129,7 +1130,7 @@ for (var i = plantiGraph.data.countries.length - 1; i >= 0; i--) {
 			
 			e.preventDefault();
 
-			if(plantiGraph.act.year == 2004) return;
+			if(plantiGraph.act.year == 1995) return;
 
 			plantiGraph.evs.gotoYear(plantiGraph.act.year - 1);
 
