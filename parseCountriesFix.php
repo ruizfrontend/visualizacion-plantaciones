@@ -1,8 +1,8 @@
 <?php
 	// parsea el archivo que ya teníamos paises.json y le añade los totales por años de cada pais
-$jsonPaises = 'paisesTot.json';
+$jsonPaises = 'paises.json';
 $csvTotals = 'totales.csv';
-$jsonPaisesOut = 'paisesTot.json';
+$jsonPaisesOut = './paisesConTotales.json';
 
 $paises = json_decode(file_get_contents($jsonPaises), true);
 $totals = getTotals($csvTotals);
@@ -16,7 +16,7 @@ foreach ($paises as $country => $data) {
 }
 
 file_put_contents($jsonPaisesOut, json_encode($paises));
-die();
+
 
 
 function getPaises($csvPaises, $capitales) {
@@ -50,13 +50,6 @@ function getPaises($csvPaises, $capitales) {
 	}
 
 	return $outp;
-}
-
-
-function writeProds($prods){
-	foreach ($prods as $prod => $data) {
-		file_put_contents($prod . '.json', json_encode($data));
-	}
 }
 
 
