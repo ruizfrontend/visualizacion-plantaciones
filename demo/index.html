@@ -1202,10 +1202,10 @@ var plantiGraph = {
 			} else {
 				if(plantiGraph.act.type.indexOf('exp') != -1) {
 					textoTT = '<strong>' + d.name + '</strong> exportó ' + plantiGraph.tools.parseAmmount(d.totalExp) + ' de <strong>' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</strong> en ' + plantiGraph.act.year;
-					posY -= (d.rImp + 4);
+					posY -= (d.rExp + 4);
 				} else {
 					textoTT = '<strong>' + d.name + '</strong> importó ' + plantiGraph.tools.parseAmmount(d.totalImp) + ' de <strong>' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</strong> en ' + plantiGraph.act.year;
-					posY -= (d.rExp + 4);
+					posY -= (d.rImp + 4);
 				}
 			}
 
