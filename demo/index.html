@@ -89,7 +89,8 @@ body { font-size: 14px; }
 
 #graph { background: #efefef; position: relative; }
 
-	.link {  fill: none; stroke: rgba(0,0,0,0.2); }
+	.link { fill: none; stroke: rgba(0,0,0,0.2); stroke: url(#linearGradient);  }
+		.link-left { stroke: url(#linearGradientInverse);}
 		.link:hover, .link-act { stroke: rgba(60, 4, 4, 0.6); }
 
 	.circImp { fill: #126567; cursor: pointer; }
@@ -196,6 +197,12 @@ body { font-size: 14px; }
 	<div id="graph">
 		<svg id="viz" class="blur">
 			<defs><filter id="blur"><feGaussianBlur in="SourceGraphic" stdDeviation="0"></feGaussianBlur></filter></defs>
+			<linearGradient id="linearGradient">
+	            <stop offset="0%"  stop-color="#126567"/><stop offset="100%" stop-color="#d35d33"/>
+	        </linearGradient>
+	        <linearGradient id="linearGradientInverse">
+	            <stop offset="0%"  stop-color="#d35d33"/><stop offset="100%" stop-color="#126567"/>
+	        </linearGradient>
 		</svg>
 		<div id="closePop">
 			< Volver a la visualización Global
@@ -749,7 +756,7 @@ var plantiGraph = {
 					.append('g').attr('class', 'linksWrap')
 						.selectAll('.link').data(links).enter()
 						.append('line')
-							.attr('class', 'link')
+							.attr('class', plantiGraph.evs.linksClass)
 							.attr('stroke-width', function(d){ return plantiGraph.viz.scale.lines(d.val); })
 							.on("mouseenter", plantiGraph.evs.linksEnter)
 							.on("mouseout", plantiGraph.evs.circOut)
@@ -783,6 +790,7 @@ var plantiGraph = {
 				// actualización de líneas
 			plantiGraph.viz.links.data(links)
 				.attr('stroke-width', function(d){ return plantiGraph.viz.scale.lines(d.val); })
+				.attr('class', plantiGraph.evs.linksClass)
 				.attr("visibility", plantiGraph.evs.linksVisibilityCheck);
 
 				// actualización de círculos y textos
@@ -833,6 +841,7 @@ var plantiGraph = {
 				.attr('x2', function(d) { return d.target.x; })
 				.attr('y1', function(d) { return d.source.y; })
 				.attr('y2', function(d) { return d.target.y; })
+				.attr('class', plantiGraph.evs.linksClass)
 				.attr("visibility", plantiGraph.evs.linksVisibilityCheck);
 
 			plantiGraph.viz.texts
@@ -1054,6 +1063,10 @@ var plantiGraph = {
 			
 			$tooltip.css({ bottom: posY, left: posX, }).appendTo('#graph')
 			$tooltip.animate({opacity: 1}, 400);
+		},
+
+		linksClass: function(d) {
+			return (d.source.x > d.target.x ? 'link' : 'link link-left');
 		},
 
 		linksEnter: function(d) {
