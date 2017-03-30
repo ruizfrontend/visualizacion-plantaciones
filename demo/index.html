@@ -93,6 +93,9 @@ body { font-size: 14px; }
 		.link-left { stroke: url(#linearGradientInverse);}
 		.link:hover, .link-act { stroke: rgba(60, 4, 4, 0.6); }
 
+	.axes text { font-weight: 900; font-family: roboto; fill: #aaa; }
+		.axes path { stroke-width: 0; }
+
 	.circImp { fill: #126567; cursor: pointer; }
 		.fullGraph .circImp {  -webkit-transform-origin: center center; -ms-transform-origin: center center; transform-origin: center center;
 				-webkit-transition: all .5s; -ms-transition: all .5s; transition: all .5s; }
@@ -142,7 +145,7 @@ body { font-size: 14px; }
 #pop h4 { font-size: 1em; font-family: roboto, sans-serif; font-weight: 900; }
 
 .bar { background: #ccc; position: relative; display: inline-block; line-height: 1.5em; margin-left: 1em; height: 1.7em; vertical-align: middle; width: 0; }
-	.bar span { position: absolute; right: 0; padding: 0.7em; line-height: 1em; }
+	.bar span { position: absolute; right: 0; padding: 0.6em; line-height: 1em; }
 
 	.bar-left span { right: inherit; left: 100%; }
 
@@ -222,7 +225,7 @@ body { font-size: 14px; }
 				<div id="frases">
 					
 				</div>
-				<div id="graphLines"><div class="inn"></div>
+				<div id="graphLines"><div class="inn"><svg></svg></div>
 					
 				</div>
 				<div id="graphBars1"><div class="inn"></div>
@@ -989,24 +992,136 @@ var plantiGraph = {
 
 		  	});
 
-
 		  		// gráfico de evolucion
-		  	plantiGraph.countryPop.$graphLines.append('<h4 style="text-transform: uppercase">Evolución importaciones y exportaciones de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
+		  	plantiGraph.countryPop.$graphLines.prepend('<h4 style="text-transform: uppercase">Evolución importaciones y exportaciones de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
 
-		  	var max = d3.max([d3.max(d3.entries(data.actCountry.resumen.exps), function(e){ return parseInt(e.value); }), d3.max(d3.entries(data.actCountry.resumen.imps), function(e){ return parseInt(e.value); })]);
+		  	var max = d3.max([d3.max(d3.entries(data.expByYear), function(e){ return parseInt(e.value); }), d3.max(d3.entries(data.impByYear), function(e){ return parseInt(e.value); })]);
 
-		  	var width = plantiGraph.countryPop.$graphBars1.width() - 30;
-		  	var height = width * 0.8;
-		  	
-		  	var tmpPath = 'M0 0';
-		  	var finalPath = 'M0 0';
-		  	var jump = width / (plantiGraph.lastYear - plantiGraph.initYear)
-		  	for(var year = plantiGraph.lastYear; year <= plantiGraph.initYear; year++) {
+		  	var padding = 30;
+		  	var paddingV = 5;
 
-		  	}
+		  	var width = 210;
+		  	var height = width * 0.6;
+		  	var scale = d3.scaleLinear().domain([0, max]).range([height, 0]);
+		  	var axis = d3.axisLeft(scale).ticks(4).tickSize(0).tickFormat(function(d) {
+		  		console.log(d, parseInt(d / 1000000));
+			      return parseInt(d / 1000000);
+			    });
 
-		  	var graph = d3.select(plantiGraph.countryPop.$graphBars1)
-		  		.append('svg').append()
+		  	var years = plantiGraph.lastYear - plantiGraph.initYear;
+		  	var jump = (width - padding) / years;
+
+		  	var tmpPath = 'M' + padding + ' ' + (height + paddingV) + ' L';
+		  	var tmpPathLine = 'M';
+		  	var finalImpPath = 'M' + padding + ' ' + (height + paddingV) + ' L';
+		  	var finalImpLine = 'M';
+		  	var finalExpPath = 'M' + padding + ' ' + (height + paddingV) + ' L';
+		  	var finalExpLine = 'M';
+
+		  	var graph = d3.select(plantiGraph.countryPop.$graphLines.find('svg')[0])
+  				.attr('width', width).attr('height', height + (2 * paddingV));
+
+		  	graph.append('g')
+		  		.attr('transform', 'translate(' + padding + ' ,' + paddingV + ')')
+		  		.attr('class', 'axes')
+		  		.call(axis);
+
+  			var lines = graph.append('g').attr('class', 'lines');
+  			var dots = graph.append('g').attr('class', 'dots');
+
+		  	for (var i = 0; i <= years; i++) {
+		  		
+		  		var Px = padding + (jump * i);
+		  		var PyExp = paddingV + scale(data.expByYear[plantiGraph.initYear + i]);
+		  		var PyImp = paddingV + scale(data.impByYear[plantiGraph.initYear + i]);
+
+		  		tmpPath += Px + ' ' + (height + paddingV) + ' L';
+		  		tmpPathLine += Px + ' ' + (height + paddingV) + ' L';
+		  		finalImpPath += Px + ' ' + PyImp + ' L';
+		  		finalImpLine += Px + ' ' + PyImp + ' L';
+		  		finalExpPath += Px + ' ' + PyExp + ' L';
+		  		finalExpLine += Px + ' ' + PyExp + ' L';
+
+		  		dots.append('circle')
+		  			.attr('cx', Px)
+		  			.attr('cy', PyExp)
+		  			.attr('r', 4)
+	  				.attr('stroke', 'white')
+	  				.attr('fill', 'white')
+	  				.attr('stroke-width', '1')
+	  				.attr('opacity', 0)
+	  				.transition().duration(2000).attr('opacity', 1);
+
+		  		dots.append('circle')
+		  			.on("mouseenter", plantiGraph.evs.circGraphTooltip)
+		  			.on("mouseout", plantiGraph.evs.circGraphTooltipOut)
+		  			.attr('cx', Px)
+		  			.attr('cy', PyExp)
+		  			.attr('r', 3)
+	  				.attr('stroke', '#126567')
+	  				.attr('stroke-width', '1')
+	  				.attr('fill', 'white')
+	  				.attr('title', data.actCountry.name + ' importó ' + plantiGraph.tools.parseAmmount(data.expByYear[plantiGraph.initYear + i]) + ' de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + ' en ' + (plantiGraph.initYear + i) + '.')
+	  				.attr('opacity', 0)
+	  				.transition().duration(2000).attr('opacity', 1);
+
+		  		dots.append('circle')
+		  			.attr('cx', Px)
+		  			.attr('cy', PyImp)
+		  			.attr('r', 4)
+	  				.attr('stroke', 'white')
+	  				.attr('fill', 'white')
+	  				.attr('stroke-width', '1')
+	  				.attr('opacity', 0)
+	  				.transition().duration(2000).attr('opacity', 1);
+
+		  		dots.append('circle')
+		  			.on("mouseenter", plantiGraph.evs.circGraphTooltip)
+		  			.on("mouseout", plantiGraph.evs.circGraphTooltipOut)
+		  			.attr('cx', Px)
+		  			.attr('cy', PyImp)
+		  			.attr('r', 3)
+	  				.attr('stroke', '#d35d33')
+	  				.attr('title', data.actCountry.name + ' exportó ' + plantiGraph.tools.parseAmmount(data.impByYear[plantiGraph.initYear + i]) + ' de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + ' en ' + (plantiGraph.initYear + i) + '.')
+	  				.attr('stroke-width', '1')
+	  				.attr('fill', 'white')
+	  				.attr('opacity', 0)
+	  				.transition().duration(2000).attr('opacity', 1);
+		  	};
+
+		  	tmpPath += (padding + width) + ' ' + (height + paddingV) + ' L' +  padding + 'Z';
+		  	finalImpPath += (padding + width) + ' ' + (height + paddingV) + 'Z';
+		  	finalExpPath += (padding + width) + ' ' + (height + paddingV) + 'Z';
+
+	  		lines.append('path')
+	  				.attr('d', tmpPath)
+	  				.attr('stroke', 'none')
+	  				.attr('fill', 'rgba(211, 93, 51, 0.1)')
+			  			.transition().duration(1000)
+			  				.attr('d', finalImpPath);
+
+	  		lines.append('path')
+	  				.attr('d', tmpPath)
+	  				.attr('stroke', 'none')
+	  				.attr('fill', 'rgba(150, 203, 81, 0.1)')
+			  			.transition().duration(1000)
+			  				.attr('d', finalExpPath);
+
+	  		lines.append('path')
+	  				.attr('d', tmpPathLine)
+	  				.attr('stroke', 'rgb(211, 93, 51)')
+	  				.attr('stroke-width', '1')
+	  				.attr('fill', 'none')
+			  			.transition().duration(1000)
+			  				.attr('d', finalImpLine);
+
+	  		lines.append('path')
+	  				.attr('d', tmpPathLine)
+	  				.attr('stroke', '#126567')
+	  				.attr('stroke-width', '1')
+	  				.attr('fill', 'none')
+			  			.transition().duration(1000)
+			  				.attr('d', finalExpLine);
 
 		  	// plantiGraph.countryPop.$graphBars1.append('<h3>importaciones</h3>')
 		  	// $.each(data.actCountry.resumen.imps, function(e, f){
@@ -1039,6 +1154,7 @@ var plantiGraph = {
 			plantiGraph.countryPop.$graphBars2.find('*').remove();
 			plantiGraph.countryPop.$graphBars1.find('*').remove();
 			plantiGraph.countryPop.$graphLines.find('*').remove();
+			plantiGraph.countryPop.$graphLines.append('<svg></svg>');
 
 			$('#searchHelp').show();
 			$('#searchSelected').hide().html('');
@@ -1054,6 +1170,24 @@ var plantiGraph = {
 
 
 		desactivaCountry: function() {
+		},
+		circGraphTooltipOut: function() {
+			$('#pop .tooltip').remove();
+		},
+
+		circGraphTooltip: function(e, f) {
+
+			var $this = $(this);
+			var $wrap = $('#pop');
+			var posX = $this.offset().left - $wrap.offset().left;
+			var posY = $wrap.height() - ($this.offset().top - $wrap.offset().top);
+			
+			var $tooltip = $('<div class="tooltip top" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner">' + $this.attr('title') + '</div></div>')
+			
+			$tooltip.css({ bottom: posY, left: posX - 98})
+			$wrap.append($tooltip);
+			$tooltip.animate({opacity: 1}, 400);
+
 		},
 
 		circTooltip: function(d) {
