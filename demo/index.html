@@ -1091,7 +1091,8 @@ var plantiGraph = {
 
 			plantiGraph.viz.links
 				.attr('class', function(e){
-					return e.source.name == d.name || e.target.name == d.name ? 'link link-act' : 'link';
+					var base = d.source.x > d.target.x ? 'link' : 'link link-left';
+					return e.source.name == d.name || e.target.name == d.name ? (base + ' link-act') : base;
 				});
 
 			plantiGraph.evs.circTooltip(d);
@@ -1100,7 +1101,8 @@ var plantiGraph = {
 		circInEnter: function(d) {
 			plantiGraph.viz.links
 				.attr('class', function(e){
-					return e.source.name == d.name || e.target.name == d.name ? 'link link-act' : 'link';
+					var base = d.source.x > d.target.x ? 'link' : 'link link-left';
+					return e.source.name == d.name || e.target.name == d.name ? (base + ' link-act') : base;
 				});
 
 			plantiGraph.evs.circTooltip(d);
@@ -1112,7 +1114,7 @@ var plantiGraph = {
 
 		circOut: function(d){
 			plantiGraph.viz.links
-				.attr('class', 'link');
+				.attr('class', plantiGraph.evs.linksClass);
 
 			$('#graph .tooltip').remove();
 		},
