@@ -156,8 +156,9 @@ body { font-size: 14px; }
 #frases li:hover { text-decoration: underline; }
 #frases li i { position: absolute; right: 0; bottom: 0; padding: 0.4em; font-size: 1.6em; color: #00aced; text-decoration: none!important; }
 
-.autocomplete-suggestions { padding: 1em; line-height: 1.2em;background: #efefef; cursor: pointer; }
+.autocomplete-suggestions { padding: 1em; line-height: 1.2em; background: #ccc; cursor: pointer; color: white; font-weight: 900; }
 .autocomplete-suggestion { text-decoration: underline; line-height: 1.6em; }
+	.autocomplete-suggestion:hover { color: #333; }
 </style>
 <body>
 <div id="plantiGraph">
@@ -821,7 +822,8 @@ var plantiGraph = {
 				.alphaDecay(.5)
 				.velocityDecay(.7)
 
-				.on('tick', plantiGraph.tools.tick);
+				.on('tick', plantiGraph.tools.tick)
+				.restart();
 
 		},
 
