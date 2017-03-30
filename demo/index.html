@@ -55,25 +55,37 @@
 body { font-size: 14px; }
 #plantiGraph { width: 100%; overflow: hidden; font-family: 'Roboto'; }
 
-.btn { background: #999999; color: white;
-	padding: 0.2em 0.8em; border-radius: 0;}
-.btn.act { background: #d35d33; color: white; }
+	#plantiGraph h1 { margin: 0.4em 0 1.2em 0; padding: 0 0.4em; }
+		#plantiGraph.fullGraph h1 { margin: 0.4em 0; }
+	#plantiGraph h4 { font-family: roboto, sans-serif; font-size: 1.4em; font-weight: 900; }
 
-#prods img { height: 25px; }
-#prods svg path { -webkit-transform: scale(0.22); -ms-transform-origin: left top;
-	-webkit-transform: scale(0.22); -ms-transform-origin: left top;
-	transform: scale(0.22); transform-origin: left top; }
-#prods span { display: none; }
-	.fullGraph #prods span { display: initial; padding-left: 0.6em; }
+#plantiGraph .btn { margin-left: 0; background: #999999; color: white; border-radius: 0; margin-bottom: 0.4em;
+	        padding: 0.2em 0.4em 0.2em 0.4em; margin-right: 0.2em; font-weight: 900; }
+	#plantiGraph .btn.act { background: #d35d33; color: white; }
 
-#typeImp.act { background: #126567; }
-#typeExp.act { background: #d35d33; }
+	#type, #prods, #years { text-align: center; box-sizing: border-box; padding: 0 0.4em 1.4em 0.4em; }
+	.fullGraph #type, .fullGraph #prods, .fullGraph #years { width: 33.33333333%; float: left;
+			text-align: left; }
+		.fullGraph #type { width: 30%; }
+		.fullGraph #prods { width: 50%; }
+		.fullGraph #years { width: 20%; }
+		#type p, #prods p, #years p { margin-bottom: 0.6em; }
+		
+		#prods img { height: 25px; }
+			.fullGraph #prods img { height: 20px; }
+		#prods .btn { width: 50px; padding: 0.6em 0; }
+			.fullGraph #prods .btn { width: auto; padding: 0.2em 0.4em 0.2em 0.4em; }
+		#prods span { display: none; }
+			.fullGraph #prods span { display: initial; padding-left: 0.4em; }
 
-#years .disabled { cursor: inherit; color: #333; }
+	#typeImp.act { background: #126567!important; }
+	#typeExp.act { background: #d35d33!important; }
 
-#head {  }
-	#type, #prods, #years { width: 33.33333333%; float: left; }
-	#yearsSel a, #yearsSel div { display: inline-block; }
+	#yearsSel a, #yearsSel div { display: inline-block; padding: 0.4em 0.6em; }
+		#yearsSel a i { font-weight: 900; font-size: 1.4em; }
+		#activeYear { border: 1px solid #ccc; }
+		
+		#years .disabled { cursor: inherit; color: #ccc; }
 
 #graph { background: #efefef; position: relative; }
 
@@ -100,6 +112,7 @@ body { font-size: 14px; }
 			    border-left: 2px solid white; }
 		#plantiGraph.fullGraph.actPop #pop { width: 100%; }
 		#plantiGraph.fullGraph.actPop #viz { opacity: 0.6; pointer-events: none; }
+
 	#viz { -webkit-transition: all 1s; -ms-transition: all 1s; transition: all 1s; }
 		#viz.blur { filter:url(#blur); }
 		/*#viz #blur feGaussianBlur { stdDeviation: 1;}*/
@@ -170,9 +183,9 @@ body { font-size: 14px; }
 			<h4>Año</h4>
 			<p>Selecciona un año</p>
 			<div id="yearsSel">
-				<a href="#" class="prevYear"><</a>
+				<a href="#" class="prevYear"><i class="fa fa-angle-left" aria-hidden="true"></i></a>
 				<div id="activeYear"></div>
-				<a href="#" class="nextYear disabled">></a>
+				<a href="#" class="nextYear disabled"><i class="fa fa-angle-right" aria-hidden="true"></i></a>
 			</div>
 		</div>
 	</div>
