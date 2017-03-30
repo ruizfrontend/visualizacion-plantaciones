@@ -746,34 +746,38 @@ var plantiGraph = {
 			if(!plantiGraph.viz.circsImp) {
 
 				plantiGraph.viz.links = plantiGraph.viz.svg
-					.selectAll('.link').data(links).enter()
-					.append('line')
-						.attr('class', 'link')
-						.attr('stroke-width', function(d){ return plantiGraph.viz.scale.lines(d.val); })
-						.on("mouseenter", plantiGraph.evs.linksEnter)
-						.on("mouseout", plantiGraph.evs.circOut)
+					.append('g').attr('class', 'linksWrap')
+						.selectAll('.link').data(links).enter()
+						.append('line')
+							.attr('class', 'link')
+							.attr('stroke-width', function(d){ return plantiGraph.viz.scale.lines(d.val); })
+							.on("mouseenter", plantiGraph.evs.linksEnter)
+							.on("mouseout", plantiGraph.evs.circOut)
 
 				plantiGraph.viz.circExp = plantiGraph.viz.svg
-					.selectAll('.circExp').data(countries).enter()
-					.append('circle')
-						.attr('class', 'circExp')
-						.on("mouseenter", plantiGraph.evs.circExpEnter)
-						.on("mousedown", plantiGraph.evs.circClick)
-						.on("mouseout", plantiGraph.evs.circOut);
+					.append('g').attr('class', 'circExpWrap')
+						.selectAll('.circExp').data(countries).enter()
+						.append('circle')
+							.attr('class', 'circExp')
+							.on("mouseenter", plantiGraph.evs.circExpEnter)
+							.on("mousedown", plantiGraph.evs.circClick)
+							.on("mouseout", plantiGraph.evs.circOut);
 
 				plantiGraph.viz.circsImp = plantiGraph.viz.svg
-					.selectAll('.circImp').data(countries).enter()
-					.append('circle')
-						.attr('class', 'circImp')
-						.on("mouseenter", plantiGraph.evs.circInEnter)
-						.on("mousedown", plantiGraph.evs.circClick)
-						.on("mouseout", plantiGraph.evs.circOut);
+					.append('g').attr('class', 'circImpWrap')
+						.selectAll('.circImp').data(countries).enter()
+						.append('circle')
+							.attr('class', 'circImp')
+							.on("mouseenter", plantiGraph.evs.circInEnter)
+							.on("mousedown", plantiGraph.evs.circClick)
+							.on("mouseout", plantiGraph.evs.circOut);
 
 				plantiGraph.viz.texts = plantiGraph.viz.svg
-					.selectAll('.text').data(countries).enter()
-					.append('text')
-						.attr('class', 'text')
-						.text(function(d){ return d.key.toUpperCase(); });
+					.append('g').attr('class', 'textsWrap')
+						.selectAll('.text').data(countries).enter()
+						.append('text')
+							.attr('class', 'text')
+							.text(function(d){ return d.key.toUpperCase(); });
 			}
 
 				// actualización de líneas
