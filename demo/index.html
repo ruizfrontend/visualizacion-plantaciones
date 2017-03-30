@@ -935,65 +935,38 @@ var plantiGraph = {
 			d3.selectAll('feGaussianBlur').transition().attr('stdDeviation', 4);
 		},
 
-		draw: function(data) {
+		drawBarras: function(top, data, $elm, type) {
 
-		  	var frases = plantiGraph.tools.getFrases(data);
-		  	$.each(frases, function(e, f){
-		  		plantiGraph.countryPop.$frases.append($('<li>' + f + '<i class="fa fa-twitter" aria-hidden="true"></i></li>'));
-		  	});
+			if(type == 'exp') {
+				$elm.append('<h4 style="text-transform: uppercase">Ranking de países <br>exportadores</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
+			} else {
+				$elm.append('<h4 style="text-transform: uppercase">Ranking de países <br>importadores</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
+			}
 
-			$('#searchSelected').show().html('<a href="#" class="clearPop">' + data.actCountry.name + '</a>');
+		  	var max = d3.max(top, function(e){ return e.data.val; });
 
-				// en móvil, hasta aquí
-		  	if(plantiGraph.viz.width < plantiGraph.breakPoint) return;
-
-		  		// gráfico de barras
-		  	var topExp = plantiGraph.tools.getTop(data.actCountry.key, 'exp');
-		  	var topImp = plantiGraph.tools.getTop(data.actCountry.key, 'imp');
-
-		  	plantiGraph.countryPop.$graphBars1.append('<h4 style="text-transform: uppercase">Ranking de países <br>exportadores</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
-
-		  	var max = d3.max(topExp, function(e){ return e.data.val; });
-
-		  	$.each(topExp, function(e, f){
+		  	$.each(top, function(e, f){
 		  		
 		  		if(e == plantiGraph.graphsElms) plantiGraph.countryPop.$graphBars1.append('<li>....</li>');
 		  		
 		  		var val = f.data.val * 100 / max;
 		  		
-		  		var $elm = $('<li><a data-toggle="tooltip" href="#" class="activaCountry' + (f.data.key == data.actCountry.key ? ' activeBar' : '' ) +'" data-country="' + f.data.key + '"><span class="key">' + f.data.key + '</span><div class="bar" title="' + f.data.name + ' Exportaciones de ' + ' ' + plantiGraph.tools.parseAmmount(f.data.val) + ' de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + ' en ' + plantiGraph.act.year + '" data-width=""><span class="text">' + millionsParser(f.data.val) + '</span></div></a></li>');
+		  		var $bar = $('<li><a data-toggle="tooltip" href="#" class="activaCountry' + (f.data.key == data.actCountry.key ? ' activeBar' : '' ) +'" data-country="' + f.data.key + '"><span class="key">' + f.data.key + '</span><div class="bar" title="' + f.data.name + ' ' + (type == 'imp' ? 'importó' : 'exportó') + ' de ' + ' ' + plantiGraph.tools.parseAmmount(f.data.val) + ' de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + ' en ' + plantiGraph.act.year + '" data-width=""><span class="text">' + millionsParser(f.data.val) + '</span></div></a></li>');
 		  		
-		  		plantiGraph.countryPop.$graphBars1.append($elm);
+		  		$elm.append($bar);
 
-		  		$elm.find('.bar').tooltip();
-		  		$elm.find('.bar').stop(false, false).css('width', 0).animate({'width': val}, 1000);
-		  		if(val < 40) $elm.find('.bar').addClass('bar-left');
+		  		$bar.find('.bar').tooltip();
+		  		$bar.find('.bar').stop(false, false).css('width', 0).animate({'width': val}, 1000);
+		  		if(val < 40) $bar.find('.bar').addClass('bar-left');
 
 		  	});
+		},
 
-		  		// gráfico de barras 2
-		  	plantiGraph.countryPop.$graphBars2.append('<h4 style="text-transform: uppercase">Ranking de países <br>importadores</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
 
-		  	var max = d3.max(topImp, function(e){ return e.data.val; });
-
-		  	$.each(topImp, function(e, f){
-		  		
-		  		if(e == plantiGraph.graphsElms) plantiGraph.countryPop.$graphBars2.append('<li>....</li>');
-		  		
-		  		var val = f.data.val * 100 / max;
-		  		
-		  		var $elm = $('<li><a data-toggle="tooltip" href="#" class="activaCountry' + (f.data.key == data.actCountry.key ? ' activeBar' : '' ) +'" data-country="' + f.data.key + '"><span class="key">' + f.data.key + '</span><div class="bar"title="' + f.data.name + ' importó ' + plantiGraph.tools.parseAmmount(f.data.val) + ' de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + ' en  ' + plantiGraph.act.year + '"  data-width=""><span class="text">' + millionsParser(f.data.val) + '</span></div></a></li>');
-		  		
-		  		plantiGraph.countryPop.$graphBars2.append($elm);
-
-		  		$elm.find('.bar').tooltip();
-		  		$elm.find('.bar').stop(false, false).css('width', 0).animate({'width': val}, 1000);
-		  		if(val < 40) $elm.find('.bar').addClass('bar-left');
-
-		  	});
-
+	  	drawEvol: function($elm, data) {
+	  		
 		  		// gráfico de evolucion
-		  	plantiGraph.countryPop.$graphLines.prepend('<h4 style="text-transform: uppercase">Evolución importaciones y exportaciones de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
+		  	$elm.prepend('<h4 style="text-transform: uppercase">Evolución importaciones y exportaciones de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
 
 		  	var max = d3.max([d3.max(d3.entries(data.expByYear), function(e){ return parseInt(e.value); }), d3.max(d3.entries(data.impByYear), function(e){ return parseInt(e.value); })]);
 
@@ -1003,10 +976,7 @@ var plantiGraph = {
 		  	var width = 210;
 		  	var height = width * 0.6;
 		  	var scale = d3.scaleLinear().domain([0, max]).range([height, 0]);
-		  	var axis = d3.axisLeft(scale).ticks(4).tickSize(0).tickFormat(function(d) {
-		  		console.log(d, parseInt(d / 1000000));
-			      return parseInt(d / 1000000);
-			    });
+		  	var axis = d3.axisLeft(scale).ticks(4).tickSize(0).tickFormat(function(d) { return parseInt(d / 1000000);});
 
 		  	var years = plantiGraph.lastYear - plantiGraph.initYear;
 		  	var jump = (width - padding) / years;
@@ -1018,11 +988,11 @@ var plantiGraph = {
 		  	var finalExpPath = 'M' + padding + ' ' + (height + paddingV) + ' L';
 		  	var finalExpLine = 'M';
 
-		  	var graph = d3.select(plantiGraph.countryPop.$graphLines.find('svg')[0])
+		  	var graph = d3.select($elm.find('svg')[0])
   				.attr('width', width).attr('height', height + (2 * paddingV));
 
 		  	graph.append('g')
-		  		.attr('transform', 'translate(' + padding + ' ,' + paddingV + ')')
+		  		.attr('transform', 'translate(' + (padding - 5) + ' ,' + paddingV + ')')
 		  		.attr('class', 'axes')
 		  		.call(axis);
 
@@ -1122,6 +1092,31 @@ var plantiGraph = {
 	  				.attr('fill', 'none')
 			  			.transition().duration(1000)
 			  				.attr('d', finalExpLine);
+		},
+		draw: function(data) {
+
+		  	var frases = plantiGraph.tools.getFrases(data);
+		  	$.each(frases, function(e, f){
+		  		plantiGraph.countryPop.$frases.append($('<li>' + f + '<i class="fa fa-twitter" aria-hidden="true"></i></li>'));
+		  	});
+
+			$('#searchSelected').show().html('<a href="#" class="clearPop">' + data.actCountry.name + '</a>');
+
+				// en móvil, hasta aquí
+		  	if(plantiGraph.viz.width < plantiGraph.breakPoint) return;
+
+		  	var topExp = plantiGraph.tools.getTop(data.actCountry.key, 'exp');
+		  	var topImp = plantiGraph.tools.getTop(data.actCountry.key, 'imp');
+
+	  		plantiGraph.countryPop.drawBarras(topExp, data, plantiGraph.countryPop.$graphBars1, 'exp');
+	  		plantiGraph.countryPop.drawBarras(topImp, data, plantiGraph.countryPop.$graphBars2, 'imp');
+		  		// gráfico de barras
+		  	if(plantiGraph.act.type.length == 2) {
+		  	}
+	 
+			 plantiGraph.countryPop.drawEvol(plantiGraph.countryPop.$graphLines, data)
+
+
 
 		  	// plantiGraph.countryPop.$graphBars1.append('<h3>importaciones</h3>')
 		  	// $.each(data.actCountry.resumen.imps, function(e, f){
@@ -1168,9 +1163,6 @@ var plantiGraph = {
 
 	evs: { // plantiGraph.evs.circInEnter
 
-
-		desactivaCountry: function() {
-		},
 		circGraphTooltipOut: function() {
 			$('#pop .tooltip').remove();
 		},
@@ -1215,6 +1207,8 @@ var plantiGraph = {
 			
 			$tooltip.css({ bottom: posY, left: posX, }).appendTo('#graph')
 			$tooltip.animate({opacity: 1}, 400);
+
+
 		},
 
 		linksClass: function(d) {
@@ -1246,6 +1240,10 @@ var plantiGraph = {
 					var base = d.source.x > d.target.x ? 'link' : 'link link-left';
 					return (e.source.name == d.name || e.target.name == d.name ? (base + ' link-act') : base);
 				});
+
+			plantiGraph.viz.circExp.each(function(){
+				console.log()
+			})
 		},
 
 		circInEnter: function(d) {
