@@ -127,7 +127,7 @@ body { font-size: 14px; }
 		.actPop #popWrap { opacity: 1; -webkit-transition-delay: .2s; -ms-transition-delay: .3s; transition-delay: .3s; }
 
 	#search { padding: 1.4em; padding-bottom: 0; position: relative; max-width: 400px; line-height: 1.3em; }
-		#search i { position: absolute; left: 1.6em; top: 1.5em; font-size: 1.2em; }
+		#search i { position: absolute; left: 1.6em; top: 1.6em; font-size: 1.2em; }
 		#countryImput { padding-left: 30px; margin-bottom: 0.8em; }
 			.fullGraph #countryImput { max-width: 200px; float: left; margin-right: 1em; }
 		#searchSelected { display: none; }
@@ -1089,23 +1089,23 @@ var plantiGraph = {
 		circExpEnter: function(d) {
 			$('#graph .tooltip').remove();
 
+			plantiGraph.evs.circTooltip(d);
+
 			plantiGraph.viz.links
 				.attr('class', function(e){
 					var base = d.source.x > d.target.x ? 'link' : 'link link-left';
 					return e.source.name == d.name || e.target.name == d.name ? (base + ' link-act') : base;
 				});
-
-			plantiGraph.evs.circTooltip(d);
 		},
 
 		circInEnter: function(d) {
+			plantiGraph.evs.circTooltip(d);
+			
 			plantiGraph.viz.links
 				.attr('class', function(e){
 					var base = d.source.x > d.target.x ? 'link' : 'link link-left';
 					return e.source.name == d.name || e.target.name == d.name ? (base + ' link-act') : base;
 				});
-
-			plantiGraph.evs.circTooltip(d);
 		},
 
 		circClick: function(d) {
