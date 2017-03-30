@@ -498,40 +498,80 @@ var plantiGraph = {
 			});
 		},
 
+		getCountry(key) {
+	    	for (var i = 0; i < plantiGraph.data.countries.length; i++) {
+	    		if(plantiGraph.data.countries[i].key == key) return plantiGraph.data.countries[i]
+	    	}
+	    	return false;
+	    },
+
 		getdataCountry: function(country) {
 			d3.json(plantiGraph.pathData + plantiGraph.act.prod + '.json' + plantiGraph.pathQuery, function(error, data){			    
 			    if (error) throw error;
-console.log(data)
+
 			    var dataCountry = {
 			    	actCountry: null,
 			    	expByYear: [],
 			    	impByYear: [],
 			    };
 			    if(plantiGraph.act.type.length == 1) {
-			    		// importaciones
-
-			    	var exprts = [];
-
-			    	if(plantiGraph.act.type.indexOf('imp') != -1) {
-
-			    		for(exp in data[year][country]) {
-			    			if(data[year][country].hasOwnProperty(exp)) {
-			    				exprts.push({
-			    					key: exp,
-			    					val: data[year][country][exp]
-			    				})
-			    			}
-			    		}
-			    	}
-			    	exprts.sort(function(x, y){
-						return d3.descending(x.val, y.val);
-					})
-			    	console.log(exprts);
 
 			    		// exportaciones
+			    	if(plantiGraph.act.type.indexOf('exp') != -1) {
+			    		var exprts = [];
+
+						for(exp in data[plantiGraph.act.year][country]) {
+							if(data[plantiGraph.act.year][country].hasOwnProperty(exp)) {
+								exprts.push({
+									key: exp,
+									val: data[plantiGraph.act.year][country][exp]
+								})
+							}
+						}
+						
+						exprts.sort(function(x, y){
+							return d3.descending(x.val, y.val);
+						});
+
+						dataCountry.exports = fixArrTop(exprts.slice(0, 5));
+			    	}
+
+			    		// importaciones
 			    	if(plantiGraph.act.type.indexOf('imp') != -1) {
+			    		var imprts = [];
+
+						for(imp in data[plantiGraph.act.year]) {
+							if(data[plantiGraph.act.year].hasOwnProperty(imp)) {
+								if(data[plantiGraph.act.year][imp][country])
+									imprts.push({
+										key: imp,
+										val: data[plantiGraph.act.year][imp][country]
+									})
+							}
+						}
+						
+						imprts.sort(function(x, y){
+							return d3.descending(x.val, y.val);
+						});
+
+						dataCountry.imports = fixArrTop(imprts.slice(0, 5));
 
 			    	}
+			    }
+			    	// apaña el array para formatearlo como los otroso tops
+			    function fixArrTop (array) {
+			    	var outp = [];
+			    	for (var i = 0; i < array.length; i++) {
+			    		outp.push({
+			    			data: {
+			    				name: plantiGraph.tools.getCountry(array[i].key).name,
+			    				key: array[i].key,
+			    				val: array[i].val
+			    			},
+			    			pos: i
+			    		})
+			    	}
+			    	return outp;
 			    }
 
 			    for (var i = plantiGraph.data.countries.length - 1; i >= 0; i--) {
@@ -980,12 +1020,23 @@ console.log(data)
 
 		drawBarras: function(top, data, $elm, type) {
 
-			if(type == 'exp') {
-				$elm.addClass('graphBarsExp')
-					.append('<h4 style="text-transform: uppercase">Ranking de países <br>exportadores</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
-			} else {
-				$elm.addClass('graphBarsImp')
-					.append('<h4 style="text-transform: uppercase">Ranking de países <br>importadores</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
+			switch(type) {
+				case 'exp':
+					$elm.addClass('graphBarsExp')
+						.append('<h4 style="text-transform: uppercase">Ranking de países <br>exportadores</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
+				break;
+				case 'imp':
+					$elm.addClass('graphBarsImp')
+						.append('<h4 style="text-transform: uppercase">Ranking de países <br>importadores</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
+				break;
+				case 'expInternal':
+					$elm.addClass('graphBarsImp')
+						.append('<h4 style="text-transform: uppercase">Principales paises<br>exportados</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
+				break;
+				case 'impInternal':
+					$elm.addClass('graphBarsImp')
+						.append('<h4 style="text-transform: uppercase">Principales paises<br>importados</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
+				break;
 			}
 
 		  	var max = d3.max(top, function(e){ return e.data.val; });
@@ -994,11 +1045,16 @@ console.log(data)
 		  		
 		  		if(e == plantiGraph.graphsElms) plantiGraph.countryPop.$graphBars1.append('<li>....</li>');
 		  		
-		  		var val = f.data.val * 100 / max;
-		  		
-		  		var $bar = $('<li><a data-toggle="tooltip" href="#" class="activaCountry' + (f.data.key == data.actCountry.key ? ' activeBar' : '' ) +'" data-country="' + f.data.key + '"><span class="key">' + f.data.key + '</span><div class="bar" title="' + f.data.name + ' ' + (type == 'imp' ? 'importó' : 'exportó') + ' de ' + ' ' + plantiGraph.tools.parseAmmount(f.data.val) + ' de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + ' en ' + plantiGraph.act.year + '" data-width=""><span class="text">' + millionsParser(f.data.val) + '</span></div></a></li>');
+		  		var $bar = null;
+		  		if(type == 'exp' || type == 'imp') {
+		  			$bar = $('<li><a data-toggle="tooltip" href="#" class="activaCountry' + (f.data.key == data.actCountry.key ? ' activeBar' : '' ) +'" data-country="' + f.data.key + '"><span class="key">' + f.data.key + '</span><div class="bar" title="' + f.data.name + ((type == 'imp') ? ' importó ' : ' exportó ') + plantiGraph.tools.parseAmmount(f.data.val) + ' de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + ' en ' + plantiGraph.act.year + '" data-width=""><span class="text">' + millionsParser(f.data.val) + '</span></div></a></li>');
+		  		} else {
+		  			$bar = $('<li><a data-toggle="tooltip" href="#" class="activaCountry' + (f.data.key == data.actCountry.key ? ' activeBar' : '' ) +'" data-country="' + f.data.key + '"><span class="key">' + f.data.key + '</span><div class="bar" title="' + data.actCountry.name + ((type == 'impInternal') ? ' importó ' : ' exportó ') + plantiGraph.tools.parseAmmount(f.data.val) + ' de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + ((type == 'impInternal') ? ' de ' : ' a ') + f.data.name + ' en ' + plantiGraph.act.year + '" data-width=""><span class="text">' + millionsParser(f.data.val) + '</span></div></a></li>');	
+		  		}
 		  		
 		  		$elm.append($bar);
+
+		  		var val = f.data.val * 100 / max;
 
 		  		$bar.find('.bar').tooltip();
 		  		$bar.find('.bar').stop(false, false).css('width', 0).animate({'width': val}, 1000);
@@ -1158,10 +1214,12 @@ console.log(data)
 		  	} else if($.inArray('imp', plantiGraph.act.type) == -1) {
 
 		  		plantiGraph.countryPop.drawBarras(plantiGraph.tools.getTop(data.actCountry.key, 'exp'), data, plantiGraph.countryPop.$graphBars1, 'exp');
+		  		plantiGraph.countryPop.drawBarras(data.exports, data, plantiGraph.countryPop.$graphBars2, 'expInternal');
 
 		  	} else {
 				
 				plantiGraph.countryPop.drawBarras(plantiGraph.tools.getTop(data.actCountry.key, 'imp'), data, plantiGraph.countryPop.$graphBars1, 'imp');
+		  		plantiGraph.countryPop.drawBarras(data.imports, data, plantiGraph.countryPop.$graphBars2, 'impInternal');
 		  	}
 	
 
@@ -1277,9 +1335,9 @@ console.log(data)
 					return (e.source.name == d.name || e.target.name == d.name ? (base + ' link-act') : base);
 				});
 
-			plantiGraph.viz.circExp.each(function(){
-				console.log()
-			})
+			// plantiGraph.viz.circExp.each(function(){
+			// 	console.log()
+			// })
 		},
 
 		circInEnter: function(d) {
@@ -1288,7 +1346,7 @@ console.log(data)
 			plantiGraph.viz.links
 				.attr('class', function(e){
 					if(!d.target) return 'link';
-					var base = d.source.x > d.target.x ? 'link' : 'link link-left';console.log(base)
+					var base = d.source.x > d.target.x ? 'link' : 'link link-left';
 					return (e.source.name == d.name || e.target.name == d.name ? (base + ' link-act') : base);
 				});
 		},
