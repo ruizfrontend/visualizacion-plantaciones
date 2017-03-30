@@ -1094,17 +1094,17 @@ var plantiGraph = {
 			plantiGraph.viz.links
 				.attr('class', function(e){
 					var base = d.source.x > d.target.x ? 'link' : 'link link-left';
-					return e.source.name == d.name || e.target.name == d.name ? (base + ' link-act') : base;
+					return (e.source.name == d.name || e.target.name == d.name ? (base + ' link-act') : base);
 				});
 		},
 
 		circInEnter: function(d) {
 			plantiGraph.evs.circTooltip(d);
-			
+
 			plantiGraph.viz.links
 				.attr('class', function(e){
-					var base = d.source.x > d.target.x ? 'link' : 'link link-left';
-					return e.source.name == d.name || e.target.name == d.name ? (base + ' link-act') : base;
+					var base = d.source.x > d.target.x ? 'link' : 'link link-left';console.log(base)
+					return (e.source.name == d.name || e.target.name == d.name ? (base + ' link-act') : base);
 				});
 		},
 
@@ -1113,10 +1113,10 @@ var plantiGraph = {
 		},
 
 		circOut: function(d){
+			$('#graph .tooltip').remove();
+
 			plantiGraph.viz.links
 				.attr('class', plantiGraph.evs.linksClass);
-
-			$('#graph .tooltip').remove();
 		},
 
 		linksVisibilityCheck: function (d) {
@@ -1332,28 +1332,6 @@ function shareTweet (texto, url, hash, via) {
     	return url;
     }
 };
-
-
-// function shareFacebook (url) {
-
-//     var windowOptions = 'scrollbars=yes,resizable=yes,toolbar=no,location=yes',
-//         width = 550,
-//         height = 420,
-//         winHeight = screen.height,
-//         winWidth = screen.width;
-
-//     var left = Math.round((winWidth / 2) - (width / 2));
-//     var top = 0;
-
-//     if (winHeight > height) {
-//       top = Math.round((winHeight / 2) - (height / 2));
-//     }
-
-//     var target = 'https://www.facebook.com/sharer/sharer.php?app_id=435567026494540&u=' + url
-//     window.open(target, 'intent', windowOptions + ',width=' + width +
-//                                        ',height=' + height + ',left=' + left + ',top=' + top);
-
-// };
 
 </script>
 </body>
