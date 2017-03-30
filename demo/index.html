@@ -872,7 +872,7 @@ var plantiGraph = {
 
 			$('body')
 				.delegate('#frases li', 'click', function(){
-					shareTweet($(this).text().slice(0, -1) + ' en el año ' + plantiGraph.act.year, 'http://www.eldiario.es/', 'pruebaHash', 'eldiarioes');
+					shareTweet($(this).text().slice(0, -1) + ' en ' + plantiGraph.act.year, 'http://www.eldiario.es/', 'pruebaHash', 'eldiarioes');
 					return false;
 				})
 				.delegate('#searchSelected a', 'click', function(){
@@ -954,7 +954,7 @@ var plantiGraph = {
 		  		
 		  		var val = f.data.val * 100 / max;
 		  		
-		  		var $elm = $('<li><a data-toggle="tooltip" href="#" class="activaCountry' + (f.data.key == data.actCountry.key ? ' activeBar' : '' ) +'" data-country="' + f.data.key + '"><span class="key">' + f.data.key + '</span><div class="bar" title="' + f.data.name + ' Exportaciones de ' + ' ' + plantiGraph.tools.parseAmmount(f.data.val) + ' de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + ' en el año ' + plantiGraph.act.year + '" data-width=""><span class="text">' + millionsParser(f.data.val) + '</span></div></a></li>');
+		  		var $elm = $('<li><a data-toggle="tooltip" href="#" class="activaCountry' + (f.data.key == data.actCountry.key ? ' activeBar' : '' ) +'" data-country="' + f.data.key + '"><span class="key">' + f.data.key + '</span><div class="bar" title="' + f.data.name + ' Exportaciones de ' + ' ' + plantiGraph.tools.parseAmmount(f.data.val) + ' de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + ' en ' + plantiGraph.act.year + '" data-width=""><span class="text">' + millionsParser(f.data.val) + '</span></div></a></li>');
 		  		
 		  		plantiGraph.countryPop.$graphBars1.append($elm);
 
@@ -975,7 +975,7 @@ var plantiGraph = {
 		  		
 		  		var val = f.data.val * 100 / max;
 		  		
-		  		var $elm = $('<li><a data-toggle="tooltip" href="#" class="activaCountry' + (f.data.key == data.actCountry.key ? ' activeBar' : '' ) +'" data-country="' + f.data.key + '"><span class="key">' + f.data.key + '</span><div class="bar"title="' + f.data.name + ' importó ' + plantiGraph.tools.parseAmmount(f.data.val) + ' de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + ' en el año ' + plantiGraph.act.year + '"  data-width=""><span class="text">' + millionsParser(f.data.val) + '</span></div></a></li>');
+		  		var $elm = $('<li><a data-toggle="tooltip" href="#" class="activaCountry' + (f.data.key == data.actCountry.key ? ' activeBar' : '' ) +'" data-country="' + f.data.key + '"><span class="key">' + f.data.key + '</span><div class="bar"title="' + f.data.name + ' importó ' + plantiGraph.tools.parseAmmount(f.data.val) + ' de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + ' en  ' + plantiGraph.act.year + '"  data-width=""><span class="text">' + millionsParser(f.data.val) + '</span></div></a></li>');
 		  		
 		  		plantiGraph.countryPop.$graphBars2.append($elm);
 
@@ -1045,14 +1045,14 @@ var plantiGraph = {
 			var textoTT = '';
 			
 			if(plantiGraph.act.type.length == 2) {
-				textoTT = '<strong>' + d.name + '</strong> exportó ' + plantiGraph.tools.parseAmmount(d.totalExp) + ' e importó ' + plantiGraph.tools.parseAmmount(d.totalImp) + ' de <strong>' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</strong> en el año ' + plantiGraph.act.year;
+				textoTT = '<strong>' + d.name + '</strong> exportó ' + plantiGraph.tools.parseAmmount(d.totalExp) + ' e importó ' + plantiGraph.tools.parseAmmount(d.totalImp) + ' de <strong>' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</strong> en ' + plantiGraph.act.year;
 				posY -= (d.rTot + 4);
 			} else {
 				if(plantiGraph.act.type.indexOf('exp') != -1) {
-					textoTT = '<strong>' + d.name + '</strong> exportó ' + plantiGraph.tools.parseAmmount(d.totalExp) + ' de <strong>' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</strong> en el año ' + plantiGraph.act.year;
+					textoTT = '<strong>' + d.name + '</strong> exportó ' + plantiGraph.tools.parseAmmount(d.totalExp) + ' de <strong>' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</strong> en ' + plantiGraph.act.year;
 					posY -= (d.rImp + 4);
 				} else {
-					textoTT = '<strong>' + d.name + '</strong> importó ' + plantiGraph.tools.parseAmmount(d.totalImp) + ' de <strong>' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</strong> en el año ' + plantiGraph.act.year;
+					textoTT = '<strong>' + d.name + '</strong> importó ' + plantiGraph.tools.parseAmmount(d.totalImp) + ' de <strong>' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</strong> en ' + plantiGraph.act.year;
 					posY -= (d.rExp + 4);
 				}
 			}
@@ -1074,7 +1074,7 @@ var plantiGraph = {
 			var posX = ((d.source.x + d.target.x) / 2) - 100;
 			var posY = ((d.source.y + d.target.y) / 2) - 5;
 
-			var textoTT = '<strong>' + d.source.name + '</strong> exportó ' + plantiGraph.tools.parseAmmount(d.val) +  ' de <strong>' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</strong> a <strong>' + d.target.name + '</strong> en el año ' + plantiGraph.act.year;
+			var textoTT = '<strong>' + d.source.name + '</strong> exportó ' + plantiGraph.tools.parseAmmount(d.val) +  ' de <strong>' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</strong> a <strong>' + d.target.name + '</strong> en ' + plantiGraph.act.year;
 
 			posY = $('#graph').height() - posY;
 			
