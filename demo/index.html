@@ -149,11 +149,11 @@ body { font-size: 14px; }
 
 	.bar-left span { right: inherit; left: 100%; }
 
-	.activeBar .bar span { color: white; }
+	.activeBar .bar span { color: white; pointer-events: none; }
 	.activeBar .bar-left span { color: #484848; }
 
-	#graphBars1 .activeBar .bar { background: #d35d33; }
-	#graphBars2 .activeBar .bar { background: #126567; }
+	.graphBarsExp .activeBar .bar { background: #d35d33; }
+	.graphBarsImp .activeBar .bar { background: #126567; }
 
 #frases li { list-style: none; padding: 0.8em 50px 0.8em 0.8em; background: white; margin: 0 0.4em 0.8em 0.4em; position: relative; cursor: pointer; }
 #frases li:hover { text-decoration: underline; }
@@ -938,9 +938,11 @@ var plantiGraph = {
 		drawBarras: function(top, data, $elm, type) {
 
 			if(type == 'exp') {
-				$elm.append('<h4 style="text-transform: uppercase">Ranking de países <br>exportadores</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
+				$elm.addClass('graphBarsExp')
+					.append('<h4 style="text-transform: uppercase">Ranking de países <br>exportadores</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
 			} else {
-				$elm.append('<h4 style="text-transform: uppercase">Ranking de países <br>importadores</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
+				$elm.addClass('graphBarsImp')
+					.append('<h4 style="text-transform: uppercase">Ranking de países <br>importadores</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
 			}
 
 		  	var max = d3.max(top, function(e){ return e.data.val; });
@@ -1105,30 +1107,25 @@ var plantiGraph = {
 				// en móvil, hasta aquí
 		  	if(plantiGraph.viz.width < plantiGraph.breakPoint) return;
 
-		  	var topExp = plantiGraph.tools.getTop(data.actCountry.key, 'exp');
-		  	var topImp = plantiGraph.tools.getTop(data.actCountry.key, 'imp');
+		  		// Grafiquitas
+		  		// esta siempre:
+			plantiGraph.countryPop.drawEvol(plantiGraph.countryPop.$graphLines, data);
 
-	  		plantiGraph.countryPop.drawBarras(topExp, data, plantiGraph.countryPop.$graphBars1, 'exp');
-	  		plantiGraph.countryPop.drawBarras(topImp, data, plantiGraph.countryPop.$graphBars2, 'imp');
-		  		// gráfico de barras
+		  		// Las de barras cambian según lo activado
 		  	if(plantiGraph.act.type.length == 2) {
+
+		  		plantiGraph.countryPop.drawBarras(plantiGraph.tools.getTop(data.actCountry.key, 'exp'), data, plantiGraph.countryPop.$graphBars1, 'exp');
+		  		plantiGraph.countryPop.drawBarras(plantiGraph.tools.getTop(data.actCountry.key, 'imp'), data, plantiGraph.countryPop.$graphBars2, 'imp');
+
+		  	} else if($.inArray('imp', plantiGraph.act.type) == -1) {
+
+		  		plantiGraph.countryPop.drawBarras(plantiGraph.tools.getTop(data.actCountry.key, 'exp'), data, plantiGraph.countryPop.$graphBars1, 'exp');
+
+		  	} else {
+				
+				plantiGraph.countryPop.drawBarras(plantiGraph.tools.getTop(data.actCountry.key, 'imp'), data, plantiGraph.countryPop.$graphBars1, 'imp');
 		  	}
-	 
-			 plantiGraph.countryPop.drawEvol(plantiGraph.countryPop.$graphLines, data)
-
-
-
-		  	// plantiGraph.countryPop.$graphBars1.append('<h3>importaciones</h3>')
-		  	// $.each(data.actCountry.resumen.imps, function(e, f){
-		  	// 	plantiGraph.countryPop.$graphBars1.append($('<li>' + e + ' - ' + plantiGraph.tools.parseAmmount(f) + '</li>'));
-		  	// });
-
-		  	// $.each(data.actCountry.resumen.exps, function(e, f){
-		  	// 	plantiGraph.countryPop.$graphBars1.append($('<li><span class="sigla">' + e + '</span>' + plantiGraph.tools.parseAmmount(f) + '</li>'));
-		  	// });
-		  	// 
-		 
-
+	
 
 		},
 
