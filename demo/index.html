@@ -238,7 +238,6 @@ body { font-size: 14px; }
 </div>
 
 <script>
-
 var plantiGraph = {
 
 	pathData: './',
@@ -263,6 +262,9 @@ var plantiGraph = {
 	minLine: null,
 	minCircProp: 10, // relation of max circ
 	minCirc: null,
+
+	initYear: 1995,
+	lastYear: 2014,
 
 	graphsElms: 5,
 
@@ -503,7 +505,7 @@ var plantiGraph = {
 				}
 				if(!dataCountry.actCountry) throw 'No se encontró el pais activo';
 
-			  	for(var year = 1995; year <= 2014; year++) {
+			  	for(var year = plantiGraph.initYear; year <= plantiGraph.lastYear; year++) {
 
 			  		dataCountry.expByYear[year] = 0
 			  		dataCountry.impByYear[year] = 0
@@ -942,9 +944,9 @@ var plantiGraph = {
 				// en móvil, hasta aquí
 		  	if(plantiGraph.viz.width < plantiGraph.breakPoint) return;
 
+		  		// gráfico de barras
 		  	var topExp = plantiGraph.tools.getTop(data.actCountry.key, 'exp');
 		  	var topImp = plantiGraph.tools.getTop(data.actCountry.key, 'imp');
-
 
 		  	plantiGraph.countryPop.$graphBars1.append('<h4 style="text-transform: uppercase">Ranking de países <br>exportadores</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
 
@@ -966,7 +968,7 @@ var plantiGraph = {
 
 		  	});
 
-
+		  		// gráfico de barras 2
 		  	plantiGraph.countryPop.$graphBars2.append('<h4 style="text-transform: uppercase">Ranking de países <br>importadores</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
 
 		  	var max = d3.max(topImp, function(e){ return e.data.val; });
@@ -988,9 +990,23 @@ var plantiGraph = {
 		  	});
 
 
+		  		// gráfico de evolucion
 		  	plantiGraph.countryPop.$graphLines.append('<h4 style="text-transform: uppercase">Evolución importaciones y exportaciones de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
 
 		  	var max = d3.max([d3.max(d3.entries(data.actCountry.resumen.exps), function(e){ return parseInt(e.value); }), d3.max(d3.entries(data.actCountry.resumen.imps), function(e){ return parseInt(e.value); })]);
+
+		  	var width = plantiGraph.countryPop.$graphBars1.width() - 30;
+		  	var height = width * 0.8;
+		  	
+		  	var tmpPath = 'M0 0';
+		  	var finalPath = 'M0 0';
+		  	var jump = width / (plantiGraph.lastYear - plantiGraph.initYear)
+		  	for(var year = plantiGraph.lastYear; year <= plantiGraph.initYear; year++) {
+
+		  	}
+
+		  	var graph = d3.select(plantiGraph.countryPop.$graphBars1)
+		  		.append('svg').append()
 
 		  	// plantiGraph.countryPop.$graphBars1.append('<h3>importaciones</h3>')
 		  	// $.each(data.actCountry.resumen.imps, function(e, f){
@@ -1188,7 +1204,7 @@ var plantiGraph = {
 
 		gotoYear: function(year) {
 
-			if(!year || plantiGraph.act.year == year || year > 2014 || year < 1995) return;
+			if(!year || plantiGraph.act.year == year || year > plantiGraph.lastYear || year < plantiGraph.initYear) return;
 
 			plantiGraph.act.year = year;
 			
@@ -1196,8 +1212,8 @@ var plantiGraph = {
 			$('#years .disabled').removeClass('disabled');
 			$('#years [data-year="' + year + '"]').addClass('act');
 
-			if(year == 2014) $('#years .nextYear').addClass('disabled');
-			if(year == 1995) $('#years .prevYear').addClass('disabled');
+			if(year == plantiGraph.lastYear) $('#years .nextYear').addClass('disabled');
+			if(year == plantiGraph.initYear) $('#years .prevYear').addClass('disabled');
 
 			$('#activeYear').html(year);
 
@@ -1216,7 +1232,7 @@ var plantiGraph = {
 			
 			e.preventDefault();
 
-			if(plantiGraph.act.year == 1995) return;
+			if(plantiGraph.act.year == plantiGraph.initYear) return;
 
 			plantiGraph.evs.gotoYear(plantiGraph.act.year - 1);
 
@@ -1226,7 +1242,7 @@ var plantiGraph = {
 			
 			e.preventDefault();
 
-			if(plantiGraph.act.year == 2014) return;
+			if(plantiGraph.act.year == plantiGraph.lastYear) return;
 
 			plantiGraph.evs.gotoYear(plantiGraph.act.year + 1);
 		},
