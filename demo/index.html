@@ -113,8 +113,8 @@ body { font-size: 14px; }
 
 	.circLines { stroke-width: 1px; fill: white; cursor: pointer; }
 	.circLinesWhite { stroke-width: 1px; stroke: white; fill: white; cursor: pointer; }
-	.circLinesExp { stroke: #d35d33; }
-	.circLinesImp { stroke: #126567; }
+	.linesExp { stroke: #126567; }
+	.linesImp { stroke: #d35d33; }
 
 	#plantiGraph.fullGraph #pop { position: absolute; top: 0; height: 100%; overflow: auto; right: 0; width: 300px; max-width: 800px; background: #efefef; z-index: 1;
 				-webkit-transition: all 1s; -ms-transition: all 1s; transition: all 1s;
@@ -1068,7 +1068,7 @@ console.log(data)
 		  		dots.append('circle')
 		  			.on("mouseenter", plantiGraph.evs.circGraphTooltip)
 		  			.on("mouseout", plantiGraph.evs.circGraphTooltipOut)
-		  			.attr('class', 'circLines circLinesExp activaYear')
+		  			.attr('class', 'circLines linesExp activaYear')
 		  			.attr('data-year', plantiGraph.initYear + i)
 		  			.attr('cx', Px)
 		  			.attr('cy', PyExp)
@@ -1089,7 +1089,7 @@ console.log(data)
 		  		dots.append('circle')
 		  			.on("mouseenter", plantiGraph.evs.circGraphTooltip)
 		  			.on("mouseout", plantiGraph.evs.circGraphTooltipOut)
-		  			.attr('class', 'circLinesWhite circLinesImp activaYear')
+		  			.attr('class', 'circLines linesImp activaYear')
 		  			.attr('data-year', plantiGraph.initYear + i)
 		  			.attr('cx', Px)
 		  			.attr('cy', PyImp)
@@ -1099,9 +1099,9 @@ console.log(data)
 	  				.transition().duration(2000).attr('opacity', 1);
 		  	};
 
-		  	tmpPath += (padding + width) + ' ' + (height + paddingV) + ' L' +  padding + 'Z';
-		  	finalImpPath += (padding + width) + ' ' + (height + paddingV) + 'Z';
-		  	finalExpPath += (padding + width) + ' ' + (height + paddingV) + 'Z';
+		  	tmpPath += (padding + width) + ' ' + (height + paddingV) + ' L' +  padding + ' 0 Z';
+		  	finalImpPath += (padding + width) + ' ' + (height + paddingV) + ' Z';
+		  	finalExpPath += (padding + width) + ' ' + (height + paddingV) + ' Z';
 
 	  		lines.append('path')
 	  				.attr('d', tmpPath)
@@ -1118,20 +1118,20 @@ console.log(data)
 			  				.attr('d', finalExpPath);
 
 	  		lines.append('path')
-	  				.attr('d', tmpPathLine)
+	  				.attr('d', tmpPathLine.slice(0, -1))
 	  				.attr('stroke', 'rgb(211, 93, 51)')
 	  				.attr('stroke-width', '1')
 	  				.attr('fill', 'none')
 			  			.transition().duration(1000)
-			  				.attr('d', finalImpLine);
+			  				.attr('d', finalImpLine.slice(0, -1));
 
 	  		lines.append('path')
-	  				.attr('d', tmpPathLine)
+	  				.attr('d', tmpPathLine.slice(0, -1))
 	  				.attr('stroke', '#126567')
 	  				.attr('stroke-width', '1')
 	  				.attr('fill', 'none')
 			  			.transition().duration(1000)
-			  				.attr('d', finalExpLine);
+			  				.attr('d', finalExpLine.slice(0, -1));
 		},
 		draw: function(data) {
 
