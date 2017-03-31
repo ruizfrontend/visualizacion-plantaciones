@@ -694,7 +694,7 @@ var plantiGraph = {
 
 				out.push('<strong>' + name + '</strong> ocupa el <strong>' + position + ' puesto</strong> en el ranking de países exportadores de <strong>' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</strong>.');
 				out.push('<strong>' + name + '</strong> controla el <strong>' + percent.toFixed(1).replace('.', ',') + '%</strong> de las exportaciones mundiales de <strong>' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</strong>.');
-				out.push('<strong>' + firstCapital(plantiGraph.txt.articulos[plantiGraph.act.prod]) + ' supone el ' + total.toFixed(1).replace('.', ',') + '% de las exportaciones de <strong>' + name +  '</strong>, ' + plantiGraph.tools.parseAmmount(dataCountry.actCountry.totalExp) + '.');
+				out.push('<strong>' + firstCapital(plantiGraph.txt.articulos[plantiGraph.act.prod]) + '</strong> supone el ' + total.toFixed(1).replace('.', ',') + '% de las exportaciones de <strong>' + name +  '</strong>, ' + plantiGraph.tools.parseAmmount(dataCountry.actCountry.totalExp) + '.');
 			}
 
 			return out;
