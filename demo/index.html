@@ -1342,6 +1342,35 @@ var plantiGraph = {
 
 		linksEnter: function(d) {
 
+			if(plantiGraph.breakPointSmallScreen) return false;
+
+			plantiGraph.evs.linesHover(d);
+			plantiGraph.evs.linesTooltip(d);
+
+		},
+
+		linesHover: function(d) {
+			$('#graph').addClass('hover');
+
+			plantiGraph.viz.links
+				.attr('class', function(e) {
+					var base = e.source.x > e.target.x ? 'link' : 'link link-left';
+					return e == d ? (base + ' linkAct') : base;
+				})
+
+			plantiGraph.viz.circExp
+				.attr('class', function(e) {
+					return (d.target == e || d.source == e) ? 'circExp circExpAct' : 'circExp';
+				});
+
+			plantiGraph.viz.circsImp
+				.attr('class', function(e) {
+					return (d.target == e || d.source == e) ? 'circImp circImpAct' : 'circImp';
+				});
+
+		},
+		linesTooltip: function(d) {
+				// links tooltip
 			var posX = ((d.source.x + d.target.x) / 2) - 100;
 			var posY = ((d.source.y + d.target.y) / 2) - 5;
 
@@ -1353,12 +1382,13 @@ var plantiGraph = {
 			
 			$tooltip.css({ bottom: posY, left: posX, }).appendTo('#graph')
 			$tooltip.animate({opacity: 1}, 400);
+
 		},
 
-		hoverCircles: function(d) {
+		circsHover: function(d) {
 
 			$('#graph').addClass('hover');
-			
+
 			plantiGraph.viz.circExp
 				.attr('class', function(e) {
 					
@@ -1398,7 +1428,7 @@ var plantiGraph = {
 
 			if(plantiGraph.breakPointSmallScreen) return false;
 
-			plantiGraph.evs.hoverCircles(d);
+			plantiGraph.evs.circsHover(d);
 			plantiGraph.evs.circTooltip(d);
 
 		},
@@ -1406,7 +1436,7 @@ var plantiGraph = {
 		circInEnter: function(d) {
 			if(plantiGraph.breakPointSmallScreen) r
 			
-			plantiGraph.evs.hoverCircles(d);
+			plantiGraph.evs.circsHover(d);
 			plantiGraph.evs.circTooltip(d);
 
 		},
