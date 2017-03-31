@@ -148,7 +148,8 @@ body { font-size: 14px; }
 			#searchSelected a:hover { opacity: 0.8; }
 				#searchSelected a:before { content: '\f00d'; display: block; font-family: FontAwesome; position: absolute; right: 0.8em; }
 	
-	#graphBars1, #graphBars2, #graphLines { width: 33%; float: left; box-sizing: border-box; padding: 0.4em; padding-top: 0; display: none; }
+	#graphBars1, #graphBars2, #graphLines { width: 33.33333%; float: left; box-sizing: border-box; padding: 0.4em; padding-top: 0;
+			    margin-bottom: 1em; display: none; }
 		.fullGraph #graphBars1, .fullGraph #graphBars2, .fullGraph #graphLines { display: block; }
 	#graphBars1 li, #graphBars2 li { list-style: none; line-height: 1.8em; }
 	#graphBars1 .key, #graphBars2 .key { display: inline-block; width: 33px; text-align: center; font-weight: 900; text-transform: uppercase; line-height: 1.7em; }
@@ -181,6 +182,8 @@ body { font-size: 14px; }
 #plantiGraph .btn-aceite.act { background: #d3a016; }
 #plantiGraph .btn-cafe.act { background: #b51629; }
 
+.tooltip.top .tooltip-arrow { border-top-color: background-color: rgba(0,0,0,0.8); }
+.tooltip-inner { background-color: rgba(0,0,0,0.8); }
 </style>
 <body>
 <div id="plantiGraph">
@@ -699,7 +702,7 @@ var plantiGraph = {
 
 		parseAmmount(ammout) {
 			if(ammout / 1000000 > 1) {
-				return numberThousandsDots(parseInt(ammout / 1000000)) + ' millones de dólares';
+				return numberThousandsDots(Math.round(ammout / 1000000)) + ' millones de dólares';
 			} else {
 				return numberThousandsDots(ammout) + ' dólares';
 			}
@@ -1112,15 +1115,26 @@ var plantiGraph = {
 		  		// gráfico de evolucion
 		  	$elm.prepend('<h4 style="text-transform: uppercase">Evolución importaciones y exportaciones de ' + plantiGraph.txt.productos[plantiGraph.act.prod] + '</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
 
-		  	var max = d3.max([d3.max(d3.entries(data.expByYear), function(e){ return parseInt(e.value); }), d3.max(d3.entries(data.impByYear), function(e){ return parseInt(e.value); })]);
+		  	var max = d3.max([
+		  		d3.max(d3.entries(data.expByYear), function(e){ return parseInt(e.value); }),
+		  		d3.max(d3.entries(data.impByYear), function(e){ return parseInt(e.value); })
+		  	]);
 
 		  	var padding = 30;
 		  	var paddingV = 5;
 
 		  	var width = 210;
 		  	var height = width * 0.6;
-		  	var scale = d3.scaleLinear().domain([0, max]).range([height, 0]);
-		  	var axis = d3.axisLeft(scale).ticks(4).tickSize(0).tickFormat(function(d) { return parseInt(d / 1000000);});
+		  	var scale = d3
+		  		.scaleLinear()
+		  		.domain([0, max])
+		  		.range([height, 0]);
+		  	
+		  	var axis = d3
+		  		.axisLeft(scale)
+		  			.ticks(4)
+		  			.tickSize(0)
+		  			.tickFormat(function(d) { return parseInt(d / 1000000);});
 
 		  	var years = plantiGraph.lastYear - plantiGraph.initYear;
 		  	var jump = (width - padding) / years;
@@ -1133,7 +1147,7 @@ var plantiGraph = {
 		  	var finalExpLine = 'M';
 
 		  	var graph = d3.select($elm.find('svg')[0])
-  				.attr('width', width).attr('height', height + (2 * paddingV));
+  				.attr('width', width + 3).attr('height', height + (2 * paddingV));
 
 		  	graph.append('g')
 		  		.attr('transform', 'translate(' + (padding - 5) + ' ,' + paddingV + ')')
@@ -1340,7 +1354,7 @@ var plantiGraph = {
 			posY = $('#graph').height() - posY;
 			
 			var $tooltip = $('<div class="tooltip top" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner">' + textoTT + '</div></div>')
-			
+
 			$tooltip.css({ bottom: posY, left: posX, }).appendTo('#graph')
 			$tooltip.animate({opacity: 1}, 400);
 
