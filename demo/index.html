@@ -719,6 +719,7 @@ var plantiGraph = {
 			var actData = data[plantiGraph.act.year];
 
 			var links = [];
+			var linksAll = [];
 			var tops = {
 				exp: [],
 				imp: []
@@ -732,6 +733,7 @@ var plantiGraph = {
 
 			var imps = [];
 
+			var max = 0;
 
 			for (var i = countries.length - 1; i >= 0; i--) {
 				if(actData[countries[i].key]) {
@@ -740,15 +742,19 @@ var plantiGraph = {
 					for (var j = countries.length - 1; j >= 0; j--) {
 						if(actData[countries[i].key][countries[j].key]) {
 
-							countries[i].totalExp += actData[countries[i].key][countries[j].key];
-							countries[j].totalImp += actData[countries[i].key][countries[j].key];
+							var val = actData[countries[i].key][countries[j].key];
 
-							imps.push(actData[countries[i].key][countries[j].key]);
+							countries[i].totalExp += val;
+							countries[j].totalImp += val;
 
-							links.push({
-								source: i,
-								target: j,
-								val: actData[countries[i].key][countries[j].key]
+							imps.push(val);
+
+							if(val > max) max = val;
+
+							linksAll.push({
+								source: countries[i],
+								target: countries[j],
+								val: val
 							});
 
 						}
@@ -756,6 +762,10 @@ var plantiGraph = {
 					}
 
 				}
+			}
+
+			for (var i = 0; i < linksAll.length; i++) {
+				if(linksAll[i].val > max / 1000) links.push(linksAll[i]);
 			}
 			
 			plantiGraph.data.totalExp = 0;
@@ -884,7 +894,9 @@ var plantiGraph = {
 			plantiGraph.viz.links.data(links)
 				.attr('stroke-width', function(d){ return plantiGraph.viz.scale.lines(d.val); })
 				.attr('class', plantiGraph.evs.linksClass)
-				.attr("visibility", plantiGraph.evs.linksVisibilityCheck);
+				.attr("visibility", plantiGraph.evs.linksVisibilityCheck)
+  				.attr('opacity', 0)
+  				.transition().duration(500).attr('opacity', 1);
 
 				// actualización de círculos y textos
 			plantiGraph.viz.circsImp.data(countries)
@@ -1347,12 +1359,12 @@ var plantiGraph = {
 
 			plantiGraph.evs.circTooltip(d);
 
-			plantiGraph.viz.links
-				.attr('class', function(e){
-					if(!d.target) return 'link';
-					var base = d.source.x > d.target.x ? 'link' : 'link link-left';
-					return (e.source.name == d.name || e.target.name == d.name ? (base + ' link-act') : base);
-				});
+			// plantiGraph.viz.links
+			// 	.attr('class', function(e){
+			// 		if(!d.target) return 'link';
+			// 		var base = d.source.x > d.target.x ? 'link' : 'link link-left';
+			// 		return (e.source.name == d.name || e.target.name == d.name ? (base + ' link-act') : base);
+			// 	});
 
 			// plantiGraph.viz.circExp.each(function(){
 			// 	console.log()
@@ -1364,12 +1376,12 @@ var plantiGraph = {
 
 			plantiGraph.evs.circTooltip(d);
 
-			plantiGraph.viz.links
-				.attr('class', function(e){
-					if(!d.target) return 'link';
-					var base = d.source.x > d.target.x ? 'link' : 'link link-left';
-					return (e.source.name == d.name || e.target.name == d.name ? (base + ' link-act') : base);
-				});
+			// plantiGraph.viz.links
+			// 	.attr('class', function(e){
+			// 		if(!d.target) return 'link';
+			// 		var base = d.source.x > d.target.x ? 'link' : 'link link-left';
+			// 		return (e.source.name == d.name || e.target.name == d.name ? (base + ' link-act') : base);
+			// 	});
 		},
 
 		circClick: function(d) {
