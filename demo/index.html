@@ -89,9 +89,12 @@ body { font-size: 14px; }
 
 #graph { background: #efefef; position: relative; }
 
-	.link { fill: none; stroke: rgba(0,0,0,0.2); stroke: url(#linearGradient);  }
+	#graph.hover .link, #graph.hover .circImp, #graph.hover .circExp { opacity: 0.2; }
+
+	.link { fill: none; stroke: rgba(0,0,0,0.2); stroke: url(#linearGradient);
+				-webkit-transition: all .5s; -ms-transition: all .5s; transition: all .5s; }
 		.link-left { stroke: url(#linearGradientInverse);}
-		.link:hover, .link-act { stroke: rgba(60, 4, 4, 0.6); }
+		/* .link:hover, .link-act { stroke: rgba(60, 4, 4, 0.6); }*/
 
 	.axes text { font-weight: 900; font-family: roboto; fill: #aaa; }
 		.axes path { stroke-width: 0; }
@@ -99,14 +102,12 @@ body { font-size: 14px; }
 	.circImp { fill: #126567; cursor: pointer; }
 		.fullGraph .circImp {  -webkit-transform-origin: center center; -ms-transform-origin: center center; transform-origin: center center;
 				-webkit-transition: all .5s; -ms-transition: all .5s; transition: all .5s; }
-		.fullGraph .circImp:hover { /*fill: rgba(6, 3, 68, 0.4);*/
-		  		-webkit-transform: -ms-scale(1.1); transform: scale(1.1); transform: scale(1.1); }
+
+	.circImpAct, .circExpAct, .linkAct { opacity: 1!important; }
 
 	.circExp { fill: #d35d33; cursor: pointer; }
 		.fullGraph .circExp {  -webkit-transform-origin: center center; -ms-transform-origin: center center; transform-origin: center center;
 				-webkit-transition: all .5s; -ms-transition: all .5s; transition: all .5s; }
-		.fullGraph .circExp:hover { /*fill: rgba(6, 3, 68, 0.4);*/
-				-webkit-transform: -ms-scale(1.1); transform: scale(1.1); transform: scale(1.1); }
 
 	.text {  fill: white; font-weight: 900; font-family: arial, sans-serif; font-size: 12px; pointer-events: none; text-anchor: middle; }
 		.fullGraph .text { -webkit-transition: stroke .5s; -ms-transition: stroke .5s; transition: stroke .5s; }
@@ -1354,36 +1355,60 @@ var plantiGraph = {
 			$tooltip.animate({opacity: 1}, 400);
 		},
 
+		hoverCircles: function(d) {
+
+			$('#graph').addClass('hover');
+			
+			plantiGraph.viz.circExp
+				.attr('class', function(e) {
+					
+					if(e.key == d.key) return 'circExp circExpAct';
+					
+					var found = false;
+					plantiGraph.viz.links.each(function(f){
+						if((f.source.key == d.key && f.target.key == e.key) && (plantiGraph.viz.scale.lines(f.val) > plantiGraph.minLine)) found = true;
+						if((f.source.key == e.key && f.target.key == d.key) && (plantiGraph.viz.scale.lines(f.val) > plantiGraph.minLine)) found = true;
+					})
+					return found ? 'circExp circExpAct' : 'circExp';
+				});
+
+			plantiGraph.viz.circsImp
+				.attr('class', function(e) {
+					
+					if(e.key == d.key) return 'circImp circImpAct';
+
+					var found = false;
+					plantiGraph.viz.links.each(function(f){
+						if((f.source.key == d.key && f.target.key == e.key) && (plantiGraph.viz.scale.lines(f.val) > plantiGraph.minLine)) found = true;
+						if((f.source.key == e.key && f.target.key == d.key) && (plantiGraph.viz.scale.lines(f.val) > plantiGraph.minLine)) found = true;
+					})
+					return found ? 'circImp circImpAct' : 'circImp';
+				});
+
+			plantiGraph.viz.links
+				.attr('class', function(e) {
+					var base = e.source.x > e.target.x ? 'link' : 'link link-left';
+					return (e.source.key == d.key || e.target.key == d.key) ? (base + ' linkAct') : base;
+				})
+		},
+
 		circExpEnter: function(d) {
+
 			$('#graph .tooltip').remove();
 
 			if(plantiGraph.breakPointSmallScreen) return false;
 
+			plantiGraph.evs.hoverCircles(d);
 			plantiGraph.evs.circTooltip(d);
 
-			// plantiGraph.viz.links
-			// 	.attr('class', function(e){
-			// 		if(!d.target) return 'link';
-			// 		var base = d.source.x > d.target.x ? 'link' : 'link link-left';
-			// 		return (e.source.name == d.name || e.target.name == d.name ? (base + ' link-act') : base);
-			// 	});
-
-			// plantiGraph.viz.circExp.each(function(){
-			// 	console.log()
-			// })
 		},
 
 		circInEnter: function(d) {
-			if(plantiGraph.breakPointSmallScreen) return false;
-
+			if(plantiGraph.breakPointSmallScreen) r
+			
+			plantiGraph.evs.hoverCircles(d);
 			plantiGraph.evs.circTooltip(d);
 
-			// plantiGraph.viz.links
-			// 	.attr('class', function(e){
-			// 		if(!d.target) return 'link';
-			// 		var base = d.source.x > d.target.x ? 'link' : 'link link-left';
-			// 		return (e.source.name == d.name || e.target.name == d.name ? (base + ' link-act') : base);
-			// 	});
 		},
 
 		circClick: function(d) {
@@ -1392,9 +1417,15 @@ var plantiGraph = {
 
 		circOut: function(d){
 			$('#graph .tooltip').remove();
+			$('#graph').removeClass('hover');
 
 			plantiGraph.viz.links
 				.attr('class', plantiGraph.evs.linksClass);
+
+			plantiGraph.viz.circExp
+				.attr('class', 'circExp');
+			plantiGraph.viz.circsImp
+				.attr('class', 'circImp');
 		},
 
 		linksVisibilityCheck: function (d) {
