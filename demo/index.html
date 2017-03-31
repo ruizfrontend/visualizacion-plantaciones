@@ -115,6 +115,8 @@ body { font-size: 14px; }
 	.circLinesWhite { stroke-width: 1px; stroke: white; fill: white; cursor: pointer; }
 	.linesExp { stroke: #126567; }
 	.linesImp { stroke: #d35d33; }
+	.linesExpFill { fill: #126567; }
+	.linesImpFill { fill: #d35d33; }
 
 	#plantiGraph.fullGraph #pop { position: absolute; top: 0; height: 100%; overflow: auto; right: 0; width: 300px; max-width: 800px; background: #efefef; z-index: 1;
 				-webkit-transition: all 1s; -ms-transition: all 1s; transition: all 1s;
@@ -1153,7 +1155,7 @@ var plantiGraph = {
 		  		dots.append('circle')
 		  			.on("mouseenter", plantiGraph.evs.circGraphTooltip)
 		  			.on("mouseout", plantiGraph.evs.circGraphTooltipOut)
-		  			.attr('class', 'circLines linesExp activaYear')
+		  			.attr('class', 'circLines linesExp activaYear' + (plantiGraph.initYear + i == plantiGraph.act.year ? ' linesExpFill' : '') )
 		  			.attr('data-year', plantiGraph.initYear + i)
 		  			.attr('cx', Px)
 		  			.attr('cy', PyExp)
@@ -1174,7 +1176,7 @@ var plantiGraph = {
 		  		dots.append('circle')
 		  			.on("mouseenter", plantiGraph.evs.circGraphTooltip)
 		  			.on("mouseout", plantiGraph.evs.circGraphTooltipOut)
-		  			.attr('class', 'circLines linesImp activaYear')
+		  			.attr('class', 'circLines linesImp activaYear' + (plantiGraph.initYear + i == plantiGraph.act.year ? ' linesImpFill' : ''))
 		  			.attr('data-year', plantiGraph.initYear + i)
 		  			.attr('cx', Px)
 		  			.attr('cy', PyImp)
