@@ -260,6 +260,7 @@ var plantiGraph = {
 
 	breakPoint: 800,
 	breakPointClass: 'fullGraph',
+	breakPointSmallScreen: null, 
 
 	maxCircProp: 20, // relation winWidth to maxCircProp
 	maxCirc: null, // generated max circle size 
@@ -361,12 +362,15 @@ var plantiGraph = {
 				
 				plantiGraph.viz.height = plantiGraph.viz.width / 1.4;
 				plantiGraph.viz.$wrap.removeClass(plantiGraph.breakPointClass);
+				plantiGraph.breakPointSmallScreen = true;
 
 			} else {
 				plantiGraph.viz.$wrap.addClass(plantiGraph.breakPointClass);
 
 			   	plantiGraph.viz.width = plantiGraph.viz.width - 300;
 			   	plantiGraph.viz.height = plantiGraph.viz.width / 2;
+
+			   	plantiGraph.breakPointSmallScreen = false;
 			}
 
 		   	plantiGraph.viz.$elm.css({
@@ -862,6 +866,16 @@ var plantiGraph = {
 						.append('text')
 							.attr('class', 'text')
 							.text(function(d){ return d.key.toUpperCase(); });
+			} else {
+				plantiGraph.viz.links.remove();
+				plantiGraph.viz.links = plantiGraph.viz.svg
+					.select('.linksWrap')
+						.selectAll('.link').data(links).enter()
+						.append('line')
+							.attr('class', plantiGraph.evs.linksClass)
+							.attr('stroke-width', function(d){ return plantiGraph.viz.scale.lines(d.val); })
+							.on("mouseenter", plantiGraph.evs.linksEnter)
+							.on("mouseout", plantiGraph.evs.circOut)
 			}
 
 				// actualización de líneas
@@ -980,28 +994,29 @@ var plantiGraph = {
 			$('#closePop').click(plantiGraph.countryPop.hide);
 
 				// clase genérica para mostrar popups
-			plantiGraph.viz.$wrap.delegate('.activaCountry', 'click', function(e){
-				e.preventDefault();
+			plantiGraph.viz.$wrap
+				.delegate('.activaCountry', 'click', function(e){
+					e.preventDefault();
 
-				var $elm = $(this);
-				var target = $elm.data('country');
+					var $elm = $(this);
+					var target = $elm.data('country');
 
-				if(!target) throw 'No se encontró el pais clickado';
+					if(!target) throw 'No se encontró el pais clickado';
 
-				plantiGraph.countryPop.activa(target);
-			})
+					plantiGraph.countryPop.activa(target);
+				})
 
-				// clase genérica para mostrar popups
-			plantiGraph.viz.$wrap.delegate('.activaYear', 'click', function(e){
-				e.preventDefault();
+					// clase genérica para mostrar popups
+				.delegate('.activaYear', 'click', function(e){
+					e.preventDefault();
 
-				var $elm = $(this);
-				var target = $elm.data('year');
+					var $elm = $(this);
+					var target = $elm.data('year');
 
-				if(!target) throw 'No se encontró el año clickado';
+					if(!target) throw 'No se encontró el año clickado';
 
-				plantiGraph.evs.gotoYear(target);
-			})
+					plantiGraph.evs.gotoYear(target);
+				})
 		},
 
 		activa: function(countryKey) {
@@ -1199,7 +1214,7 @@ var plantiGraph = {
 			$('#searchSelected').show().html('<a href="#" class="clearPop">' + data.actCountry.name + '</a>');
 
 				// en móvil, hasta aquí
-		  	if(plantiGraph.viz.width < plantiGraph.breakPoint) return;
+		  	if(plantiGraph.breakPointSmallScreen) return;
 
 		  		// Grafiquitas
 		  		// esta siempre:
@@ -1326,6 +1341,8 @@ var plantiGraph = {
 		circExpEnter: function(d) {
 			$('#graph .tooltip').remove();
 
+			if(plantiGraph.breakPointSmallScreen) return false;
+
 			plantiGraph.evs.circTooltip(d);
 
 			plantiGraph.viz.links
@@ -1341,6 +1358,8 @@ var plantiGraph = {
 		},
 
 		circInEnter: function(d) {
+			if(plantiGraph.breakPointSmallScreen) return false;
+
 			plantiGraph.evs.circTooltip(d);
 
 			plantiGraph.viz.links
