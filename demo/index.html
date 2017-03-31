@@ -61,6 +61,7 @@ body { font-size: 14px; }
 
 #plantiGraph .btn { margin-left: 0; background: #999999; color: white; border-radius: 0; margin-bottom: 0.4em;
 	        padding: 0.2em 0.4em 0.2em 0.4em; margin-right: 0.2em; font-weight: 900; }
+	#plantiGraph .btn:hover { opacity: 0.8; }
 	#plantiGraph .btn.act { background: #d35d33; color: white; }
 
 	#type, #prods, #years { text-align: center; box-sizing: border-box; padding: 0 0.4em 1.4em 0.4em; }
@@ -91,7 +92,7 @@ body { font-size: 14px; }
 
 	#graph.hover .link, #graph.hover .circImp, #graph.hover .circExp { opacity: 0.2; }
 
-	.link { fill: none; stroke: rgba(0,0,0,0.2); stroke: url(#linearGradient);
+	.link { fill: none; stroke: rgba(0,0,0,0.2); stroke: url(#linearGradient); opacity: 0.6;
 				-webkit-transition: all .5s; -ms-transition: all .5s; transition: all .5s; }
 		.link-left { stroke: url(#linearGradientInverse);}
 		/* .link:hover, .link-act { stroke: rgba(60, 4, 4, 0.6); }*/
@@ -103,7 +104,8 @@ body { font-size: 14px; }
 		.fullGraph .circImp {  -webkit-transform-origin: center center; -ms-transform-origin: center center; transform-origin: center center;
 				-webkit-transition: all .5s; -ms-transition: all .5s; transition: all .5s; }
 
-	.circImpAct, .circExpAct, .linkAct { opacity: 1!important; }
+	.circImpAct, .circExpAct { opacity: 1!important; }
+		.linkAct { opacity: 1!important; }
 
 	.circExp { fill: #d35d33; cursor: pointer; }
 		.fullGraph .circExp {  -webkit-transform-origin: center center; -ms-transform-origin: center center; transform-origin: center center;
@@ -143,6 +145,7 @@ body { font-size: 14px; }
 			.fullGraph #countryImput { max-width: 200px; float: left; margin-right: 1em; }
 		#searchSelected { display: none; }
 			#searchSelected a { display: inline-block; background: #666666; padding: 0.5em 2.5em 0.6em 0.8em; position: relative; color: white; font-weight: 900; cursor: pointer; }
+			#searchSelected a:hover { opacity: 0.8; }
 				#searchSelected a:before { content: '\f00d'; display: block; font-family: FontAwesome; position: absolute; right: 0.8em; }
 	
 	#graphBars1, #graphBars2, #graphLines { width: 33%; float: left; box-sizing: border-box; padding: 0.4em; padding-top: 0; display: none; }
@@ -153,6 +156,7 @@ body { font-size: 14px; }
 #pop h4 { font-size: 1em; font-family: roboto, sans-serif; font-weight: 900; }
 
 .bar { background: #ccc; position: relative; display: inline-block; line-height: 1.5em; margin-left: 1em; height: 1.7em; vertical-align: middle; width: 0; }
+		 .bar:hover { opacity: 0.8; }
 	.bar span { position: absolute; right: 0; padding: 0.6em; line-height: 1em; }
 
 	.bar-left span { right: inherit; left: 100%; }
@@ -167,9 +171,16 @@ body { font-size: 14px; }
 #frases li:hover { text-decoration: underline; }
 #frases li i { position: absolute; right: 0; bottom: 0; padding: 0.4em; font-size: 1.6em; color: #00aced; text-decoration: none!important; }
 
-.autocomplete-suggestions { padding: 1em; line-height: 1.2em; background: #ccc; cursor: pointer; color: white; font-weight: 900; }
+.autocomplete-suggestions { padding: 1em; line-height: 1.2em; background: #ccc; cursor: pointer; color: #666; font-weight: 900; }
 .autocomplete-suggestion { text-decoration: underline; line-height: 1.6em; }
 	.autocomplete-suggestion:hover { color: #333; }
+
+#plantiGraph .btn-cacao.act { background: #529fbc; }
+#plantiGraph .btn-banana.act { background: #e0e233; }
+#plantiGraph .btn-azucar.act { background: #96cb51; }
+#plantiGraph .btn-aceite.act { background: #d3a016; }
+#plantiGraph .btn-cafe.act { background: #b51629; }
+
 </style>
 <body>
 <div id="plantiGraph">
@@ -187,11 +198,11 @@ body { font-size: 14px; }
 			<h4>¿Por qué producto quieres filtrar?</h4>
 			<p>Selecciona una opción</p>
 
-			<a href="#" data-prod="cacao" class="btn"><img src="./icons/chocolate.svg"><span>Cacao</span></a>
-			<a href="#" data-prod="banana" class="btn"><img src="./icons/banana.svg"><span>Banano</span></a>
-			<a href="#" data-prod="azucar" class="btn"><img src="./icons/sugar.svg"><span>Azúcar</span></a>
-			<a href="#" data-prod="aceite" class="btn"><img src="./icons/palm_oil.svg"><span>Aceite de palma</span></a>
-			<a href="#" data-prod="cafe" class="btn"><img src="./icons/coffee.svg"><span>Café</span></a>
+			<a href="#" data-prod="cacao" class="btn btn-cacao"><img src="./icons/chocolate.svg"><span>Cacao</span></a>
+			<a href="#" data-prod="banana" class="btn btn-banana"><img src="./icons/banana.svg"><span>Banano</span></a>
+			<a href="#" data-prod="azucar" class="btn btn-azucar"><img src="./icons/sugar.svg"><span>Azúcar</span></a>
+			<a href="#" data-prod="aceite" class="btn btn-aceite"><img src="./icons/palm_oil.svg"><span>Aceite de palma</span></a>
+			<a href="#" data-prod="cafe" class="btn btn-cafe"><img src="./icons/coffee.svg"><span>Café</span></a>
 		</div>
 		<div id="years">
 			<h4>Año</h4>
