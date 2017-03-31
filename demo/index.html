@@ -105,7 +105,7 @@ body { font-size: 14px; }
 				-webkit-transition: all .5s; -ms-transition: all .5s; transition: all .5s; }
 
 	.circImpAct, .circExpAct { opacity: 1!important; }
-		.linkAct { opacity: 1!important; }
+		.linkAct { opacity: .9!important; }
 
 	.circExp { fill: #d35d33; cursor: pointer; }
 		.fullGraph .circExp {  -webkit-transform-origin: center center; -ms-transform-origin: center center; transform-origin: center center;
@@ -279,14 +279,14 @@ var plantiGraph = {
 	breakPointClass: 'fullGraph',
 	breakPointSmallScreen: null, 
 
-	maxCircProp: 20, // relation winWidth to maxCircProp
+	maxCircProp: 25, // relation winWidth to maxCircProp
 	maxCirc: null, // generated max circle size 
-	maxLineProp: 100,
+	maxLineProp: 70,
 	maxLine: null,
 
 	minLineProp: 10, // relation of max circ
 	minLine: null,
-	minCircProp: 20, // relation of max circ
+	minCircProp: 15, // relation of max circ
 	minCirc: null,
 
 	initYear: 1995,
@@ -841,11 +841,11 @@ var plantiGraph = {
 			// 	d3.scaleLinear().domain([0,d3.max(imps)]).range([0,plantiGraph.maxLine]);
 
 			plantiGraph.viz.scale.circImp = 
-				d3.scalePow().exponent(.6).domain([0,d3.max(maxImp)]).range([0,plantiGraph.maxCirc]);
+				d3.scalePow().exponent(.5).domain([0,d3.max(maxImp)]).range([0,plantiGraph.maxCirc]);
 			plantiGraph.viz.scale.circExp = 
-				d3.scalePow().exponent(.6).domain([0,d3.max(maxExp)]).range([0,plantiGraph.maxCirc]);
+				d3.scalePow().exponent(.5).domain([0,d3.max(maxExp)]).range([0,plantiGraph.maxCirc]);
 			plantiGraph.viz.scale.circImpExp = 
-				d3.scalePow().exponent(.6).domain([0,d3.max(maxImpExp)]).range([0,plantiGraph.maxCirc]);
+				d3.scalePow().exponent(.5).domain([0,d3.max(maxImpExp)]).range([0,plantiGraph.maxCirc]);
 			plantiGraph.viz.scale.lines = 
 				d3.scalePow().exponent(.9).domain([0,d3.max(imps)]).range([0,plantiGraph.maxLine]);
 
@@ -934,13 +934,13 @@ var plantiGraph = {
 				.attr('y', function(d) { if(d.posY) return d.y + 5; });
 
 			plantiGraph.viz.force = d3.forceSimulation(countries)
-				.force("link", d3.forceLink(links).strength(0.0000000001))
+				.force("link", d3.forceLink(links).strength(0.0000000000001))
 				// .force("charge", d3.forceManyBody().strength(0.01))
-    			.force("collide", d3.forceCollide().radius(plantiGraph.evs.collideRadiusFn).iterations(2).strength(4))
+    			.force("collide", d3.forceCollide().radius(plantiGraph.evs.collideRadiusFn).iterations(6).strength(1.2))
 				// .force("link", d3.forceLink(links).strength(function(d){return d.val / 1000 }).distance(20))
 				// .force("center", d3.forceCenter(plantiGraph.viz.width / 2, plantiGraph.viz.height / 2))
 
-				.alphaDecay(.5)
+				.alphaDecay(plantiGraph.breakPointSmallScreen ? 0.8 : .6)
 				.velocityDecay(.7)
 
 				.on('tick', plantiGraph.tools.tick)
@@ -949,7 +949,7 @@ var plantiGraph = {
 		},
 
 			// each forze loop
-		tick: function() {
+		tick: function() {console.log('tick')
 
 			plantiGraph.viz.circsImp
 				.attr('cx', function(d) { return d.x; })
@@ -1459,7 +1459,7 @@ var plantiGraph = {
 		},
 
 		circInEnter: function(d) {
-			if(plantiGraph.breakPointSmallScreen) r
+			if(plantiGraph.breakPointSmallScreen) return;
 			
 			plantiGraph.evs.circsHover(d);
 			plantiGraph.evs.circTooltip(d);
@@ -1526,13 +1526,11 @@ var plantiGraph = {
 		},
 
 		collideRadiusFn: function(d) {
-			if(plantiGraph.act.type.length == 2) {
-				return d.rTot + 3;
-			} else {
-				if($.inArray('imp', plantiGraph.act.type) == -1) return d.rExp + 3;
-				return d.rImp + 2;
+			var param = d.rTot
+			if(plantiGraph.act.type.length != 2) {
+				param = $.inArray('imp', plantiGraph.act.type) == -1 ? d.rExp : d.rImp;
 			}
-			return d.rTot + 2;
+			return param + 5;
 		},
 
 		changeProduct: function(e) {
