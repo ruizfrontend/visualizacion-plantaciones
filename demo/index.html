@@ -1060,8 +1060,87 @@ var plantiGraph = {
 			
 			plantiGraph.viz.$wrap.addClass('actPop');
 
+			setTimeout(function(){plantiGraph.countryPop.activaHover(countryKey); }, 100)
+
 			$('#searchHelp').hide();
 			d3.selectAll('feGaussianBlur').transition().attr('stdDeviation', 4);
+
+		},
+
+		activaHover: function(countryKey) {
+			for (var i = 0; i < plantiGraph.data.countries.length; i++) {
+				if (plantiGraph.data.countries[i].key == countryKey) {
+					plantiGraph.evs.circsHover(plantiGraph.data.countries[i]);
+					return;
+				}
+			};
+		},	
+
+		hide: function() {
+			plantiGraph.countryPop.active = null;
+			plantiGraph.viz.$wrap.removeClass('actPop');
+
+			d3.selectAll('feGaussianBlur').transition().attr('stdDeviation', 0);
+			
+			plantiGraph.evs.circOut();
+
+			plantiGraph.countryPop.clear();
+		},
+
+		clear: function() {
+
+			plantiGraph.countryPop.active = null;
+
+			plantiGraph.countryPop.$frases.find('*').remove();
+			plantiGraph.countryPop.$graphBars2.find('*').remove();
+			plantiGraph.countryPop.$graphBars1.find('*').remove();
+			plantiGraph.countryPop.$graphLines.find('*').remove();
+			plantiGraph.countryPop.$graphLines.append('<svg></svg>');
+
+			$('#searchHelp').show();
+			$('#searchSelected').hide().html('');
+
+		},
+
+		update: function() {
+			if(plantiGraph.countryPop.active) plantiGraph.countryPop.activa(plantiGraph.countryPop.active);
+		},
+		
+
+		draw: function(data) {
+
+		  	var frases = plantiGraph.tools.getFrases(data);
+		  	$.each(frases, function(e, f){
+		  		plantiGraph.countryPop.$frases.append($('<li>' + f + '<i class="fa fa-twitter" aria-hidden="true"></i></li>'));
+		  	});
+
+			$('#searchSelected').show().html('<a href="#" class="clearPop">' + data.actCountry.name + '</a>');
+
+				// en móvil, hasta aquí
+		  	if(plantiGraph.breakPointSmallScreen) return;
+
+		  		// Grafiquitas
+		  		// esta siempre:
+			plantiGraph.countryPop.drawEvol(plantiGraph.countryPop.$graphLines, data);
+
+		  		// Las de barras cambian según lo activado
+		  	if(plantiGraph.act.type.length == 2) {
+
+		  		plantiGraph.countryPop.drawBarras(plantiGraph.tools.getTop(data.actCountry.key, 'exp'), data, plantiGraph.countryPop.$graphBars1, 'exp');
+		  		plantiGraph.countryPop.drawBarras(plantiGraph.tools.getTop(data.actCountry.key, 'imp'), data, plantiGraph.countryPop.$graphBars2, 'imp');
+
+		  	} else if($.inArray('imp', plantiGraph.act.type) == -1) {
+
+		  		plantiGraph.countryPop.drawBarras(plantiGraph.tools.getTop(data.actCountry.key, 'exp'), data, plantiGraph.countryPop.$graphBars1, 'exp');
+		  		plantiGraph.countryPop.drawBarras(data.exports, data, plantiGraph.countryPop.$graphBars2, 'expInternal');
+
+		  	} else {
+				
+				plantiGraph.countryPop.drawBarras(plantiGraph.tools.getTop(data.actCountry.key, 'imp'), data, plantiGraph.countryPop.$graphBars1, 'imp');
+		  		plantiGraph.countryPop.drawBarras(data.imports, data, plantiGraph.countryPop.$graphBars2, 'impInternal');
+		  	}
+	
+
 		},
 
 		drawBarras: function(top, data, $elm, type) {
@@ -1246,69 +1325,6 @@ var plantiGraph = {
 			  			.transition().duration(1000)
 			  				.attr('d', finalExpLine.slice(0, -1));
 		},
-		draw: function(data) {
-
-		  	var frases = plantiGraph.tools.getFrases(data);
-		  	$.each(frases, function(e, f){
-		  		plantiGraph.countryPop.$frases.append($('<li>' + f + '<i class="fa fa-twitter" aria-hidden="true"></i></li>'));
-		  	});
-
-			$('#searchSelected').show().html('<a href="#" class="clearPop">' + data.actCountry.name + '</a>');
-
-				// en móvil, hasta aquí
-		  	if(plantiGraph.breakPointSmallScreen) return;
-
-		  		// Grafiquitas
-		  		// esta siempre:
-			plantiGraph.countryPop.drawEvol(plantiGraph.countryPop.$graphLines, data);
-
-		  		// Las de barras cambian según lo activado
-		  	if(plantiGraph.act.type.length == 2) {
-
-		  		plantiGraph.countryPop.drawBarras(plantiGraph.tools.getTop(data.actCountry.key, 'exp'), data, plantiGraph.countryPop.$graphBars1, 'exp');
-		  		plantiGraph.countryPop.drawBarras(plantiGraph.tools.getTop(data.actCountry.key, 'imp'), data, plantiGraph.countryPop.$graphBars2, 'imp');
-
-		  	} else if($.inArray('imp', plantiGraph.act.type) == -1) {
-
-		  		plantiGraph.countryPop.drawBarras(plantiGraph.tools.getTop(data.actCountry.key, 'exp'), data, plantiGraph.countryPop.$graphBars1, 'exp');
-		  		plantiGraph.countryPop.drawBarras(data.exports, data, plantiGraph.countryPop.$graphBars2, 'expInternal');
-
-		  	} else {
-				
-				plantiGraph.countryPop.drawBarras(plantiGraph.tools.getTop(data.actCountry.key, 'imp'), data, plantiGraph.countryPop.$graphBars1, 'imp');
-		  		plantiGraph.countryPop.drawBarras(data.imports, data, plantiGraph.countryPop.$graphBars2, 'impInternal');
-		  	}
-	
-
-		},
-
-		hide: function() {
-			plantiGraph.countryPop.active = null;
-			plantiGraph.viz.$wrap.removeClass('actPop');
-
-			d3.selectAll('feGaussianBlur').transition().attr('stdDeviation', 0);
-			
-			plantiGraph.countryPop.clear();
-		},
-
-		clear: function() {
-
-			plantiGraph.countryPop.active = null;
-
-			plantiGraph.countryPop.$frases.find('*').remove();
-			plantiGraph.countryPop.$graphBars2.find('*').remove();
-			plantiGraph.countryPop.$graphBars1.find('*').remove();
-			plantiGraph.countryPop.$graphLines.find('*').remove();
-			plantiGraph.countryPop.$graphLines.append('<svg></svg>');
-
-			$('#searchHelp').show();
-			$('#searchSelected').hide().html('');
-
-		},
-
-		update: function() {
-			if(plantiGraph.countryPop.active) plantiGraph.countryPop.activa(plantiGraph.countryPop.active);
-		}
 	},
 
 	evs: { // plantiGraph.evs.circInEnter
