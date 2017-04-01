@@ -200,11 +200,11 @@ body { font-size: 14px; }
 			<h4>¿Por qué producto quieres filtrar?</h4>
 			<p>Selecciona una opción</p>
 
-			<a href="#" data-prod="cacao" class="btn btn-cacao"><img src="./icons/chocolate.svg"><span>Cacao</span></a>
-			<a href="#" data-prod="banana" class="btn btn-banana"><img src="./icons/banana.svg"><span>Banano</span></a>
-			<a href="#" data-prod="azucar" class="btn btn-azucar"><img src="./icons/sugar.svg"><span>Azúcar</span></a>
-			<a href="#" data-prod="aceite" class="btn btn-aceite"><img src="./icons/palm_oil.svg"><span>Aceite de palma</span></a>
-			<a href="#" data-prod="cafe" class="btn btn-cafe"><img src="./icons/coffee.svg"><span>Café</span></a>
+			<a href="#" data-prod="cacao" class="btn btn-cacao"><img src="http://estaticos.lab.eldiario.es/estaticos/plantaciones/icons/chocolate.svg"><span>Cacao</span></a>
+			<a href="#" data-prod="banana" class="btn btn-banana"><img src="http://estaticos.lab.eldiario.es/estaticos/plantaciones/icons/banana.svg"><span>Banano</span></a>
+			<a href="#" data-prod="azucar" class="btn btn-azucar"><img src="http://estaticos.lab.eldiario.es/estaticos/plantaciones/icons/sugar.svg"><span>Azúcar</span></a>
+			<a href="#" data-prod="aceite" class="btn btn-aceite"><img src="http://estaticos.lab.eldiario.es/estaticos/plantaciones/icons/palm_oil.svg"><span>Aceite de palma</span></a>
+			<a href="#" data-prod="cafe" class="btn btn-cafe"><img src="http://estaticos.lab.eldiario.es/estaticos/plantaciones/icons/coffee.svg"><span>Café</span></a>
 		</div>
 		<div id="years">
 			<h4>Año</h4>
@@ -264,8 +264,8 @@ body { font-size: 14px; }
 <script>
 var plantiGraph = {
 
-	pathData: './',
-	pathPaises: './paisesTot.json',
+	pathData: 'http://estaticos.lab.eldiario.es/estaticos/plantaciones/',
+	pathPaises: 'paisesTot.json',
 	pathQuery: '?mls3',
 
 	act:{
@@ -371,7 +371,6 @@ var plantiGraph = {
 			plantiGraph.tools.loadCountries();
 			plantiGraph.tools.updateProjection();
 			plantiGraph.tools.update();
-			// plantiGraph.tools.initBG();
 		},
 
 		updateProjection: function() {
@@ -419,33 +418,10 @@ var plantiGraph = {
 			plantiGraph.minLine = plantiGraph.maxLine / plantiGraph.minLineProp;
 
 		},
-			// fondo de paises
-		initBG: function() {
-
-			d3.json("./world-50m.json", function(error, world) {
-				if (error) throw error;
-
-				var countries = topojson.feature(world, world.objects.countries).features;
-				// var neighbors = topojson.neighbors(world.objects.countries.geometries);
-
-				if(plantiGraph.viz.map) plantiGraph.viz.map.remove()
-
-				plantiGraph.viz.map = plantiGraph.viz.svg.selectAll(".country")
-					.data(countries)
-					.enter()
-						.insert("path", ".graticule")
-							.attr('d', plantiGraph.viz.path)
-							.attr('class', "country")
-							.style('stroke', '#ccc')
-							.style('fill', 'none')
-							.style('stroke-width', '1');
-
-			});
-		},
 
 		loadCountries: function(cb) {
 
-			d3.json(plantiGraph.pathPaises, function(error, world) {
+			d3.json(plantiGraph.pathData + plantiGraph.pathPaises + plantiGraph.pathQuery, function(error, world) {
 			  	
 			  	if (error) throw error;
 
