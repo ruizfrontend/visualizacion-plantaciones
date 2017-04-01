@@ -109,8 +109,8 @@ body { font-size: 14px; }
 	.circExp { fill: #d35d33; cursor: pointer; }
 		.fullGraph .circExp {  -webkit-transition: all .5s; -ms-transition: all .5s; transition: all .5s; }
 
-	.text {  fill: white; font-weight: 900; font-family: arial, sans-serif; font-size: 12px; pointer-events: none; text-anchor: middle; }
-		.fullGraph .text { -webkit-transition: stroke .5s; -ms-transition: stroke .5s; transition: stroke .5s; }
+	.text {  fill: white; font-weight: 900; font-family: arial, sans-serif; font-size: 10px; pointer-events: none; text-anchor: middle; }
+		.fullGraph .text { -webkit-transition: stroke .5s; -ms-transition: stroke .5s; transition: stroke .5s; font-size: 12px; }
 
 	.circLines { stroke-width: 1px; fill: white; cursor: pointer; }
 	.circLinesWhite { stroke-width: 1px; stroke: white; fill: white; cursor: pointer; }
@@ -287,6 +287,12 @@ var plantiGraph = {
 	minLine: null,
 	minCircProp: 15, // relation of max circ
 	minCirc: null,
+
+	maxWidthText: 13,
+	maxWidthTextMovil: 11,
+
+	textYOffsetMovil: 3,
+	textYOffset: 5,
 
 	initYear: 1995,
 	lastYear: 2014,
@@ -930,7 +936,7 @@ var plantiGraph = {
 			plantiGraph.viz.texts.data(countries)
 				.attr("visibility", plantiGraph.evs.textVisibilityCheck)
 				.attr('x', function(d) { if(d.posX) return d.x; })
-				.attr('y', function(d) { if(d.posY) return d.y + 5; });
+				.attr('y', function(d) { if(d.posY) return d.y + (plantiGraph.breakPointSmallScreen ? 3 : 5); });
 
 			plantiGraph.viz.force = d3.forceSimulation(countries)
 				.force("link", d3.forceLink(links).strength(0.0000000000001))
@@ -968,7 +974,7 @@ var plantiGraph = {
 
 			plantiGraph.viz.texts
 				.attr('x', function(d) { return d.x; })
-				.attr('y', function(d) { return d.y + 5; });
+				.attr('y', function(d) { return d.y + (plantiGraph.breakPointSmallScreen ? plantiGraph.textYOffset : plantiGraph.textYOffset); });
 			
 		},
 
@@ -1056,12 +1062,16 @@ var plantiGraph = {
 			var countryData = plantiGraph.tools.getdataCountry(countryKey);
 			
 			plantiGraph.countryPop.active = countryKey;
+
+			$('#searchHelp').hide();
 			
 			plantiGraph.viz.$wrap.addClass('actPop');
 
-			setTimeout(function(){plantiGraph.countryPop.activaHover(countryKey); }, 100)
+				// hasta aquí móvil
+			if(plantiGraph.breakPointSmallScreen) return;
 
-			$('#searchHelp').hide();
+			setTimeout(function(){plantiGraph.countryPop.activaHover(countryKey); }, 100);
+
 			d3.selectAll('feGaussianBlur').transition().attr('stdDeviation', 4);
 
 		},
@@ -1078,12 +1088,16 @@ var plantiGraph = {
 		hide: function() {
 			plantiGraph.countryPop.active = null;
 			plantiGraph.viz.$wrap.removeClass('actPop');
+			
+			plantiGraph.countryPop.clear();
+
+				// hasta aquí móvil
+			if(plantiGraph.breakPointSmallScreen) return;
 
 			d3.selectAll('feGaussianBlur').transition().attr('stdDeviation', 0);
 			
 			plantiGraph.evs.circOut();
 
-			plantiGraph.countryPop.clear();
 		},
 
 		clear: function() {
@@ -1508,10 +1522,10 @@ var plantiGraph = {
 		textVisibilityCheck: function(d) {
 			if(!d.posX) return "hidden";
 			if(plantiGraph.act.type.length == 2) {
-				return d.rTot < 13 ? "hidden" : "visible";
+				return d.rTot < (plantiGraph.breakPointSmallScreen ? plantiGraph.maxWidthTextMovil : plantiGraph.maxWidthText) ? "hidden" : "visible";
 			} else {
-				if($.inArray('imp', plantiGraph.act.type) == -1) return d.rExp < 13 ? "hidden" : "visible";
-				return d.rImp < 13 ? "hidden" : "visible";
+				if($.inArray('imp', plantiGraph.act.type) == -1) return d.rExp < (plantiGraph.breakPointSmallScreen ? plantiGraph.maxWidthTextMovil : plantiGraph.maxWidthText) ? "hidden" : "visible";
+				return d.rImp < (plantiGraph.breakPointSmallScreen ? plantiGraph.maxWidthTextMovil : plantiGraph.maxWidthText) ? "hidden" : "visible";
 			}
 		},
 
