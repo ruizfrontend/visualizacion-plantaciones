@@ -101,15 +101,13 @@ body { font-size: 14px; }
 		.axes path { stroke-width: 0; }
 
 	.circImp { fill: #126567; cursor: pointer; }
-		.fullGraph .circImp {  -webkit-transform-origin: center center; -ms-transform-origin: center center; transform-origin: center center;
-				-webkit-transition: all .5s; -ms-transition: all .5s; transition: all .5s; }
+		.fullGraph .circImp {  -webkit-transition: all .5s; -ms-transition: all .5s; transition: all .5s; }
 
 	.circImpAct, .circExpAct { opacity: 1!important; }
 		.linkAct { opacity: .9!important; }
 
 	.circExp { fill: #d35d33; cursor: pointer; }
-		.fullGraph .circExp {  -webkit-transform-origin: center center; -ms-transform-origin: center center; transform-origin: center center;
-				-webkit-transition: all .5s; -ms-transition: all .5s; transition: all .5s; }
+		.fullGraph .circExp {  -webkit-transition: all .5s; -ms-transition: all .5s; transition: all .5s; }
 
 	.text {  fill: white; font-weight: 900; font-family: arial, sans-serif; font-size: 12px; pointer-events: none; text-anchor: middle; }
 		.fullGraph .text { -webkit-transition: stroke .5s; -ms-transition: stroke .5s; transition: stroke .5s; }
@@ -122,14 +120,15 @@ body { font-size: 14px; }
 	.linesImpFill { fill: #d35d33; }
 
 	#plantiGraph.fullGraph #pop { position: absolute; top: 0; height: 100%; overflow: auto; right: 0; width: 300px; max-width: 800px; background: #efefef; z-index: 1;
-				-webkit-transition: all 1s; -ms-transition: all 1s; transition: all 1s;
+				-webkit-transition: all 1s; -ms-transition: all 1s; transition: all 1s; overflow-x: hidden;
 			    border-left: 2px solid white; }
-		#plantiGraph.fullGraph.actPop #pop { width: 100%; }
-		#plantiGraph.fullGraph.actPop #viz { opacity: 0.6; pointer-events: none; }
+		#plantiGraph.fullGraph.actPop #pop { width: 100%; 
+			-webkit-transition: all 1s; -ms-transition: all 1s; transition: all 1s; }
+		#plantiGraph.fullGraph.actPop #viz { opacity: 0.6; pointer-events: none; 
+			-webkit-transform: translateX(-200px); -ms-transform: translateX(-200px); transform: translateX(-200px); }
 
 	#viz { -webkit-transition: all 1s; -ms-transition: all 1s; transition: all 1s; }
-		#viz.blur { filter:url(#blur); }
-		/*#viz #blur feGaussianBlur { stdDeviation: 1;}*/
+		#viz.blur { filter:url(#blur); } 
 
 	#closePop { position: absolute; left: -100%;     position: absolute; top: 0; font-weight: 900;
 			-webkit-transition: all 1s; -ms-transition: all 1s; transition: all 1s;
