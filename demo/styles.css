@@ -76,7 +76,7 @@
 
 	#pG #viz { -webkit-transition: all 1s; -ms-transition: all 1s; transition: all 1s; }
 		#pG #viz.blur { filter:url(#blur); } 
-		.safari #pG #viz { filter: inherit; } 
+		.safari #pG #viz { filter: inherit!important; } 
 
 	#pG #closePop { position: absolute; left: -100%;     position: absolute; top: 0; font-weight: 900;
 			-webkit-transition: all 1s; -ms-transition: all 1s; transition: all 1s;

@@ -97,7 +97,7 @@ var pG = {
 		pG.tools.initJqueries();
 
 		$(window).bind('orientationchange resize', throttle(pG.tools.handleResize, 300)).resize();
-		if(navigator.userAgent.toLowerCase().indexOf('safari/') != -1) $('body').addClass('safari').find('feGaussianBlur').remove();
+		if(/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) $('body').addClass('safari').find('feGaussianBlur').remove();
 	},
 
 	tools: {
