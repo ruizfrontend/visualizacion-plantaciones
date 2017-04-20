@@ -1,7 +1,11 @@
 #pG { width: 100%; overflow: hidden; font-family: 'Roboto'; }
 
 	#pG h1 { margin: 0.4em 0 1.2em 0; padding: 0 0.4em; text-align: center; }
-		#pG.fullGraph h1 { margin: 0.4em 0; text-align: left; }
+		#pG.fullGraph h1 { margin: 0.4em 0; text-align: center; }
+
+		@media (min-width: 1400px) {
+			#pG.fullGraph #headGraph { padding: 0 2em; }
+		}
 	#pG h4 { font-family: roboto, sans-serif; font-size: 1.4em; font-weight: 900; }
 
 #pG .btn { margin-left: 0; background: #999999; color: white; border-radius: 0; margin-bottom: 0.4em;

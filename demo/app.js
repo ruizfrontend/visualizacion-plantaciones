@@ -381,15 +381,11 @@ var pG = {
 				var positionImp = pG.tools.getPosition(dataCountry, 'imp');
 				var positionExp = pG.tools.getPosition(dataCountry, 'exp');
 
-				if(balance > 0) {
-					out.push('<strong>' + name + '</strong> exportó <strong>' + pG.tools.parseAmmount(balance) + ' más</strong> en <strong>' + pG.txt.productos[pG.act.prod] + '</strong> de los que importó.');
-				} else {
-					out.push('<strong>' + name + '</strong> importó <strong>' + pG.tools.parseAmmount(-1 * balance) + ' más</strong> en <strong>' + pG.txt.productos[pG.act.prod] + '</strong> de los que exportó.');
-				}
-				out.push('<strong>' + name + '</strong> ocupa el puesto número <strong>' + positionExp + '</strong> de países exportadores y el puesto número <strong>' + positionImp + '</strong> de paises importadores de <strong>' + pG.txt.productos[pG.act.prod] + '</strong>.');
+				out.push('En ' + pG.act.year + ', <strong>' + name + '</strong> ocupó el puesto número <strong>' + positionExp + '</strong> de países exportadores y el puesto número <strong>' + positionImp + '</strong> de paises importadores de <strong>' + pG.txt.productos[pG.act.prod] + '</strong>.');
+				out.push('<strong>' + name + '</strong> exportó por <strong>' + pG.tools.parseAmmount(dataCountry.actCountry.totalExp) + '</strong>. Importó por <strong>' + pG.tools.parseAmmount(dataCountry.actCountry.totalImp) + '</strong>.');
 
 
-			} else if(pG.act.type.indexOf('imp') != -1) {
+			} else if (pG.act.type.indexOf('imp') != -1) {
 
 				var posImp = pG.tools.fixPosition(pG.tools.getPosition(dataCountry, 'imp'));
 				var percImp = 100 * dataCountry.actCountry.totalImp / pG.data.totalImp;
@@ -691,7 +687,10 @@ var pG = {
 
 			$('body')
 				.delegate('#frases li', 'click', function(){
-					shareTweet($(this).text().slice(0, -1) + ' en ' + pG.act.year, 'http://latierraesclava.eldiario.es/', 'latierraesclava', 'eldiarioes');
+					var text = $(this).text().slice(0, -1);
+					if(text.slice(0, 3) != 'En ') text += ' en ' + pG.act.year;
+
+					shareTweet(text, 'http://latierraesclava.eldiario.es/', 'latierraesclava', 'eldiarioes');
 					return false;
 				})
 				.delegate('#searchSelected a', 'click', function(){
@@ -852,19 +851,19 @@ var pG = {
 			switch(type) {
 				case 'exp':
 					$elm.addClass('graphBarsExp')
-						.append('<h4 style="text-transform: uppercase">Ranking de países <br>exportadores</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
+						.append('<h4 style="text-transform: uppercase">Ranking de países <br>exportadores</h4><p style="margin-bottom: 0.8em">En millones de dólares</p>');
 				break;
 				case 'imp':
 					$elm.addClass('graphBarsImp')
-						.append('<h4 style="text-transform: uppercase">Ranking de países <br>importadores</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
+						.append('<h4 style="text-transform: uppercase">Ranking de países <br>importadores</h4><p style="margin-bottom: 0.8em">En millones de dólares</p>');
 				break;
 				case 'expInternal':
 					$elm.addClass('graphBarsImp')
-						.append('<h4 style="text-transform: uppercase">Principales paises<br>a los que exporta</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
+						.append('<h4 style="text-transform: uppercase">Principales paises<br>a los que exporta</h4><p style="margin-bottom: 0.8em">En millones de dólares</p>');
 				break;
 				case 'impInternal':
 					$elm.addClass('graphBarsImp')
-						.append('<h4 style="text-transform: uppercase">Principales paises<br>de los que importa</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
+						.append('<h4 style="text-transform: uppercase">Principales paises<br>de los que importa</h4><p style="margin-bottom: 0.8em">En millones de dólares</p>');
 				break;
 			}
 
@@ -896,7 +895,7 @@ var pG = {
 		drawEvol: function($elm, data) {
 			
 				// gráfico de evolucion
-			$elm.prepend('<h4 style="text-transform: uppercase">Evolución importaciones y exportaciones de ' + pG.txt.productos[pG.act.prod] + '</h4><p style="margin-bottom: 0.8em">En millones de dolares</p>');
+			$elm.prepend('<h4 style="text-transform: uppercase">Evolución importaciones y exportaciones de ' + pG.txt.productos[pG.act.prod] + '</h4><p style="margin-bottom: 0.8em">En millones de dólares</p>');
 
 			var max = d3.max([
 				d3.max(d3.entries(data.expByYear), function(e){ return parseInt(e.value, 10); }),
@@ -1059,7 +1058,7 @@ var pG = {
 			var textoTT = '';
 			
 			if(pG.act.type.length == 2) {
-				textoTT = '<strong>' + d.name + '</strong> exportó ' + pG.tools.parseAmmount(d.totalExp) + ' e importó ' + pG.tools.parseAmmount(d.totalImp) + ' de <strong>' + pG.txt.productos[pG.act.prod] + '</strong> en ' + pG.act.year;
+				textoTT = '<strong>' + d.name + '</strong><br/><span style="font-style: italic;">Haz click para más información</span>';// exportó ' + pG.tools.parseAmmount(d.totalExp) + ' e importó ' + pG.tools.parseAmmount(d.totalImp) + ' de <strong>' + pG.txt.productos[pG.act.prod] + '</strong> en ' + pG.act.year;
 				posY -= (d.rTot + 4);
 			} else {
 				if(pG.act.type.indexOf('exp') != -1) {
@@ -1175,18 +1174,27 @@ var pG = {
 
 			$('#graph .tooltip').remove();
 
-			if(pG.breakPointSmallScreen) return false;
+			if(pG.breakPointSmallScreen) return;
 
-			pG.evs.circsHover(d);
 			pG.evs.circTooltip(d);
+
+			if(pG.act.type.length != 2) return;
+			
+			pG.evs.circsHover(d);
 
 		},
 
 		circInEnter: function(d) {
+
+			$('#graph .tooltip').remove();
+
 			if(pG.breakPointSmallScreen) return;
+		
+			pG.evs.circTooltip(d);
+
+			if(pG.act.type.length != 2) return;
 			
 			pG.evs.circsHover(d);
-			pG.evs.circTooltip(d);
 
 		},
 
