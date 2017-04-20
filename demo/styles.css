@@ -1,4 +1,4 @@
-#pG { width: 100%; overflow: hidden; font-family: 'Roboto'; }
+#pG { width: 100%; overflow: hidden; font-family: 'Roboto';font-size: 15px;  }
 
 	#pG h1 { margin: 0.4em 0 1.2em 0; padding: 0 0.4em; text-align: center; }
 		#pG.fullGraph h1 { margin: 0.4em 0; text-align: center; }
