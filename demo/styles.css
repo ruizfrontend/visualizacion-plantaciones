@@ -123,9 +123,9 @@
 #pG #frases li:hover { text-decoration: underline; }
 #pG #frases li i { position: absolute; right: 0; bottom: 0; padding: 0.4em; font-size: 1.6em; color: #00aced; text-decoration: none!important; }
 
-#pG .autocomplete-suggestions { padding: 1em; line-height: 1.2em; background: #ccc; cursor: pointer; color: #666; font-weight: 900; }
-#pG .autocomplete-suggestion { text-decoration: underline; line-height: 1.6em; }
-	#pG .autocomplete-suggestion:hover { color: #333; }
+.autocomplete-suggestions { padding: 1em; line-height: 1.2em; background: #ccc; cursor: pointer; color: #666; font-weight: 900; }
+.autocomplete-suggestion { text-decoration: underline; line-height: 1.6em; }
+	.autocomplete-suggestion:hover { color: #333; }
 
 #pG .btn-cacao.act { background: #529fbc; }
 #pG .btn-banana.act { background: #e0e233; }
